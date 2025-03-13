@@ -1,0 +1,83 @@
+---
+const services = [
+  {
+    name: 'CORTE DE CABELLO (CASH) / HAIR CUT MEN',
+    description: 'Corte de cabello + lavado + peinado y producto (TIEMPO DE ESPERA MÍNIMO...)',
+    price: '18,00 €',
+    duration: '30min'
+  },
+  {
+    name: 'CORTE DE CABELLO + BARBA (CASH)',
+    description: 'Incluye corte de cabello + ritual de afeitado de barba tradicional con navaja',
+    price: '28,00 €',
+    duration: '50min'
+  },
+  {
+    name: 'CORTE DE CABELLO + BARBA EXPRES',
+    description: 'Corte de cabello + corte de barba express solo con maquina no incluye...',
+    price: '23,00 €',
+    duration: '40min'
+  },
+  {
+    name: 'AFEITADO DE BARBA (shaving beard)',
+    description: 'Ritual de barba incluye afeite de barba con toalla caliente y navaja',
+    price: '13,00 €',
+    duration: '20min'
+  },
+  {
+    name: 'DEPILACION DE CEJAS (eyebrow waxing)',
+    description: 'Diseño y depilacion de cejas de acuerdo a tus facciones, con cera o con pinzas.',
+    price: '6,00 €',
+    duration: '10min'
+  },
+  {
+    name: 'TAPAR CANAS (cover gray hair)',
+    description: 'Incluye coloracion del cabello de acuerdo al color del pelo natural',
+    price: '25,00 €',
+    duration: '30min'
+  },
+  {
+    name: 'DECOLORACION / DECOLORATION',
+    description: 'DECOLORION DEL CABELLO CON PRODUCTOS SIN AMONIACO',
+    price: '30,00 €',
+    duration: '50min'
+  },
+  {
+    name: 'DECOLORACION + COLOR (discoloration + color)',
+    description: 'Decoloracion del cabello para llegar al tono del color deseado por el cliente...',
+    price: '55,00 €',
+    duration: '30min'
+  }
+];
+---
+
+<section id="services" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">NUESTROS SERVICIOS</h2>
+    <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Servicios profesionales de peluquería para el caballero moderno</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {services.map(service => (
+        <div class="border border-gray-200 p-6 hover:border-black transition duration-300 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-bold mb-2">{service.name}</h3>
+            <p class="text-gray-600 mb-4">{service.description}</p>
+          </div>
+          <div class="flex justify-between items-center mt-4">
+            <div class="flex items-center">
+              <span class="text-xl font-bold">{service.price}</span>
+              <span class="text-gray-500 ml-2">{service.duration}</span>
+            </div>
+            <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition duration-300">
+              Reservar
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center mt-12">
+      <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition duration-300">RESERVAR CITA</a>
+    </div>
+  </div>
+</section> 

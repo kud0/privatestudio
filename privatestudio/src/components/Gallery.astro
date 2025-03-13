@@ -1,0 +1,27 @@
+---
+const galleryImages = [
+  { src: '/images/gallery-1.jpg', alt: 'Classic haircut' },
+  { src: '/images/gallery-2.jpg', alt: 'Beard trim' },
+  { src: '/images/gallery-3.jpg', alt: 'Hot towel shave' },
+  { src: '/images/gallery-4.jpg', alt: 'Styling' },
+  { src: '/images/gallery-5.jpg', alt: 'Barbershop interior' },
+  { src: '/images/gallery-6.jpg', alt: 'Haircut process' },
+];
+---
+
+<section id="gallery" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {galleryImages.map(image => (
+        <div class="overflow-hidden group">
+          <img 
+            src={image.src} 
+            alt={image.alt} 
+            class="w-full h-80 object-cover grayscale transition duration-500 group-hover:scale-105"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

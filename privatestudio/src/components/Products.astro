@@ -1,0 +1,52 @@
+---
+const products = [
+  {
+    name: 'Premium Pomade',
+    description: 'Strong hold with medium shine for classic styles',
+    price: '$24.99',
+    image: '/images/product-1.jpg'
+  },
+  {
+    name: 'Beard Oil',
+    description: 'Nourishing oil for a healthy, soft beard',
+    price: '$19.99',
+    image: '/images/product-2.jpg'
+  },
+  {
+    name: 'Styling Clay',
+    description: 'Matte finish with flexible hold for textured styles',
+    price: '$22.99',
+    image: '/images/product-3.jpg'
+  },
+  {
+    name: 'Shaving Kit',
+    description: 'Complete kit for the perfect traditional shave',
+    price: '$49.99',
+    image: '/images/product-4.jpg'
+  }
+];
+---
+
+<section id="products" class="py-20 bg-gray-100">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">PRODUCTOS PREMIUM</h2>
+    <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Solo productos de calidad</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {products.map(product => (
+        <div class="bg-white p-6 shadow-md hover:shadow-lg transition duration-300">
+          <div class="mb-4 overflow-hidden">
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              class="w-full h-64 object-cover grayscale hover:grayscale-0 transition duration-500"
+            />
+          </div>
+          <h3 class="text-xl font-bold mb-2">{product.name}</h3>
+          <p class="text-gray-600 mb-4">{product.description}</p>
+     
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 

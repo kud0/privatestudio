@@ -1,0 +1,86 @@
+---
+const navItems = [
+  { name: 'Home', url: '#' },
+  { name: 'Productos', url: '#products' },
+  { name: 'Servicios', url: '#services' },
+  { name: 'Book', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona' },
+];
+---
+
+<header class="fixed w-full bg-black text-white z-50">
+  <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- Logo/Brand as a link to home -->
+    <a href="#" class="flex items-center hover:opacity-80 transition duration-300">
+      <div class="w-12 h-12 flex items-center justify-center mr-3">
+        <img src="/images/ps-logo.png" alt="Private Studio Logo" class="w-10 h-10 object-contain rounded-full overflow-hidden" />
+      </div>
+      <span class="text-2xl font-bold">PRIVATE STUDIO</span>
+    </a>
+    
+    <!-- Mobile menu button -->
+    <button id="menu-toggle" class="md:hidden">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+    
+    <!-- Desktop menu -->
+    <ul class="hidden md:flex space-x-8">
+      {navItems.map(item => (
+        <li>
+          <a href={item.url} class="hover:text-gray-300 transition duration-300">{item.name}</a>
+        </li>
+      ))}
+    </ul>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black bg-opacity-95 z-50 flex-col items-center justify-center text-center hidden">
+      <button id="close-menu" class="absolute top-4 right-4 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="mb-8">
+        <div class="w-20 h-20 rounded-full overflow-hidden bg-white mx-auto flex items-center justify-center">
+          <img src="/images/ps-logo.png" alt="Private Studio Logo" class="w-16 h-16 object-contain" />
+        </div>
+      </div>
+      <ul class="text-2xl space-y-8">
+        {navItems.map(item => (
+          <li>
+            <a href={item.url} class="hover:text-gray-300 transition duration-300">{item.name}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.getElementById('menu-toggle');
+    const closeMenu = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileLinks = document.querySelectorAll('#mobile-menu a');
+    
+    menuToggle?.addEventListener('click', () => {
+      mobileMenu?.classList.remove('hidden');
+      mobileMenu?.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    });
+    
+    closeMenu?.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+      mobileMenu?.classList.remove('flex');
+      document.body.style.overflow = '';
+    });
+    
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu?.classList.add('hidden');
+        mobileMenu?.classList.remove('flex');
+        document.body.style.overflow = '';
+      });
+    });
+  });
+</script> 
