@@ -1,0 +1,44 @@
+---
+const brands = [
+  {
+    name: "STMNT CUIDADO",
+    description: "ELEVA TU NEGOCIO CON SOLUCIONES RÁPIDAS Y FÁCILES QUE COMPLEMENTAN A LAS COLECCIONES DE ACABADO DE STMNT. ESTA LÍNEA HA SIDO DESARROLLADA ESPECÍFICAMENTE PARA CUIDAR TODO TIPO DE CABELLO Y BARBA, SE HA AÑADIDO A SUS FÓRMULAS DE ALTO RENDIMIENTO CARBÓN ACTIVADO PARA PURIFICAR Y MENTOL REVITALIZANTE PARA CONSEGUIR ESE TOQUE DE FRESCURA Y LIMPIEZA ADICIONAL.",
+        image: "/images/stmnt-master_products-care-styling-collection-v2_1-1-ratio.webp",
+    bgImage: "/images/family.png"
+  }
+];
+---
+
+<section id="brands" class="bg-black">
+  <div class="flex flex-col md:flex-row">
+    <!-- Brand Image Section (Left) -->
+    <div class="w-full md:w-1/2">
+      <img 
+        src="/images/products.webp" 
+        alt="STMNT Cuidado" 
+        class="w-full h-full object-cover grayscale"
+      />
+    </div>
+    
+    <!-- Brand Description Section (Right) -->
+    <div class="w-full md:w-1/2 bg-black text-white relative">
+      <!-- Background image with overlay -->
+      <div class="absolute inset-0 opacity-15 z-0">
+        <img 
+          src="/images/smtn-logo.webp"  
+          alt="Background texture" 
+          class="w-full h-full object-cover grayscale"
+        />
+      </div>
+      
+      <!-- Content -->
+      <div class="relative z-10 p-12 md:p-16 lg:p-20 flex flex-col justify-center h-full">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">STMNT CUIDADO</h2>
+        <p class="text-base md:text-lg">
+          ELEVA TU NEGOCIO CON SOLUCIONES RÁPIDAS Y FÁCILES QUE COMPLEMENTAN A LAS COLECCIONES DE ACABADO DE STMNT. ESTA LÍNEA HA SIDO DESARROLLADA ESPECÍFICAMENTE PARA CUIDAR TODO TIPO DE CABELLO Y BARBA, SE HA AÑADIDO A SUS FÓRMULAS DE ALTO RENDIMIENTO CARBÓN ACTIVADO PARA PURIFICAR Y MENTOL REVITALIZANTE PARA CONSEGUIR ESE TOQUE DE FRESCURA Y LIMPIEZA ADICIONAL.
+        </p>
+        <div class="mt-8 w-full max-w-xs h-px bg-white"></div>
+      </div>
+    </div>
+  </div>
+</section> 

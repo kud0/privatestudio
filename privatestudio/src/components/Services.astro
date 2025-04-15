@@ -1,54 +1,56 @@
 ---
 const services = [
   {
-    name: 'CORTE DE CABELLO (CASH) / HAIR CUT MEN',
-    description: 'Corte de cabello + lavado + peinado y producto (TIEMPO DE ESPERA MÍNIMO...)',
-    price: '18,00 €',
-    duration: '30min'
-  },
-  {
-    name: 'CORTE DE CABELLO + BARBA (CASH)',
-    description: 'Incluye corte de cabello + ritual de afeitado de barba tradicional con navaja',
-    price: '28,00 €',
-    duration: '50min'
-  },
-  {
-    name: 'CORTE DE CABELLO + BARBA EXPRES',
-    description: 'Corte de cabello + corte de barba express solo con maquina no incluye...',
-    price: '23,00 €',
+    name: 'CORTE DE CABELLO(CASH) / HAIR CUT (CASH)',
+    description: 'En Private Studio, cada corte es un arte diseñado a medida. Analizamos tu tipo de cabello y estilo personal.',
+    price: '20,00 €',
     duration: '40min'
   },
   {
-    name: 'AFEITADO DE BARBA (shaving beard)',
-    description: 'Ritual de barba incluye afeite de barba con toalla caliente y navaja',
-    price: '13,00 €',
+    name: 'CORTE DE CABELLO + RITUAL DE BARBA',
+    description: 'Vive la experiencia definitiva en cuidado masculino con nuestro servicio exclusivo que combina corte y ritual de barba.',
+    price: '30,00 €',
+    duration: '50min'
+  },
+  {
+    name: 'CORTE DE CABELLO + BARBA EXPRESS',
+    description: 'La combinación perfecta para un look fresco y bien definido en menos tiempo.',
+    price: '25,00 €',
+    duration: '45min'
+  },
+  {
+    name: 'RITUAL DE AFEITADO DE BARBA / BEARD SHAVING RITUAL',
+    description: 'Más que un afeitado, una experiencia de lujo para tu piel. En Private Studio transformamos el afeitado en un ritual.',
+    price: '15,00 €',
     duration: '20min'
   },
   {
-    name: 'DEPILACION DE CEJAS (eyebrow waxing)',
-    description: 'Diseño y depilacion de cejas de acuerdo a tus facciones, con cera o con pinzas.',
+    name: 'DISEÑO DE CEJAS / EYEBROW DESIGN',
+    description: 'Más que un afeitado, una experiencia de lujo para tu piel. En Private Studio transformamos el diseño de cejas en un arte.',
     price: '6,00 €',
     duration: '10min'
   },
   {
-    name: 'TAPAR CANAS (cover gray hair)',
-    description: 'Incluye coloracion del cabello de acuerdo al color del pelo natural',
+    name: 'COVER GRAY – CAMUFLAJE NATURAL DE CANAS',
+    description: 'Recupera un look fresco y rejuvenecido con nuestro tratamiento Cover Gray. Resultados naturales y discretos.',
     price: '25,00 €',
     duration: '30min'
   },
   {
     name: 'DECOLORACION / DECOLORATION',
-    description: 'DECOLORION DEL CABELLO CON PRODUCTOS SIN AMONIACO',
+    description: 'Ilumina tu look con una decoloración de alto nivel que protege tu cabello y cuero cabelludo.',
     price: '30,00 €',
     duration: '50min'
   },
   {
-    name: 'DECOLORACION + COLOR (discoloration + color)',
-    description: 'Decoloracion del cabello para llegar al tono del color deseado por el cliente...',
+    name: 'DECOLORACIÓN + COLOR / BLEACHING + COLOR',
+    description: 'Lleva tu look al siguiente nivel con una decoloración profesional y un color personalizado.',
     price: '55,00 €',
     duration: '30min'
   }
 ];
+
+const booksyUrl = "https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona";
 ---
 
 <section id="services" class="py-20 bg-white">
@@ -68,7 +70,12 @@ const services = [
               <span class="text-xl font-bold">{service.price}</span>
               <span class="text-gray-500 ml-2">{service.duration}</span>
             </div>
-            <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition duration-300">
+            <a 
+              href={booksyUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition duration-300"
+            >
               Reservar
             </a>
           </div>
@@ -77,7 +84,14 @@ const services = [
     </div>
     
     <div class="text-center mt-12">
-      <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition duration-300">RESERVAR CITA</a>
+      <a 
+        href={booksyUrl}
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition duration-300"
+      >
+        RESERVAR CITA
+      </a>
     </div>
   </div>
 </section> 
