@@ -173,42 +173,83 @@ const reviews = [
     mobilePrevBtn?.addEventListener('click', () => {
       const newIndex = (currentMobileIndex - 1 + mobileSlides.length) % mobileSlides.length;
       showMobileSlide(newIndex);
+      resetAutoSlideTimer(); // Reset timer when manually navigating
     });
     
     // Next button click
     mobileNextBtn?.addEventListener('click', () => {
       const newIndex = (currentMobileIndex + 1) % mobileSlides.length;
       showMobileSlide(newIndex);
+      resetAutoSlideTimer(); // Reset timer when manually navigating
     });
     
     // Indicator dots click
     mobileDots.forEach((dot, index) => {
       dot.addEventListener('click', () => {
         showMobileSlide(index);
+        resetAutoSlideTimer(); // Reset timer when manually navigating
       });
     });
     
-    // Auto advance slides every 5 seconds on mobile
-    let mobileSlideInterval = setInterval(() => {
-      if (mobileSlides.length > 0) {
-        const newIndex = (currentMobileIndex + 1) % mobileSlides.length;
-        showMobileSlide(newIndex);
-      }
-    }, 5000);
+    // Auto slide functionality
+    let mobileSlideInterval;
+    const slideDelay = 5000; // 5 seconds between slides
     
-    // Pause auto-advance when hovering over the slider
+    function startAutoSlide() {
+      mobileSlideInterval = setInterval(() => {
+        if (mobileSlides.length > 0) {
+          const newIndex = (currentMobileIndex + 1) % mobileSlides.length;
+          showMobileSlide(newIndex);
+        }
+      }, slideDelay);
+    }
+    
+    function resetAutoSlideTimer() {
+      clearInterval(mobileSlideInterval);
+      startAutoSlide();
+    }
+    
+    // Start auto-sliding
+    startAutoSlide();
+    
+    // Pause auto-advance when hovering over the slider (for desktop touch)
     const mobileContainer = document.getElementById('mobile-reviews-container');
     mobileContainer?.addEventListener('mouseenter', () => {
       clearInterval(mobileSlideInterval);
     });
     
     mobileContainer?.addEventListener('mouseleave', () => {
-      mobileSlideInterval = setInterval(() => {
-        if (mobileSlides.length > 0) {
-          const newIndex = (currentMobileIndex + 1) % mobileSlides.length;
-          showMobileSlide(newIndex);
-        }
-      }, 5000);
+      startAutoSlide();
     });
+    
+    // Handle touch events for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    mobileContainer?.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      // Pause auto-sliding when user starts touching
+      clearInterval(mobileSlideInterval);
+    }, false);
+    
+    mobileContainer?.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+      // Resume auto-sliding after touch ends
+      startAutoSlide();
+    }, false);
+    
+    function handleSwipe() {
+      const swipeThreshold = 50; // Minimum pixels to consider a swipe
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe left, show next slide
+        const newIndex = (currentMobileIndex + 1) % mobileSlides.length;
+        showMobileSlide(newIndex);
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe right, show previous slide
+        const newIndex = (currentMobileIndex - 1 + mobileSlides.length) % mobileSlides.length;
+        showMobileSlide(newIndex);
+      }
+    }
   });
 </script> 
