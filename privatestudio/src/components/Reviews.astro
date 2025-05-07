@@ -49,8 +49,8 @@ const reviews = [
       <div class="overflow-hidden" id="mobile-reviews-container">
         <div class="transition-transform duration-500" id="mobile-reviews-wrapper">
           {reviews.map((review, index) => (
-            <div class="mobile-review-slide bg-white p-8 rounded-none shadow-md w-full hidden">
-              <div class="flex items-start gap-6">
+            <div class="mobile-review-slide bg-white p-8 rounded-none shadow-md w-full min-h-[430px] flex flex-col">
+              <div class="flex items-start gap-6 h-full">
                 <!-- Left: Avatar and name -->
                 <div class="flex-shrink-0">
                   <div class="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center text-xl font-bold">
@@ -59,7 +59,7 @@ const reviews = [
                 </div>
                 
                 <!-- Right: Content -->
-                <div class="flex-grow">
+                <div class="flex-grow flex flex-col">
                   <div class="flex justify-between items-start mb-2">
                     <div>
                       <h3 class="text-xl font-bold">{review.name}</h3>
@@ -73,7 +73,7 @@ const reviews = [
                       ))}
                     </div>
                   </div>
-                  <p class="text-gray-700">{review.review}</p>
+                  <p class="text-gray-700 flex-grow">{review.review}</p>
                 </div>
               </div>
             </div>
