@@ -4,7 +4,7 @@
   <!-- Video Background -->
   <div class="absolute inset-0 overflow-hidden">
     <video 
-      class="w-full h-full object-cover " 
+      class="w-full h-full object-cover" 
       autoplay 
       muted 
       loop 
@@ -17,11 +17,49 @@
   </div>
   
   <div class="container mx-auto px-4 z-20 text-center">
-    <h1 class="text-4xl md:text-6xl font-bold mb-4">PRIVATE STUDIO</h1>
-    <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Premium barbershop experience for the modern gentleman</p>
+    <h1 class="text-5xl sm:text-4xl md:text-4xl lg:text-7xl font-black tracking-wider mb-4 animate-fade-in">
+      <span class="inline-block hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent animate-gradient">
+        PRIVATE STUDIO
+      </span>
+    </h1>
+    <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Experiencia premium de barbería para el caballero moderno</p>
     <div class="flex flex-col sm:flex-row justify-center gap-4">
       <a href="#services" class="bg-white text-black px-8 py-3 font-semibold hover:bg-gray-200 transition duration-300">NUESTROS SERVICIOS</a>
       <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="border-2 border-white px-8 py-3 font-semibold hover:bg-white hover:text-black transition duration-300">RESERVAR CITA</a>
     </div>
   </div>
-</section> 
+</section>
+
+<style>
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: gradient 8s linear infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1.5s ease-out forwards;
+  }
+</style> 
