@@ -16,12 +16,20 @@ const navItems = [
       <span class="text-2xl font-bold"></span>
     </a>
     
-    <!-- Mobile menu button -->
-    <button id="menu-toggle" class="md:hidden">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-      </svg>
-    </button>
+    <!-- Mobile menu button and Reservar -->
+    <div class="flex items-center gap-4 md:hidden">
+      <a 
+        href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
+        class="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300 shadow-lg hover:shadow-red-600/30 text-sm"
+      >
+        Reservar
+      </a>
+      <button id="menu-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+    </div>
     
     <!-- Desktop menu -->
     <ul class="hidden md:flex space-x-8 items-center">
