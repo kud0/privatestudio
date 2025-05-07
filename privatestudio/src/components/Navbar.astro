@@ -2,7 +2,7 @@
 const navItems = [
   { name: 'Home', url: '#' },
   { name: 'Servicios', url: '#services' },
-  { name: 'Reservar', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona' },
+  { name: 'Reservar', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona', isButton: true },
 ];
 ---
 
@@ -13,7 +13,7 @@ const navItems = [
       <div class="w-12 h-12 flex items-center justify-center mr-3">
         <img src="/images/ps-logo.png" alt="Private Studio Logo" class="w-10 h-10 object-contain overflow-hidden" />
       </div>
-      <span class="text-2xl font-bold">PRIVATE STUDIO</span>
+      <span class="text-2xl font-bold"></span>
     </a>
     
     <!-- Mobile menu button -->
@@ -24,10 +24,17 @@ const navItems = [
     </button>
     
     <!-- Desktop menu -->
-    <ul class="hidden md:flex space-x-8">
+    <ul class="hidden md:flex space-x-8 items-center">
       {navItems.map(item => (
         <li>
-          <a href={item.url} class="hover:text-gray-300 transition duration-300">{item.name}</a>
+          <a 
+            href={item.url} 
+            class={item.isButton ? 
+              "bg-red-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300 shadow-lg hover:shadow-red-600/30" : 
+              "hover:text-gray-300 transition duration-300"}
+          >
+            {item.name}
+          </a>
         </li>
       ))}
     </ul>
@@ -47,7 +54,14 @@ const navItems = [
       <ul class="text-2xl space-y-8">
         {navItems.map(item => (
           <li>
-            <a href={item.url} class="hover:text-gray-300 transition duration-300">{item.name}</a>
+            <a 
+              href={item.url} 
+              class={item.isButton ? 
+                "bg-red-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300 shadow-lg hover:shadow-red-600/30" : 
+                "hover:text-gray-300 transition duration-300"}
+            >
+              {item.name}
+            </a>
           </li>
         ))}
       </ul>
