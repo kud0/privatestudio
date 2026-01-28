@@ -1,42 +1,70 @@
-<section class="relative h-screen flex items-center justify-center bg-black text-white">
-  <div class="absolute inset-0 bg-gradient-to-b from-black to-transparent opacity-60 z-10"></div>
-  
+<section
+  class="relative h-screen flex items-center justify-center bg-black text-white"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-black to-transparent opacity-60 z-10"
+  >
+  </div>
+
   <!-- Video Background -->
   <div class="absolute inset-0 overflow-hidden">
-    <video 
-      class="w-full h-full object-cover" 
-      autoplay 
-      muted 
-      loop 
-      playsinline
-    >
-      <source src="/images/herovideo.mp4" type="video/mp4">
+    <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+      <source src="/images/herovideo.mp4" type="video/mp4" />
       <!-- Fallback for browsers that don't support video -->
-      <img src="/images/hero-bg.jpg" alt="Barbershop" class="w-full h-full object-cover grayscale">
+      <img
+        src="/images/hero-bg.jpg"
+        alt="Barbershop"
+        class="w-full h-full object-cover grayscale"
+      />
     </video>
   </div>
-  
+
   <div class="container mx-auto px-4 z-20 text-center">
-    <h1 class="text-[2.7rem] sm:text-4xl md:text-4xl lg:text-6xl font-black tracking-wide mb-4 animate-fade-in">
-      <span class="inline-block hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-yellow-200 via-white to-yellow-500 bg-clip-text text-transparent animate-gradient">
+    <h1
+      class="text-[2.7rem] sm:text-4xl md:text-4xl lg:text-6xl font-black tracking-wide mb-4 animate-fade-in"
+    >
+      <span
+        class="inline-block hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-yellow-200 via-white to-yellow-500 bg-clip-text text-transparent animate-gradient"
+      >
         PRIVATESTUDIO
       </span>
     </h1>
-    <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-light tracking-wide text-pretty">Dedicamos nuestro tiempo a atender cada detalle.</p>
+    <p
+      class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto font-light tracking-wide text-pretty"
+    >
+      Asesoramos y diseñamos la imagen masculina adaptada a cada rostro y
+      estilo.
+    </p>
     <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a 
-        href="#services" 
+      <a
+        href="#services"
         class="group relative bg-gradient-to-r from-yellow-100 via-white to-yellow-400 text-black px-8 py-3 font-semibold transition-all duration-300 overflow-hidden rounded-full hover:shadow-lg hover:shadow-yellow-500/20"
       >
-        <span class="absolute inset-0 bg-gradient-to-r from-yellow-500 via-white to-yellow-1w00 opacity-0 group-hover:opacity-80 transition-opacity duration-300"></span>
+        <span
+          class="absolute inset-0 bg-gradient-to-r from-yellow-500 via-white to-yellow-1w00 opacity-0 group-hover:opacity-80 transition-opacity duration-300"
+        ></span>
         <span class="relative inline-flex items-center">
           NUESTROS SERVICIOS
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2.5"
+              d="M9 5l7 7-7 7"></path>
           </svg>
         </span>
       </a>
-      <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="border-2 rounded-full border-white px-8 py-3 font-semibold hover:bg-white hover:text-black transition duration-300">RESERVAR CITA</a>
+      <a
+        href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
+        class="border-2 rounded-full border-white px-8 py-3 font-semibold hover:bg-white hover:text-black transition duration-300"
+        >RESERVAR CITA</a
+      >
     </div>
   </div>
 </section>
@@ -73,4 +101,5 @@
   .animate-fade-in {
     animation: fadeIn 1.5s ease-out forwards;
   }
-</style> 
+</style>
+
