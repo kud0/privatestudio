@@ -1,17 +1,22 @@
 ---
+import LanguageProvider from './LanguageProvider.astro';
+
 const navItems = [
-  { name: 'Home', url: '#' },
-  { name: 'Servicios', url: '#services' },
-  { name: 'Reservar', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona', isButton: true },
+  { name: 'Home', url: '#', key: 'nav.home' },
+  { name: 'Nosotros', url: '#about', key: 'nav.about' },
+  { name: 'Servicios', url: '#services', key: 'nav.services' },
+  { name: 'Reservar', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona', isButton: true, key: 'nav.book' },
 ];
 ---
+
+<LanguageProvider />
 
 <header id="main-header" class="fixed w-full text-white z-50 transition-all duration-500 bg-transparent py-6">
   <nav class="container mx-auto px-4 flex justify-between items-center">
     <!-- Logo/Brand as a link to home -->
     <a href="#" class="flex items-center hover:opacity-80 transition duration-300">
       <div class="w-12 h-12 flex items-center justify-center mr-3">
-        <img src="/images/ps-logo.png" alt="Private Studio Logo" class="w-10 h-10 object-contain overflow-hidden" />
+        <img src="/images/ps-logo3.png" alt="Private Studio Logo" class="w-10 h-10 object-contain rounded-xl" />
       </div>
     </a>
     
@@ -29,6 +34,7 @@ const navItems = [
       <a 
         href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
         class="bg-beige-100 text-black px-4 py-2 rounded-md font-bold hover:bg-white transition duration-300 text-sm uppercase tracking-tight"
+        data-i18n="nav.book"
       >
         Reservar
       </a>
@@ -45,6 +51,7 @@ const navItems = [
         <li>
           <a 
             href={item.url} 
+            data-i18n={item.key}
             class={item.isButton ? 
               "bg-beige-100 text-black px-8 py-2.5 rounded-none font-bold hover:bg-white transition duration-300 uppercase tracking-widest text-sm" : 
               "hover:text-beige-300 transition duration-300 uppercase tracking-[0.2em] text-xs font-bold"}
@@ -53,6 +60,13 @@ const navItems = [
           </a>
         </li>
       ))}
+      
+      <!-- Language Switcher -->
+      <li class="flex items-center gap-2 ml-4 text-xs font-bold tracking-widest border-l border-white/20 pl-6">
+        <button onclick="window.setLanguage('es')" class="lang-btn hover:text-white transition-colors" data-lang="es">ES</button>
+        <span class="text-gray-500">|</span>
+        <button onclick="window.setLanguage('en')" class="lang-btn hover:text-white transition-colors" data-lang="en">EN</button>
+      </li>
     </ul>
     
     <!-- Mobile menu -->
@@ -63,14 +77,20 @@ const navItems = [
         </svg>
       </button>
       <div class="mb-12">
-        <img src="/images/ps-logo.png" alt="Private Studio Logo" class="w-20 h-20 mx-auto object-contain" />
+        <img src="/images/ps-logo3.png" alt="Private Studio Logo" class="w-20 h-20 mx-auto object-contain rounded-2xl" />
       </div>
       <ul class="text-3xl space-y-10 font-black uppercase tracking-tighter">
         {navItems.map(item => (
           <li>
-            <a href={item.url} class="hover:text-beige-400 transition-colors">{item.name}</a>
+            <a href={item.url} class="hover:text-beige-400 transition-colors" data-i18n={item.key}>{item.name}</a>
           </li>
         ))}
+        <!-- Mobile Lang Switch -->
+        <li class="flex items-center justify-center gap-4 mt-8 pt-8 border-t border-white/10 w-24 mx-auto">
+            <button onclick="window.setLanguage('es')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="es">ES</button>
+            <span class="text-gray-600 text-xl">|</span>
+            <button onclick="window.setLanguage('en')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="en">EN</button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -99,26 +119,6 @@ const navItems = [
     const menuToggle = document.getElementById('menu-toggle');
     const closeMenu = document.getElementById('close-menu');
     const mobileMenu = document.getElementById('mobile-menu');
-    
-    menuToggle?.addEventListener('click', () => {
-      mobileMenu?.classList.remove('hidden');
-      mobileMenu?.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    });
-    
-    closeMenu?.addEventListener('click', () => {
-      mobileMenu?.classList.add('hidden');
-      mobileMenu?.classList.remove('flex');
-      document.body.style.overflow = '';
-    });
-  });
-</script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const menuToggle = document.getElementById('menu-toggle');
-    const closeMenu = document.getElementById('close-menu');
-    const mobileMenu = document.getElementById('mobile-menu');
     const mobileLinks = document.querySelectorAll('#mobile-menu a');
     
     menuToggle?.addEventListener('click', () => {
@@ -141,4 +141,4 @@ const navItems = [
       });
     });
   });
-</script> 
+</script>

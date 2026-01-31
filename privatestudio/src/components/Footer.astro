@@ -1,12 +1,12 @@
 ---
 const hours = [
-  { day: "LUNES", hours: "10:00 - 20:00" },
-  { day: "MARTES", hours: "10:00 - 20:00" },
-  { day: "MIERCOLES", hours: "10:00 - 20:00" },
-  { day: "JUEVES", hours: "10:00 - 20:00" },
-  { day: "VIERNES", hours: "10:00 - 20:00" },
-  { day: "SABADOS", hours: "10:00 - 15:00" },
-  { day: "DOMINGO", hours: "CERRADO" },
+  { day: "LUNES", hours: "10:00 - 20:00", key: 'days.mon' },
+  { day: "MARTES", hours: "10:00 - 20:00", key: 'days.tue' },
+  { day: "MIERCOLES", hours: "10:00 - 20:00", key: 'days.wed' },
+  { day: "JUEVES", hours: "10:00 - 20:00", key: 'days.thu' },
+  { day: "VIERNES", hours: "10:00 - 20:00", key: 'days.fri' },
+  { day: "SABADOS", hours: "10:00 - 15:00", key: 'days.sat' },
+  { day: "DOMINGO", hours: "CERRADO", key: 'days.sun', closedKey: 'days.closed' },
 ];
 
 const socialLinks = [
@@ -26,14 +26,14 @@ const socialLinks = [
             class="w-11 h-11 overflow-hidden flex items-center justify-center mr-3"
           >
             <img
-              src="/images/ps-logo.png"
+              src="/images/ps-logo3.png"
               alt="Private Studio Logo"
               class="w-10 h-10 object-contain"
             />
           </div>
           <h3 class="text-xl font-bold">PRIVATE STUDIO</h3>
         </div>
-        <p class="mb-4">
+        <p class="mb-4" data-i18n="footer.about">
           Private Studio es un espacio de barbería premium especializado en
           asesoría de imagen masculina. Nuestro enfoque va más allá del corte:
           analizamos el rostro, el estilo de vida y la identidad de cada cliente
@@ -83,13 +83,13 @@ const socialLinks = [
 
       <!-- Hours -->
       <div>
-        <h3 class="text-xl font-bold mb-4">HORARIOS</h3>
+        <h3 class="text-xl font-bold mb-4" data-i18n="footer.hours">HORARIOS</h3>
         <ul class="space-y-2">
           {
             hours.map((item) => (
               <li class="flex justify-between">
-                <span>{item.day}</span>
-                <span class="text-right">{item.hours}</span>
+                <span data-i18n={item.key}>{item.day}</span>
+                <span class="text-right" data-i18n={item.closedKey}>{item.hours}</span>
               </li>
             ))
           }
@@ -98,7 +98,7 @@ const socialLinks = [
 
       <!-- Contact -->
       <div>
-        <h3 class="text-xl font-bold mb-4">CONTACTO</h3>
+        <h3 class="text-xl font-bold mb-4" data-i18n="footer.contact">CONTACTO</h3>
         <address class="not-italic">
           <a
             href="https://maps.app.goo.gl/g1CY1yPGPptzhyWx7"
@@ -117,20 +117,20 @@ const socialLinks = [
                   d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                   clip-rule="evenodd"></path>
               </svg>
-              <span class="underline">Encuéntranos en Google Maps:</span>
+              <span class="underline" data-i18n="footer.maps">Encuéntranos en Google Maps:</span>
             </div>
             <p class="mb-2 ml-7">Carrer de Muntaner, 172</p>
             <p class="mb-2 ml-7">BAJO 01</p>
             <p class="mb-2 ml-7">08036, Barcelona</p>
           </a>
           <p class="mb-2">
-            Teléfono: <a
+            <span data-i18n="footer.phone">Teléfono:</span> <a
               href="tel:+34624367153"
               class="hover:text-beige-300 transition-colors underline"
               >+34 624 367 153</a>
           </p>
           <p class="mb-2">
-            Email: <a
+            <span data-i18n="footer.email">Email:</span> <a
               href="mailto:privatestudio2@gmail.com"
               class="hover:text-beige-300 transition-colors underline"
               >privatestudio2@gmail.com</a>
@@ -141,8 +141,7 @@ const socialLinks = [
 
     <div class="border-t border-gray-800 pt-8 text-center">
       <p>
-        &copy; {new Date().getFullYear()} Private Studio Barbershop. Todos los derechos
-        reservados.
+        &copy; {new Date().getFullYear()} Private Studio Barbershop. <span data-i18n="footer.rights">Todos los derechos reservados.</span>
       </p>
     </div>
   </div>

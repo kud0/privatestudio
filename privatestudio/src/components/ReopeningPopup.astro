@@ -1,62 +1,41 @@
-<div id="reopening-popup" class="fixed inset-0 bg-black bg-opacity-90 z-[60] flex items-center justify-center px-4 opacity-0 pointer-events-none transition-opacity duration-500">
-  <div class="bg-black border border-yellow-500/30 text-white p-10 max-w-lg w-full rounded-xl relative transform scale-95 transition-all duration-500 shadow-2xl shadow-yellow-500/10">
-    <!-- Close button -->
-    <button id="close-popup" class="absolute top-4 right-4 text-yellow-500/70 hover:text-yellow-500 transition-colors">
+---
+---
+
+<div id="membership-popup" class="fixed inset-0 z-[100] flex items-center justify-center px-4 opacity-0 pointer-events-none transition-opacity duration-500">
+  <!-- Backdrop -->
+  <div id="popup-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500"></div>
+
+  <!-- Modal Card -->
+  <div class="relative bg-white w-full max-w-md p-8 shadow-2xl transform scale-95 transition-all duration-500 delay-100 border border-beige-200" id="popup-content">
+    <!-- Close Button -->
+    <button id="close-popup" class="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
     <!-- Content -->
-    <div class="text-center relative">
-      <!-- Decorative elements -->
-      <div class="absolute top-0 left-0 w-12 h-12 border-l-2 border-t-2 border-yellow-500/30 -translate-x-4 -translate-y-4"></div>
-      <div class="absolute bottom-0 right-0 w-12 h-12 border-r-2 border-b-2 border-yellow-500/30 translate-x-4 translate-y-4"></div>
+    <div class="text-center space-y-6">
+      <div class="inline-block px-3 py-1 bg-black text-white text-[10px] font-bold tracking-[0.2em] uppercase" data-i18n="popup.new">
+        Novedad
+      </div>
       
-      <!-- Main content -->
-      <div class="space-y-6">
-        <div>
-          <h2 class="text-4xl font-black mb-2 bg-gradient-to-r from-yellow-500 via-white to-yellow-500 bg-clip-text text-transparent tracking-tight">
-            PRIVATE STUDIO
-          </h2>
-          <div class="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
-          <h3 class="text-2xl font-light mt-2 tracking-widest text-yellow-500">REINAUGURACIÓN</h3>
-        </div>
-        
-        <div class="space-y-6 my-8">
-          <div class="space-y-1">
-            <p class="text-xl font-light tracking-widest">SÁBADO</p>
-            <p class="text-4xl font-black text-yellow-500">7 JUNIO</p>
-          </div>
-          
-          <div class="bg-yellow-500 text-black py-3 px-6 rounded-sm inline-block transform hover:scale-105 transition-transform duration-300">
-            <p class="text-3xl font-black tracking-tight">CORTES 10€</p>
-          </div>
-          
-          <div class="grid grid-cols-3 gap-4 text-sm font-light tracking-wider">
-            <div class="border border-yellow-500/30 p-3 rounded-sm">
-              <span class="block text-xl mb-1">🎵</span>
-              <span class="text-yellow-500">DJ SET</span>
-            </div>
-            <div class="border border-yellow-500/30 p-3 rounded-sm">
-              <span class="block text-xl mb-1">🥂</span>
-              <span class="text-yellow-500">DRINKS</span>
-            </div>
-            <div class="border border-yellow-500/30 p-3 rounded-sm">
-              <span class="block text-xl mb-1">✨</span>
-              <span class="text-yellow-500">VIBES</span>
-            </div>
-          </div>
-        </div>
-        
-        <a 
-          href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" 
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-block bg-yellow-500 text-black px-8 py-3 rounded-sm font-black tracking-wider hover:bg-white transition-colors duration-300 hidden"
-        >
-          RESERVA AHORA
+      <h3 class="text-3xl font-black uppercase tracking-tight leading-none">
+        <span data-i18n="popup.title.1">Únete al Club</span><br>
+        <span class="text-beige-500" data-i18n="popup.title.2">Private Studio</span>
+      </h3>
+      
+      <p class="text-gray-600 text-sm font-medium leading-relaxed px-4" data-i18n="popup.desc">
+        Descubre nuestros nuevos <strong class="text-black">Packs de Suscripción</strong>. Mantén tu estilo impecable todo el mes con ventajas exclusivas y prioridad en reservas.
+      </p>
+
+      <div class="pt-2">
+        <a href="#services" id="view-plans-btn" class="inline-block w-full bg-black text-white font-bold uppercase tracking-widest text-xs py-4 hover:bg-beige-900 transition-colors duration-300" data-i18n="popup.cta">
+          Ver Planes y Precios
         </a>
+        <button id="dismiss-popup" class="mt-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors" data-i18n="popup.dismiss">
+          No gracias, solo mirar
+        </button>
       </div>
     </div>
   </div>
@@ -64,43 +43,34 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const popup = document.getElementById('reopening-popup');
-    const closeButton = document.getElementById('close-popup');
-    
-    // Show popup with animation after a short delay
+    const popup = document.getElementById('membership-popup');
+    const content = document.getElementById('popup-content');
+    const closeBtn = document.getElementById('close-popup');
+    const dismissBtn = document.getElementById('dismiss-popup');
+    const viewPlansBtn = document.getElementById('view-plans-btn');
+    const backdrop = document.getElementById('popup-backdrop');
+
+    // Always show popup after delay
     setTimeout(() => {
-      if (popup) {
-        popup.classList.remove('opacity-0', 'pointer-events-none');
-        const modalContent = popup.querySelector('div');
-        if (modalContent) {
-          modalContent.classList.remove('scale-95');
-          modalContent.classList.add('scale-100');
-        }
-      }
-    }, 1500);
+      popup.classList.remove('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-95');
+      content.classList.add('scale-100');
+    }, 2000); // Show after 2 seconds
+
+    const closePopup = () => {
+      popup.classList.add('opacity-0', 'pointer-events-none');
+      content.classList.remove('scale-100');
+      content.classList.add('scale-95');
+    };
+
+    closeBtn.addEventListener('click', closePopup);
+    dismissBtn.addEventListener('click', closePopup);
+    backdrop.addEventListener('click', closePopup);
     
-    // Close popup with animation
-    closeButton?.addEventListener('click', () => {
-      if (popup) {
-        popup.classList.add('opacity-0', 'pointer-events-none');
-        const modalContent = popup.querySelector('div');
-        if (modalContent) {
-          modalContent.classList.remove('scale-100');
-          modalContent.classList.add('scale-95');
-        }
-      }
-    });
-    
-    // Close popup when clicking outside
-    popup?.addEventListener('click', (e) => {
-      if (e.target === popup) {
-        popup.classList.add('opacity-0', 'pointer-events-none');
-        const modalContent = popup.querySelector('div');
-        if (modalContent) {
-          modalContent.classList.remove('scale-100');
-          modalContent.classList.add('scale-95');
-        }
-      }
+    viewPlansBtn.addEventListener('click', () => {
+      closePopup();
+      // Smooth scroll is handled by CSS scroll-behavior: smooth on html element usually,
+      // but if not, standard anchor link works.
     });
   });
-</script> 
+</script>
