@@ -87,6 +87,18 @@ const navItems = [
         <a href={item.url} class="hover:text-beige-400 transition-colors" data-i18n={item.key}>{item.name}</a>
       </li>
     ))}
+    
+    <!-- Map Button -->
+    <li class="pt-4">
+      <a href="https://maps.app.goo.gl/g1CY1yPGPptzhyWx7" target="_blank" class="flex items-center gap-3 text-sm font-bold tracking-widest uppercase border border-white/20 px-8 py-3 rounded-full hover:bg-white/10 transition-all text-beige-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+        </svg>
+        <span data-i18n="nav.map">Cómo llegar</span>
+      </a>
+    </li>
+
     <!-- Mobile Lang Switch -->
     <li class="flex items-center justify-center gap-4 mt-8 pt-8 border-t border-white/10 w-24 mx-auto">
         <button onclick="window.setLanguage('es')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="es">ES</button>

@@ -11,6 +11,7 @@ export const ui = {
     'nav.about': 'Nosotros',
     'nav.services': 'Servicios',
     'nav.book': 'Reservar',
+    'nav.map': 'Cómo llegar',
     
     'hero.concept': 'Private Studio',
     'hero.desc.1': 'Es un espacio de barbería premium especializado en',
@@ -136,6 +137,7 @@ export const ui = {
     'nav.about': 'About',
     'nav.services': 'Services',
     'nav.book': 'Book Now',
+    'nav.map': 'Get Directions',
     
     'hero.concept': 'Private Studio',
     'hero.desc.1': 'Is a premium barbershop space specialized in',
