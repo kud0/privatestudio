@@ -9,39 +9,43 @@ const brands = [
 ];
 ---
 
-<section id="brands" class="bg-black">
-  <div class="flex flex-col md:flex-row">
+<section id="brands" class="bg-black relative overflow-hidden group">
+  <div class="flex flex-col md:flex-row h-auto md:min-h-[600px]">
     <!-- Brand Image Section (Left) -->
-    <div class="w-full md:w-1/2">
+    <div class="w-full md:w-1/2 relative overflow-hidden">
+      <div class="absolute inset-0 bg-beige-900/20 z-10 mix-blend-multiply"></div>
       <img 
         src="/images/products.webp" 
         alt="STMNT Cuidado" 
-        class="w-full h-full object-cover grayscale"
+        class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105"
       />
     </div>
     
     <!-- Brand Description Section (Right) -->
-    <div class="w-full md:w-1/2 bg-black text-white relative">
-      <!-- Background image with overlay -->
-      <div class="absolute inset-0 opacity-15 z-0">
+    <div class="w-full md:w-1/2 bg-black text-white relative flex items-center">
+      <!-- Background texture -->
+      <div class="absolute inset-0 opacity-10 z-0">
         <img 
           src="/images/smtn-logo.webp"  
           alt="Background texture" 
-          class="w-full h-full object-cover grayscale"
+          class="w-full h-full object-cover"
         />
       </div>
       
       <!-- Content -->
-      <div class="relative z-10 p-12 md:p-16 lg:p-20 flex flex-col justify-center h-full">
-        <div class="text-center mb-10">
-          <h1 class="text-7xl font-black tracking-wider bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent transform hover:scale-105 transition-transform duration-300 animate-pulse">
-            STMNT
-          </h1>
+      <div class="relative z-10 p-12 md:p-20 flex flex-col justify-center h-full">
+        <h2 class="text-sm font-bold tracking-[0.3em] text-beige-400 mb-4 uppercase">Partner Oficial</h2>
+        <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-8 text-white leading-none">
+          STMNT
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 font-light leading-relaxed mb-8">
+          En nuestra barbería confiamos en <span class="text-white font-bold">STMNT Grooming Goods</span>. Productos de alto rendimiento seleccionados para ofrecerte resultados profesionales.
+        </p>
+        
+        <div class="flex items-center gap-4">
+            <div class="h-px bg-beige-500 w-12"></div>
+            <span class="text-beige-200 uppercase tracking-widest text-sm font-bold">Calidad Premium</span>
         </div>
-        <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold mb-6 text-center">Lo mejor para tu cuidado </h2>
-        <p class="text-base md:text-lg">
-          En nuestra barbería confiamos en <b>STMNT Grooming Goods</b>, una marca de alto rendimiento utilizada por los mejores barberos del mundo. Cada producto ha sido cuidadosamente seleccionado para ofrecerte resultados profesionales, cuidando tu cabello y barba con ingredientes de calidad premium. Porque tu estilo merece lo mejor.
-          <div class="mt-8 w-full max-w-xs h-px bg-white"></div>
       </div>
     </div>
   </div>

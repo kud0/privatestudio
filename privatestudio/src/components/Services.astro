@@ -1,4 +1,62 @@
 ---
+const subscriptionGroups = [
+  {
+    name: 'PACK CORTES',
+    description: 'Mantenimiento de corte.',
+    cardBg: 'bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300',
+    textColor: 'text-black',
+    borderColor: 'border-gray-400',
+    chipColor: 'bg-gray-400',
+    features: [
+      '✔ Servicios premium',
+      '✔ 5% de descuento en productos',
+      '✔ Lavado capilar',
+      '✔ Asesoría personalizada'
+    ],
+    options: [
+      { label: '3 SESIONES', price: '65,75€', note: '-20%' },
+      { label: '4 SESIONES', price: '84,75€', note: '-15%' }
+    ]
+  },
+  {
+    name: 'MIX EXPRESS',
+    description: 'Corte y barba express.',
+    cardBg: 'bg-gradient-to-br from-yellow-100 via-yellow-300 to-yellow-500',
+    textColor: 'text-black',
+    borderColor: 'border-yellow-600',
+    chipColor: 'bg-yellow-600',
+    features: [
+      '✔ Servicios premium',
+      '✔ 5% de descuento en productos',
+      '✔ Lavado capilar',
+      '✔ Asesoría personalizada'
+    ],
+    options: [
+      { label: '3 SESIONES', price: '78,95€', note: '-20%' },
+      { label: '4 SESIONES', price: '104,85€', note: '-15%' }
+    ]
+  },
+  {
+    name: 'PACK COMPLETO',
+    description: 'Experiencia definitiva.',
+    cardBg: 'bg-gradient-to-br from-zinc-800 via-black to-zinc-900',
+    textColor: 'text-white',
+    borderColor: 'border-gray-700',
+    chipColor: 'bg-gray-700',
+    isDark: true,
+    features: [
+      '✔ Servicios premium',
+      '✔ 5% de descuento en productos',
+      '✔ Lavado capilar',
+      '✔ Asesoría personalizada'
+    ],
+    options: [
+      { label: '3 SESIONES', price: '91,87€', note: '-20%' },
+      { label: '4 SESIONES', price: '122,05€', note: '-15%' }
+    ]
+  }
+];
+
 const serviceCategories = [
   {
     name: 'CORTE DE CABELLO',
@@ -113,52 +171,117 @@ const serviceCategories = [
 const booksyUrl = "https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona";
 ---
 
-<section id="services" class="py-20 bg-white">
+<section id="services" class="py-20 bg-wall-texture">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">NUESTROS SERVICIOS</h2>
-    <p class="text-gray-600 text-center max-w-2xl mx-auto mb-12">Servicios profesionales de peluquería para el caballero moderno</p>
+    <p class="text-gray-600 text-center max-w-2xl mx-auto mb-16">Servicios profesionales de peluquería para el caballero moderno</p>
 
-    <div class="max-w-6xl mx-auto space-y-6">
-      {serviceCategories.map((category, categoryIndex) => (
-        <details class="group border border-gray-200 hover:border-gray-400 transition-all duration-300" open={categoryIndex === 0}>
-          <summary class="cursor-pointer p-6 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors duration-300">
-            <div class="flex items-center gap-3">
-              <svg class="w-5 h-5 transform transition-transform duration-300 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-              <h3 class="text-xl md:text-2xl font-bold uppercase">{category.name}</h3>
-            </div>
-            <span class="text-gray-500 font-medium">{category.count} servicios</span>
-          </summary>
+    <!-- Subscriptions / Memberships -->
+    <div class="max-w-6xl mx-auto mb-20">
+        <h3 class="text-2xl font-black text-center mb-8 uppercase tracking-widest text-beige-900">Planes & Membresías</h3>
+        <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-8 md:pb-0 px-4 md:px-0 -mx-4 md:mx-0 scrollbar-hide">
+            {subscriptionGroups.map(group => (
+                <div class={`relative flex-shrink-0 w-[85vw] md:w-auto snap-center overflow-hidden rounded-2xl p-6 shadow-2xl ${group.cardBg} ${group.textColor} transform hover:scale-[1.02] transition-transform duration-500 border ${group.borderColor} flex flex-col justify-between min-h-[450px] group-card`}>
+                    
+                    <!-- Decorative Shine -->
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-black opacity-5 rounded-full blur-2xl -ml-16 -mb-16 pointer-events-none"></div>
 
-          <div class="divide-y divide-gray-100">
-            {category.services.map(service => (
-              <div class="p-6 hover:bg-gray-50 transition-colors duration-300">
-                <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-                  <div class="flex-1">
-                    <h4 class="text-lg font-bold mb-2 uppercase">{service.name}</h4>
-                    <p class="text-gray-600 text-sm leading-relaxed" set:html={service.description}></p>
-                  </div>
+                    <!-- Card Header -->
+                    <div class="relative z-10 mb-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <!-- Chip -->
+                            <div class="w-12 h-9 rounded-md bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-inner">
+                                <div class="w-8 h-5 border border-white/20 rounded-sm flex gap-1 justify-center items-center">
+                                  <div class="w-px h-3 bg-white/20"></div>
+                                  <div class="w-px h-3 bg-white/20"></div>
+                                  <div class="w-px h-3 bg-white/20"></div>
+                                </div>
+                            </div>
+                            <!-- Brand -->
+                            <span class="font-bold tracking-[0.2em] uppercase text-[10px] opacity-60">Private Studio</span>
+                        </div>
 
-                  <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:ml-6">
-                    <div class="flex flex-col items-start md:items-end min-w-[100px]">
-                      <span class="text-2xl font-bold text-black">{service.price}</span>
-                      <span class="text-gray-500 text-sm">{service.duration}</span>
+                        <h4 class="text-2xl font-black uppercase tracking-wider mb-1 leading-none drop-shadow-sm">{group.name}</h4>
+                        <p class="text-xs font-bold uppercase tracking-widest opacity-60">{group.description}</p>
                     </div>
-                    <a
-                      href={booksyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors duration-300 font-medium whitespace-nowrap"
-                    >
-                      Reservar
-                    </a>
-                  </div>
+
+                    <!-- Features -->
+                    <div class="relative z-10 mb-8 flex-grow">
+                        <ul class="space-y-2">
+                            {group.features.map(feature => (
+                                <li class="flex items-start text-xs font-bold tracking-wide opacity-90">
+                                    {feature}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <!-- Purchase Options -->
+                    <div class="relative z-10 space-y-3 mt-auto">
+                        {group.options.map(opt => (
+                            <a href={booksyUrl} target="_blank" class={`flex justify-between items-center w-full p-3 rounded-lg backdrop-blur-sm border transition-all duration-300 hover:scale-[1.02] active:scale-95 ${group.isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-black/5 border-black/10 hover:bg-black/10'}`}>
+                                <div class="flex flex-col items-start">
+                                    <span class="text-[10px] font-black uppercase tracking-widest opacity-60">{opt.label}</span>
+                                    <div class="flex items-center gap-2">
+                                      <span class="text-xs font-bold bg-current text-transparent bg-clip-text opacity-100">{opt.note}</span>
+                                    </div>
+                                </div>
+                                <div class="text-xl font-black tracking-tight">{opt.price}</div>
+                            </a>
+                        ))}
+                    </div>
                 </div>
-              </div>
             ))}
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-4" id="accordion-container">
+      {serviceCategories.map((category, categoryIndex) => (
+        <div class="accordion-item bg-white border border-beige-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300" data-active={categoryIndex === 0}>
+          <button class="accordion-header w-full flex justify-between items-center p-6 cursor-pointer bg-beige-100 hover:bg-beige-200 transition-colors duration-300 text-left">
+            <div class="flex items-center gap-4">
+              <span class="accordion-icon flex items-center justify-center w-8 h-8 rounded-full bg-black text-white transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7 7" />
+                </svg>
+              </span>
+              <h3 class="text-xl md:text-2xl font-black uppercase tracking-wider">{category.name}</h3>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-widest text-beige-900 hidden sm:block">{category.count} Servicios</span>
+          </button>
+
+          <div class="accordion-content overflow-hidden transition-all duration-500 ease-in-out" style={categoryIndex === 0 ? "max-height: 1000px; opacity: 1;" : "max-height: 0; opacity: 0;"}>
+            <div class="p-6 md:p-8 bg-white border-t border-beige-200">
+              <div class="space-y-8">
+                {category.services.map(service => (
+                  <div class="group/item">
+                    <div class="flex items-baseline justify-between mb-2">
+                      <h4 class="text-lg font-bold uppercase tracking-wide text-black pr-4">{service.name}</h4>
+                      <div class="flex-grow border-b-2 border-dotted border-gray-300 mx-2 relative -top-1 hidden sm:block"></div>
+                      <div class="text-xl font-bold text-black pl-4 whitespace-nowrap">{service.price}</div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
+                      <p class="text-gray-600 text-sm leading-relaxed max-w-xl italic" set:html={service.description}></p>
+                      <div class="flex items-center gap-3 mt-2 sm:mt-0 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end">
+                        <span class="text-xs font-bold text-beige-900 bg-beige-200 px-2 py-1 uppercase tracking-wider">{service.duration}</span>
+                        <a
+                          href={booksyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-xs font-bold underline hover:text-beige-500 sm:hidden group-hover/item:block"
+                        >
+                          RESERVAR
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </details>
+        </div>
       ))}
     </div>
 
@@ -176,18 +299,61 @@ const booksyUrl = "https://booksy.com/es-es/90283_private-studio_barberia_48863_
 </section>
 
 <script>
-  // Optional: Add smooth scroll behavior for details elements
-  document.querySelectorAll('details').forEach((details) => {
-    details.addEventListener('toggle', (e) => {
-      if (details.open) {
-        // Close other details when one is opened (accordion behavior)
-        // Comment out these lines if you want multiple sections open at once
-        // document.querySelectorAll('details').forEach((otherDetails) => {
-        //   if (otherDetails !== details) {
-        //     otherDetails.open = false;
-        //   }
-        // });
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    const accordionItems = document.querySelectorAll('.accordion-item');
+
+    // Initialize first item height correctly
+    const firstItem = accordionItems[0];
+    const firstContent = firstItem.querySelector('.accordion-content');
+    if (firstItem && firstContent) {
+       firstItem.setAttribute('data-active', 'true');
+       firstContent.style.maxHeight = firstContent.scrollHeight + "px";
+       firstContent.style.opacity = "1";
+       firstItem.querySelector('.accordion-icon').classList.add('bg-beige-900');
+       firstItem.querySelector('svg').classList.add('rotate-180');
+    }
+
+    accordionItems.forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      
+      header.addEventListener('click', () => {
+        const isActive = item.getAttribute('data-active') === 'true';
+        const content = item.querySelector('.accordion-content');
+        const icon = item.querySelector('.accordion-icon');
+        const arrow = item.querySelector('svg');
+
+        // Close all other items
+        accordionItems.forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.setAttribute('data-active', 'false');
+            const otherContent = otherItem.querySelector('.accordion-content');
+            const otherIcon = otherItem.querySelector('.accordion-icon');
+            const otherArrow = otherItem.querySelector('svg');
+            
+            otherContent.style.maxHeight = '0px';
+            otherContent.style.opacity = '0';
+            otherIcon.classList.remove('bg-beige-900');
+            otherArrow.classList.remove('rotate-180');
+          }
+        });
+
+        // Toggle current item
+        if (!isActive) {
+          item.setAttribute('data-active', 'true');
+          content.style.maxHeight = content.scrollHeight + "px";
+          content.style.opacity = "1";
+          icon.classList.add('bg-beige-900');
+          arrow.classList.add('rotate-180');
+        } else {
+          // Optional: Allow closing the active item to have none open? 
+          // Current logic mimics previous behavior: clicking active closes it.
+          item.setAttribute('data-active', 'false');
+          content.style.maxHeight = '0px';
+          content.style.opacity = '0';
+          icon.classList.remove('bg-beige-900');
+          arrow.classList.remove('rotate-180');
+        }
+      });
     });
   });
 </script> 
