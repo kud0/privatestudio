@@ -15,7 +15,7 @@ import { ui } from '../i18n/ui';
         if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
              el.setAttribute('placeholder', window.translations[lang][key]);
         } else {
-             el.innerText = window.translations[lang][key];
+             el.innerHTML = window.translations[lang][key];
         }
       }
     });

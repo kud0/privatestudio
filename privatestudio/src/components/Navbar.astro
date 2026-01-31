@@ -68,33 +68,33 @@ const navItems = [
         <button onclick="window.setLanguage('en')" class="lang-btn hover:text-white transition-colors" data-lang="en">EN</button>
       </li>
     </ul>
-    
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-50 flex-col items-center justify-center text-center hidden">
-      <button id="close-menu" class="absolute top-6 right-6 text-white p-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-      <div class="mb-12">
-        <img src="/images/ps-logo3.png" alt="Private Studio Logo" class="w-20 h-20 mx-auto object-contain rounded-2xl" />
-      </div>
-      <ul class="text-3xl space-y-10 font-black uppercase tracking-tighter">
-        {navItems.map(item => (
-          <li>
-            <a href={item.url} class="hover:text-beige-400 transition-colors" data-i18n={item.key}>{item.name}</a>
-          </li>
-        ))}
-        <!-- Mobile Lang Switch -->
-        <li class="flex items-center justify-center gap-4 mt-8 pt-8 border-t border-white/10 w-24 mx-auto">
-            <button onclick="window.setLanguage('es')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="es">ES</button>
-            <span class="text-gray-600 text-xl">|</span>
-            <button onclick="window.setLanguage('en')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="en">EN</button>
-        </li>
-      </ul>
-    </div>
   </nav>
 </header>
+
+<!-- Mobile menu - Moved outside header -->
+<div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[60] flex-col items-center justify-center text-center hidden transition-all duration-300">
+  <button id="close-menu" class="absolute top-6 right-6 text-white p-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <div class="mb-12">
+    <img src="/images/ps-logo3.png" alt="Private Studio Logo" class="w-20 h-20 mx-auto object-contain rounded-2xl" />
+  </div>
+  <ul class="text-3xl space-y-10 font-black uppercase tracking-tighter text-white">
+    {navItems.map(item => (
+      <li>
+        <a href={item.url} class="hover:text-beige-400 transition-colors" data-i18n={item.key}>{item.name}</a>
+      </li>
+    ))}
+    <!-- Mobile Lang Switch -->
+    <li class="flex items-center justify-center gap-4 mt-8 pt-8 border-t border-white/10 w-24 mx-auto">
+        <button onclick="window.setLanguage('es')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="es">ES</button>
+        <span class="text-gray-600 text-xl">|</span>
+        <button onclick="window.setLanguage('en')" class="lang-btn text-xl hover:text-beige-400 transition-colors" data-lang="en">EN</button>
+    </li>
+  </ul>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
