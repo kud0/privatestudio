@@ -61,108 +61,108 @@ const subscriptionGroups = [
 
 const serviceCategories = [
   {
-    name: 'CORTE DE CABELLO',
+    nameKey: 'cat.corte',
     count: 3,
     services: [
       {
-        name: 'CORTE DE CABELLO(PREMIUM) / (PREMIUM) HAIR CUT',
-        description: 'En Private Studio, cada corte es un arte diseñado a medida. Analizamos tu tipo de rostro y estilo personal para crear un look que te favorezca al máximo. El servicio incluye:<br><br>✔ Lavado capilar premium para preparar el cabello.<br>✔ Corte de precisión adaptado a tu fisonomía y preferencias.<br>✔ Acabado profesional con productos de alta calidad para una fijación y textura impecables.<br><br>Déjate cuidar por expertos y vive una experiencia de barbería exclusiva en Barcelona.',
+        nameKey: 'serv.corte.premium',
+        descKey: 'serv.corte.premium.desc',
         price: '25,00 €',
         duration: '45min'
       },
       {
-        name: 'CORTE DE CABELLO (PREMIUM) + CEJAS',
-        description: 'CORTE DE CABELLO COMPLETO Y PERSONALIZADO, CON ACABADO PROFESIONAL Y DISEÑO DE CEJAS.<br><br>✔ Corte de cabello adaptado a tu tipo de rostro y estilo.<br>✔ Lavado capilar premium.<br>✔ Diseño y perfilado de cejas para una mirada definida.<br>✔ Acabado con productos de alta calidad.<br><br>La combinación perfecta para un look impecable y bien cuidado.',
+        nameKey: 'serv.corte.cejas',
+        descKey: 'serv.corte.cejas.desc',
         price: '28,00 €',
         duration: '45min'
       },
       {
-        name: 'CORTE DE CABELLO (LARGO) ( HAIR CUT, LARGE HAIR )',
-        description: 'Corte diseñado para cabellos largos, trabajado 100% con tijera y dividido en secciones para máxima precisión.<br><br>✔ Técnica especializada para cabello largo.<br>✔ Corte por secciones para un acabado uniforme.<br>✔ Lavado capilar premium.<br>✔ Productos de acabado profesional.<br><br>Para quienes llevan el cabello largo con estilo y quieren mantenerlo impecable.',
+        nameKey: 'serv.corte.largo',
+        descKey: 'serv.corte.largo.desc',
         price: '25,00 €',
         duration: '45min'
       }
     ]
   },
   {
-    name: 'ARREGLO DE BARBA Y TINTURACION',
+    nameKey: 'cat.barba',
     count: 4,
     services: [
       {
-        name: 'CORTE DE CABELLO(PREMIUM) + BARBA EXPRESS',
-        description: 'La combinación perfecta para un look fresco y bien definido en menos tiempo. Ideal para quienes buscan practicidad sin perder el estilo.<br><br>✔ Corte de cabello adaptado a tu rostro y estilo personal.<br>✔ Perfilado de barba con maquinilla, sin navaja, para un acabado limpio y natural.<br>✔ Lavado capilar y aplicación de productos de acabado premium para una fijación impecable.<br><br>Un servicio ágil, preciso y con el sello de calidad de Private Studio.',
+        nameKey: 'serv.barba.express',
+        descKey: 'serv.barba.express.desc',
         price: '30,00 €',
         duration: '50min'
       },
       {
-        name: 'CORTE DE CABELLO + RITUAL DE BARBA ( PRESIDENCIAL)',
-        description: 'Corte de cabello personalizado, adaptado a tu estilo y forma de rostro, seguido del ritual de barba más completo.<br><br>✔ Corte de cabello de precisión.<br>✔ Toalla caliente aromatizada.<br>✔ Afeitado con navaja tradicional.<br>✔ Hidratación y masaje facial.<br>✔ Productos premium de acabado.<br><br>La experiencia definitiva en cuidado masculino para el caballero moderno.',
+        nameKey: 'serv.barba.ritual',
+        descKey: 'serv.barba.ritual.desc',
         price: '36,00 €',
         duration: '1h'
       },
       {
-        name: 'RITUAL DE BARBA.PRESINDECIAL/ BEARD SHAVING RITUAL',
-        description: 'Más que un afeitado, una experiencia de lujo para tu piel. En Private Studio, elevamos el clásico afeitado con un ritual diseñado para ofrecer precisión, confort y bienestar.<br><br>✔ Toalla caliente aromatizada, para abrir los poros y suavizar la barba.<br>✔ Espuma de alta calidad, aplicada con brocha para una protección óptima de la piel.<br>✔ Afeitado con navaja tradicional, garantizando un corte limpio y sin irritaciones.<br>✔ Hidratación y masaje facial, para calmar la piel y dejarla fresca y revitalizada.<br><br>Un momento de desconexión y cuidado que transforma el afeitado en un auténtico placer.',
+        nameKey: 'serv.barba.ritual.only',
+        descKey: 'serv.barba.ritual.only.desc',
         price: '16,00 €',
         duration: '25min'
       },
       {
-        name: 'TINTURACION DE BARBA / BEARD PAINT',
-        description: 'Refuerza el color de tu barba y logra un look más definido y uniforme con nuestro servicio de tinturación especializada.<br><br>✔ Asesoría personalizada para elegir el tono perfecto.<br>✔ Aplicación profesional de tintes específicos para barba.<br>✔ Técnica cuidadosa que garantiza cobertura uniforme.<br>✔ Productos nutritivos para dejar la barba suave y con brillo.<br><br>Ideal para cubrir canas o intensificar el color natural de tu barba.',
+        nameKey: 'serv.barba.tinte',
+        descKey: 'serv.barba.tinte.desc',
         price: '15,00 €',
         duration: '30min'
       }
     ]
   },
   {
-    name: 'TINTURACION DE CABELLO',
+    nameKey: 'cat.tinte',
     count: 5,
     services: [
       {
-        name: 'COVER GRAY – CAMUFLAJE NATURAL DE CANAS',
-        description: 'Recupera un look fresco y rejuvenecido con nuestro tratamiento Cover Gray, diseñado para atenuar las canas de forma sutil y natural.<br><br>✔ Cobertura progresiva y natural, sin efecto raíz ni tonos artificiales.<br>✔ Fórmula sin amoníaco, ideal para todo tipo de cabello y piel.<br>✔ Tono personalizado, adaptado a tu color original.<br>✔ Aplicación rápida y precisa, con resultados inmediatos.<br><br>Porque verte bien no significa cambiar, sino resaltar lo mejor de ti.',
+        nameKey: 'serv.tinte.cover',
+        descKey: 'serv.tinte.cover.desc',
         price: '30,00 €',
         duration: '30min'
       },
       {
-        name: 'TINTURACION RUBIO.GRIS/COLOR HAIR BLONDE.GRAY',
-        description: 'Lleva tu look al siguiente nivel con una decoloración profesional y un color rubio o gris impecable.<br><br>✔ Evaluación capilar previa para garantizar la salud del cabello.<br>✔ Decoloración controlada con productos premium.<br>✔ Aplicación de color (rubio, gris, platinado) según tu preferencia.<br>✔ Hidratación profunda post-servicio.<br><br>Para quienes buscan un cambio de imagen audaz y sofisticado.',
+        nameKey: 'serv.tinte.rubio',
+        descKey: 'serv.tinte.rubio.desc',
         price: '80,00 €+',
         duration: '1h'
       },
       {
-        name: 'TINTURACION DE CABELLO / COLOR HAIR PAINT',
-        description: 'Refresca tu imagen con un color vibrante y natural sin comprometer la salud de tu cabello. Utilizamos tintes de última generación, libres de amoníaco.<br><br>✔ Asesoría experta para elegir el tono ideal.<br>✔ Fórmula suave y respetuosa, sin amoníaco.<br>✔ Cobertura total o matización perfecta.<br>✔ Tratamiento nutritivo incluido.<br><br>Dale a tu cabello el color que merece con cuidado profesional.',
+        nameKey: 'serv.tinte.pelo',
+        descKey: 'serv.tinte.pelo.desc',
         price: '80,00 €+',
         duration: '30min'
       },
       {
-        name: 'MATIZ SHAMPO',
-        description: 'Perfecciona tu color con un matiz especializado, ideal para eliminar tonos indeseados y potenciar un acabado uniforme y radiante.<br><br>✔ Neutralización de tonos no deseados (amarillos, naranjas o rojizos).<br>✔ Realce del color y mayor duración.<br>✔ Fórmulas suaves y nutritivas.<br>✔ Brillo y sedosidad garantizados.<br><br>El toque final para un cabello perfecto.',
+        nameKey: 'serv.tinte.matiz',
+        descKey: 'serv.tinte.matiz.desc',
         price: '10,00 €',
         duration: '15min'
       },
       {
-        name: 'MECHAS O ILUMINACION MASCULINA/ WICKS OR LIGHTING',
-        description: 'Coloración & Mechas Masculinas. Servicio de coloración y mechas especializado para hombres que buscan destacar con estilo.<br><br>✔ Técnica de mechas o iluminación profesional.<br>✔ Diseño personalizado según tu estilo.<br>✔ Productos de alta calidad que cuidan tu cabello.<br>✔ Acabado natural y moderno.<br><br>Dale dimensión y profundidad a tu look con un toque distintivo.',
+        nameKey: 'serv.tinte.mechas',
+        descKey: 'serv.tinte.mechas.desc',
         price: '80,00 €+',
         duration: '1h'
       }
     ]
   },
   {
-    name: 'DEPILACION CON CERA',
+    nameKey: 'cat.cera',
     count: 2,
     services: [
       {
-        name: 'DEPILACION DE CEJAS CON CERA/ EYEBROW WAXING',
-        description: 'En Private Studio, el diseño de cejas es un gesto sutil con gran impacto. Más que una limpieza, es una intervención precisa que potencia tu expresión y define tu mirada.<br><br>✔ Estudio detallado de tu rostro para un diseño armonioso.<br>✔ Depilación con cera profesional.<br>✔ Eliminación de exceso manteniendo un look masculino.<br>✔ Productos calmantes post-depilación.<br><br>Un servicio rápido y eficaz para hombres que cuidan los detalles.',
+        nameKey: 'serv.cera.cejas',
+        descKey: 'serv.cera.cejas.desc',
         price: '10,00 €',
         duration: '10min'
       },
       {
-        name: 'DEPILACION CON CERA NARIZ Y OREJAS/WAX NOUSE.EARS',
-        description: 'Depilación con cera (nariz y orejas). Servicio rápido y preciso para eliminar el vello no deseado de forma efectiva.<br><br>✔ Técnica profesional de depilación con cera.<br>✔ Proceso rápido y eficiente.<br>✔ Productos hipoalergénicos.<br>✔ Acabado limpio y cuidado.<br><br>Un detalle que marca la diferencia en tu imagen personal.',
+        nameKey: 'serv.cera.nariz',
+        descKey: 'serv.cera.nariz.desc',
         price: '10,00 €',
         duration: '10min'
       }
@@ -223,7 +223,7 @@ const serviceCategories = [
                     <!-- Purchase Options -->
                     <div class="relative z-10 space-y-3 mt-auto">
                         {group.options.map(opt => (
-                            <a href={booksyUrl} target="_blank" class={`flex justify-between items-center w-full p-3 rounded-lg backdrop-blur-sm border transition-all duration-300 hover:scale-[1.02] active:scale-95 ${group.isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-black/5 border-black/10 hover:bg-black/10'}`}>
+                            <a href={opt.link} target="_blank" class={`flex justify-between items-center w-full p-3 rounded-lg backdrop-blur-sm border transition-all duration-300 hover:scale-[1.02] active:scale-95 ${group.isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-black/5 border-black/10 hover:bg-black/10'}`}>
                                 <div class="flex flex-col items-start">
                                     <span class="text-[10px] font-black uppercase tracking-widest opacity-60">{opt.count} <span data-i18n="sub.sessions">SESIONES</span></span>
                                     <div class="flex items-center gap-2">
@@ -246,12 +246,12 @@ const serviceCategories = [
             <div class="flex items-center gap-4">
               <span class="accordion-icon flex items-center justify-center w-8 h-8 rounded-full bg-black text-white transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7 7" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </span>
-              <h3 class="text-xl md:text-2xl font-black uppercase tracking-wider">{category.name}</h3>
+              <h3 class="text-xl md:text-2xl font-black uppercase tracking-wider" data-i18n={category.nameKey}></h3>
             </div>
-            <span class="text-xs font-bold uppercase tracking-widest text-beige-900 hidden sm:block">{category.count} Servicios</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-beige-900 hidden sm:block"><span>{category.count}</span> <span data-i18n="services.subs.reserve">Servicios</span></span>
           </button>
 
           <div class="accordion-content overflow-hidden transition-all duration-500 ease-in-out" style={categoryIndex === 0 ? "max-height: 1000px; opacity: 1;" : "max-height: 0; opacity: 0;"}>
@@ -260,13 +260,13 @@ const serviceCategories = [
                 {category.services.map(service => (
                   <div class="group/item">
                     <div class="flex items-baseline justify-between mb-2">
-                      <h4 class="text-lg font-bold uppercase tracking-wide text-black pr-4">{service.name}</h4>
+                      <h4 class="text-lg font-bold uppercase tracking-wide text-black pr-4" data-i18n={service.nameKey}></h4>
                       <div class="flex-grow border-b-2 border-dotted border-gray-300 mx-2 relative -top-1 hidden sm:block"></div>
                       <div class="text-xl font-bold text-black pl-4 whitespace-nowrap">{service.price}</div>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
-                      <p class="text-gray-600 text-sm leading-relaxed max-w-xl italic" set:html={service.description}></p>
+                      <p class="text-gray-600 text-sm leading-relaxed max-w-xl italic" data-i18n={service.descKey}></p>
                       <div class="flex items-center gap-3 mt-2 sm:mt-0 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end">
                         <span class="text-xs font-bold text-beige-900 bg-beige-200 px-2 py-1 uppercase tracking-wider">{service.duration}</span>
                         <a
@@ -274,6 +274,7 @@ const serviceCategories = [
                           target="_blank"
                           rel="noopener noreferrer"
                           class="text-xs font-bold underline hover:text-beige-500 sm:hidden group-hover/item:block"
+                          data-i18n="services.subs.reserve"
                         >
                           RESERVAR
                         </a>
@@ -294,6 +295,7 @@ const serviceCategories = [
         target="_blank"
         rel="noopener noreferrer"
         class="inline-block bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition-colors duration-300 rounded-md"
+        data-i18n="hero.cta.book"
       >
         RESERVAR CITA
       </a>
@@ -307,7 +309,7 @@ const serviceCategories = [
 
     // Initialize first item height correctly
     const firstItem = accordionItems[0];
-    const firstContent = firstItem.querySelector('.accordion-content');
+    const firstContent = firstItem?.querySelector('.accordion-content');
     if (firstItem && firstContent) {
        firstItem.setAttribute('data-active', 'true');
        firstContent.style.maxHeight = firstContent.scrollHeight + "px";
@@ -319,7 +321,7 @@ const serviceCategories = [
     accordionItems.forEach(item => {
       const header = item.querySelector('.accordion-header');
       
-      header.addEventListener('click', () => {
+      header?.addEventListener('click', () => {
         const isActive = item.getAttribute('data-active') === 'true';
         const content = item.querySelector('.accordion-content');
         const icon = item.querySelector('.accordion-icon');
@@ -333,30 +335,34 @@ const serviceCategories = [
             const otherIcon = otherItem.querySelector('.accordion-icon');
             const otherArrow = otherItem.querySelector('svg');
             
-            otherContent.style.maxHeight = '0px';
-            otherContent.style.opacity = '0';
-            otherIcon.classList.remove('bg-beige-900');
-            otherArrow.classList.remove('rotate-180');
+            if (otherContent) {
+              otherContent.style.maxHeight = '0px';
+              otherContent.style.opacity = '0';
+            }
+            otherIcon?.classList.remove('bg-beige-900');
+            otherArrow?.classList.remove('rotate-180');
           }
         });
 
         // Toggle current item
         if (!isActive) {
           item.setAttribute('data-active', 'true');
-          content.style.maxHeight = content.scrollHeight + "px";
-          content.style.opacity = "1";
-          icon.classList.add('bg-beige-900');
-          arrow.classList.add('rotate-180');
+          if (content) {
+            content.style.maxHeight = content.scrollHeight + "px";
+            content.style.opacity = "1";
+          }
+          icon?.classList.add('bg-beige-900');
+          arrow?.classList.add('rotate-180');
         } else {
-          // Optional: Allow closing the active item to have none open? 
-          // Current logic mimics previous behavior: clicking active closes it.
           item.setAttribute('data-active', 'false');
-          content.style.maxHeight = '0px';
-          content.style.opacity = '0';
-          icon.classList.remove('bg-beige-900');
-          arrow.classList.remove('rotate-180');
+          if (content) {
+            content.style.maxHeight = '0px';
+            content.style.opacity = '0';
+          }
+          icon?.classList.remove('bg-beige-900');
+          arrow?.classList.remove('rotate-180');
         }
       });
     });
   });
-</script> 
+</script>
