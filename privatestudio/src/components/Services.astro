@@ -1,6 +1,7 @@
 ---
 const booksyUrl = "https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona";
 
+// Reuse existing data structure
 const subscriptionGroups = [
   {
     nameKey: 'sub.cortes.name',
@@ -9,12 +10,7 @@ const subscriptionGroups = [
     textColor: 'text-black',
     borderColor: 'border-gray-400',
     chipColor: 'bg-gray-400',
-    featureKeys: [
-      'sub.cortes.f1',
-      'sub.cortes.f2',
-      'sub.cortes.f3',
-      'sub.cortes.f4'
-    ],
+    featureKeys: ['sub.cortes.f1', 'sub.cortes.f2', 'sub.cortes.f3', 'sub.cortes.f4'],
     options: [
       { count: '3', price: '65,75€', note: '-20%', link: booksyUrl },
       { count: '4', price: '84,75€', note: '-15%', link: booksyUrl }
@@ -27,12 +23,7 @@ const subscriptionGroups = [
     textColor: 'text-black',
     borderColor: 'border-yellow-600',
     chipColor: 'bg-yellow-600',
-    featureKeys: [
-      'sub.mix.f1',
-      'sub.mix.f2',
-      'sub.mix.f3',
-      'sub.mix.f4'
-    ],
+    featureKeys: ['sub.mix.f1', 'sub.mix.f2', 'sub.mix.f3', 'sub.mix.f4'],
     options: [
       { count: '3', price: '78,95€', note: '-20%', link: booksyUrl },
       { count: '4', price: '104,85€', note: '-15%', link: booksyUrl }
@@ -46,12 +37,7 @@ const subscriptionGroups = [
     borderColor: 'border-gray-700',
     chipColor: 'bg-gray-700',
     isDark: true,
-    featureKeys: [
-      'sub.pres.f1',
-      'sub.pres.f2',
-      'sub.pres.f3',
-      'sub.pres.f4'
-    ],
+    featureKeys: ['sub.pres.f1', 'sub.pres.f2', 'sub.pres.f3', 'sub.pres.f4'],
     options: [
       { count: '3', price: '91,87€', note: '-20%', link: booksyUrl },
       { count: '4', price: '122,05€', note: '-15%', link: booksyUrl }
@@ -61,176 +47,89 @@ const subscriptionGroups = [
 
 const serviceCategories = [
   {
+    id: 'corte',
     nameKey: 'cat.corte',
-    count: 5,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M6 3L3 6M18 3L21 6M4 11L7 8M20 11L17 8M12 21V15M9 15L12 12L15 15M4 11H20V15C20 17.2091 18.2091 19 16 19H8C5.79086 19 4 17.2091 4 15V11Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      {
-        nameKey: 'serv.corte.premium',
-        descKey: 'serv.corte.premium.desc',
-        price: '25,00 €',
-        duration: '45min'
-      },
-      {
-        nameKey: 'serv.corte.cejas',
-        descKey: 'serv.corte.cejas.desc',
-        price: '28,00 €',
-        duration: '45min'
-      },
-      {
-        nameKey: 'serv.corte.largo',
-        descKey: 'serv.corte.largo.desc',
-        price: '25,00 €',
-        duration: '45min'
-      },
-      {
-        nameKey: 'serv.barba.express',
-        descKey: 'serv.barba.express.desc',
-        price: '30,00 €',
-        duration: '50min'
-      },
-      {
-        nameKey: 'serv.barba.ritual',
-        descKey: 'serv.barba.ritual.desc',
-        price: '36,00 €',
-        duration: '1h'
-      }
+      { id: 'corte-premium', nameKey: 'serv.corte.premium', descKey: 'serv.corte.premium.desc', price: '25,00 €', duration: '45min' },
+      { id: 'corte-cejas', nameKey: 'serv.corte.cejas', descKey: 'serv.corte.cejas.desc', price: '28,00 €', duration: '45min' },
+      { id: 'corte-largo', nameKey: 'serv.corte.largo', descKey: 'serv.corte.largo.desc', price: '25,00 €', duration: '45min' },
+      { id: 'barba-express', nameKey: 'serv.barba.express', descKey: 'serv.barba.express.desc', price: '30,00 €', duration: '50min' },
+      { id: 'barba-ritual', nameKey: 'serv.barba.ritual', descKey: 'serv.barba.ritual.desc', price: '36,00 €', duration: '1h' }
     ]
   },
   {
+    id: 'barba',
     nameKey: 'cat.barba',
-    count: 2,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M7 3C7 3 4 4.5 4 8C4 11.5 7 13 7 13M17 3C17 3 20 4.5 20 8C20 11.5 17 13 17 13M12 21C9.5 21 6 19.5 6 15V13H18V15C18 19.5 14.5 21 12 21Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      {
-        nameKey: 'serv.barba.ritual.only',
-        descKey: 'serv.barba.ritual.only.desc',
-        price: '16,00 €',
-        duration: '25min'
-      },
-      {
-        nameKey: 'serv.barba.tinte',
-        descKey: 'serv.barba.tinte.desc',
-        price: '15,00 €',
-        duration: '30min'
-      }
+      { id: 'barba-ritual-only', nameKey: 'serv.barba.ritual.only', descKey: 'serv.barba.ritual.only.desc', price: '16,00 €', duration: '25min' },
+      { id: 'barba-tinte', nameKey: 'serv.barba.tinte', descKey: 'serv.barba.tinte.desc', price: '15,00 €', duration: '30min' }
     ]
   },
   {
+    id: 'tinte',
     nameKey: 'cat.tinte',
-    count: 5,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M12 2L15 5M12 2L9 5M12 2V22M12 22L15 19M12 22L9 19M5 12H19M5 12L8 9M5 12L8 15M19 12L16 9M19 12L16 15" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      {
-        nameKey: 'serv.tinte.cover',
-        descKey: 'serv.tinte.cover.desc',
-        price: '30,00 €',
-        duration: '30min'
-      },
-      {
-        nameKey: 'serv.tinte.rubio',
-        descKey: 'serv.tinte.rubio.desc',
-        price: '80,00 €+',
-        duration: '1h'
-      },
-      {
-        nameKey: 'serv.tinte.pelo',
-        descKey: 'serv.tinte.pelo.desc',
-        price: '80,00 €+',
-        duration: '30min'
-      },
-      {
-        nameKey: 'serv.tinte.matiz',
-        descKey: 'serv.tinte.matiz.desc',
-        price: '10,00 €',
-        duration: '15min'
-      },
-      {
-        nameKey: 'serv.tinte.mechas',
-        descKey: 'serv.tinte.mechas.desc',
-        price: '80,00 €+',
-        duration: '1h'
-      }
+      { id: 'tinte-cover', nameKey: 'serv.tinte.cover', descKey: 'serv.tinte.cover.desc', price: '30,00 €', duration: '30min' },
+      { id: 'tinte-rubio', nameKey: 'serv.tinte.rubio', descKey: 'serv.tinte.rubio.desc', price: '80,00 €+', duration: '1h' },
+      { id: 'tinte-pelo', nameKey: 'serv.tinte.pelo', descKey: 'serv.tinte.pelo.desc', price: '80,00 €+', duration: '30min' },
+      { id: 'tinte-matiz', nameKey: 'serv.tinte.matiz', descKey: 'serv.tinte.matiz.desc', price: '10,00 €', duration: '15min' },
+      { id: 'tinte-mechas', nameKey: 'serv.tinte.mechas', descKey: 'serv.tinte.mechas.desc', price: '80,00 €+', duration: '1h' }
     ]
   },
   {
+    id: 'cera',
     nameKey: 'cat.cera',
-    count: 2,
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M12 4V20M4 12H20" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      {
-        nameKey: 'serv.cera.cejas',
-        descKey: 'serv.cera.cejas.desc',
-        price: '10,00 €',
-        duration: '10min'
-      },
-      {
-        nameKey: 'serv.cera.nariz',
-        descKey: 'serv.cera.nariz.desc',
-        price: '10,00 €',
-        duration: '10min'
-      }
+      { id: 'cera-cejas', nameKey: 'serv.cera.cejas', descKey: 'serv.cera.cejas.desc', price: '10,00 €', duration: '10min' },
+      { id: 'cera-nariz', nameKey: 'serv.cera.nariz', descKey: 'serv.cera.nariz.desc', price: '10,00 €', duration: '10min' }
     ]
   }
 ];
 ---
 
-<section id="services" class="py-20 bg-wall-texture">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-20 space-y-3">
-      <span class="text-beige-900/60 tracking-[0.4em] text-xs font-bold uppercase block" data-i18n="services.label">Excelencia en cada detalle</span>
+<section id="services" class="py-24 bg-wall-texture relative">
+  <div class="container mx-auto px-4 lg:px-8">
+    
+    <!-- HEADER -->
+    <div class="text-center mb-20 md:mb-28 space-y-3">
+      <span class="text-beige-900/60 tracking-[0.4em] text-xs font-bold uppercase block animate-fade-in-up" data-i18n="services.label">Excelencia en cada detalle</span>
       <h2 class="text-5xl md:text-7xl font-black text-black tracking-tighter uppercase leading-none">
-        <span data-i18n="services.title.1">Nuestros</span> <br class="md:hidden"> <span class="text-transparent bg-clip-text bg-gradient-to-r from-beige-500 to-black" data-i18n="services.title.2">Servicios</span>
+        <span data-i18n="services.title.1">Nuestros</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-beige-500 to-black" data-i18n="services.title.2">Servicios</span>
       </h2>
     </div>
 
-    <!-- Subscriptions / Memberships -->
-    <div class="max-w-6xl mx-auto mb-20">
-        <h3 class="text-2xl font-black text-center mb-8 uppercase tracking-widest text-beige-900" data-i18n="services.subs.title">Planes & Membresías</h3>
+    <!-- MEMBERSHIPS -->
+    <div class="max-w-7xl mx-auto mb-36">
+        <h3 class="text-sm md:text-base font-black text-center mb-12 uppercase tracking-[0.3em] text-beige-900" data-i18n="services.subs.title">Planes & Membresías</h3>
         <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-8 md:pb-0 px-4 md:px-0 -mx-4 md:mx-0 scrollbar-hide">
             {subscriptionGroups.map(group => (
-                <div class={`relative flex-shrink-0 w-[85vw] md:w-auto snap-center overflow-hidden rounded-2xl p-6 shadow-2xl ${group.cardBg} ${group.textColor} transform hover:scale-[1.02] transition-transform duration-500 border ${group.borderColor} flex flex-col justify-between min-h-[450px] group-card`}>
-                    
-                    <!-- Decorative Shine -->
-                    <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-black opacity-5 rounded-full blur-2xl -ml-16 -mb-16 pointer-events-none"></div>
-
-                    <!-- Card Header -->
+                <div class={`relative flex-shrink-0 w-[85vw] md:w-auto snap-center overflow-hidden rounded-xl p-8 shadow-2xl ${group.cardBg} ${group.textColor} transition-transform duration-500 hover:-translate-y-2 border ${group.borderColor} flex flex-col justify-between min-h-[420px]`}>
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                     <div class="relative z-10 mb-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <!-- Chip -->
-                            <div class="w-12 h-9 rounded-md bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-inner">
-                                <div class="w-8 h-5 border border-white/20 rounded-sm flex gap-1 justify-center items-center">
-                                  <div class="w-px h-3 bg-white/20"></div>
-                                  <div class="w-px h-3 bg-white/20"></div>
-                                  <div class="w-px h-3 bg-white/20"></div>
-                                </div>
-                            </div>
-                            <!-- Brand -->
-                            <span class="font-bold tracking-[0.2em] uppercase text-[10px] opacity-60">Private Studio</span>
-                        </div>
-
-                        <h4 class="text-2xl font-black uppercase tracking-wider mb-1 leading-none drop-shadow-sm" data-i18n={group.nameKey}></h4>
+                        <span class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-widest border border-current rounded-full opacity-60">PRIVATE CLUB</span>
+                        <h4 class="text-2xl font-black uppercase tracking-tight mb-2 leading-none" data-i18n={group.nameKey}></h4>
                         <p class="text-xs font-bold uppercase tracking-widest opacity-60" data-i18n={group.descKey}></p>
                     </div>
-
-                    <!-- Features -->
                     <div class="relative z-10 mb-8 flex-grow">
-                        <ul class="space-y-2">
+                        <ul class="space-y-3">
                             {group.featureKeys.map(key => (
-                                <li class="flex items-start text-xs font-bold tracking-wide opacity-90" data-i18n={key}>
+                                <li class="flex items-start text-xs font-bold tracking-wide opacity-80 gap-2">
+                                  <span>•</span> <span data-i18n={key}></span>
                                 </li>
                             ))}
                         </ul>
                     </div>
-
-                    <!-- Purchase Options -->
-                    <div class="relative z-10 space-y-3 mt-auto">
+                    <div class="relative z-10 space-y-3 mt-auto pt-6 border-t border-current/10">
                         {group.options.map(opt => (
-                            <a href={opt.link} target="_blank" class={`flex justify-between items-center w-full p-3 rounded-lg backdrop-blur-sm border transition-all duration-300 hover:scale-[1.02] active:scale-95 ${group.isDark ? 'bg-white/10 border-white/20 hover:bg-white/20' : 'bg-black/5 border-black/10 hover:bg-black/10'}`}>
+                            <a href={opt.link} target="_blank" class={`flex justify-between items-center w-full group/btn`}>
                                 <div class="flex flex-col items-start">
                                     <span class="text-[10px] font-black uppercase tracking-widest opacity-60">{opt.count} <span data-i18n="sub.sessions">SESIONES</span></span>
-                                    <div class="flex items-center gap-2">
-                                      <span class="text-xs font-bold bg-current text-transparent bg-clip-text opacity-100">{opt.note}</span>
-                                    </div>
                                 </div>
-                                <div class="text-xl font-black tracking-tight">{opt.price}</div>
+                                <div class="text-xl font-black tracking-tight group-hover/btn:scale-110 transition-transform duration-300">{opt.price}</div>
                             </a>
                         ))}
                     </div>
@@ -239,130 +138,206 @@ const serviceCategories = [
         </div>
     </div>
 
-    <div class="max-w-4xl mx-auto space-y-4" id="accordion-container">
-      {serviceCategories.map((category, categoryIndex) => (
-        <div class="accordion-item bg-white border border-beige-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300" data-active={categoryIndex === 0}>
-          <button class="accordion-header w-full flex justify-between items-center p-6 cursor-pointer bg-beige-100 hover:bg-beige-200 transition-colors duration-300 text-left">
-            <div class="flex items-center gap-4">
-              <span class="accordion-icon flex items-center justify-center w-8 h-8 rounded-full bg-black text-white transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </span>
-              <h3 class="text-xl md:text-2xl font-black uppercase tracking-wider" data-i18n={category.nameKey}></h3>
-            </div>
-            <span class="text-xs font-bold uppercase tracking-widest text-beige-900 hidden sm:block"><span>{category.count}</span> <span data-i18n="services.subs.reserve">Servicios</span></span>
-          </button>
+    <!-- EDITORIAL SERVICE MENU -->
+    <div class="max-w-7xl mx-auto">
+      <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-start relative">
+        
+        <!-- STICKY NAV -->
+        <div class="lg:col-span-4 lg:sticky lg:top-32 mb-8 lg:mb-0 z-30">
+          <div class="relative">
+            <nav class="flex lg:flex-col overflow-x-auto lg:overflow-visible gap-6 lg:gap-10 pb-4 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0 scrollbar-hide border-b lg:border-b-0 border-black/10 mobile-nav-mask">
+              {serviceCategories.map((cat, index) => (
+                <button 
+                  class={`service-nav-item group flex items-center text-left whitespace-nowrap transition-all duration-500 ${index === 0 ? 'active' : 'opacity-40 hover:opacity-100'}`}
+                  data-target={cat.id}
+                >
+                  <span class="text-lg md:text-xl lg:text-2xl font-black uppercase tracking-tighter group-[.active]:text-beige-700 transition-colors" data-i18n={cat.nameKey}></span>
+                </button>
+              ))}
+            </nav>
+            <!-- Vertical Divider Anchor (Desktop) -->
+            <div class="hidden lg:block absolute -right-10 top-0 bottom-0 w-px bg-black/5"></div>
+          </div>
+        </div>
 
-          <div class="accordion-content overflow-hidden transition-all duration-500 ease-in-out" style={categoryIndex === 0 ? "max-height: 1000px; opacity: 1;" : "max-height: 0; opacity: 0;"}>
-            <div class="p-6 md:p-8 bg-white border-t border-beige-200">
-              <div class="space-y-8">
-                {category.services.map(service => (
-                  <div class="group/item">
-                    <div class="flex items-baseline justify-between mb-2">
-                      <h4 class="text-lg font-bold uppercase tracking-wide text-black pr-4" data-i18n={service.nameKey}></h4>
-                      <div class="flex-grow border-b-2 border-dotted border-gray-300 mx-2 relative -top-1 hidden sm:block"></div>
-                      <div class="text-xl font-bold text-black pl-4 whitespace-nowrap">{service.price}</div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row justify-between items-start gap-2">
-                      <p class="text-gray-600 text-sm leading-relaxed max-w-xl italic" data-i18n={service.descKey}></p>
-                      <div class="flex items-center gap-3 mt-2 sm:mt-0 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-                        <span class="text-xs font-bold text-beige-900 bg-beige-200 px-2 py-1 uppercase tracking-wider">{service.duration}</span>
-                        <a
-                          href={booksyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="text-xs font-bold underline hover:text-beige-500 sm:hidden group-hover/item:block"
-                          data-i18n="services.subs.reserve"
-                        >
-                          RESERVAR
-                        </a>
+        <!-- SERVICE LIST -->
+        <div class="lg:col-span-8 min-h-[400px]">
+          {serviceCategories.map((cat, index) => (
+            <div id={cat.id} class={`service-group transition-all duration-500 ease-in-out ${index === 0 ? 'block opacity-100 translate-y-0' : 'hidden opacity-0 translate-y-4'}`}>
+              
+              <div class="space-y-0">
+                {cat.services.map((service, sIndex) => (
+                  <div 
+                    class="service-row group relative py-8 md:py-12 px-6 -mx-6 border-b border-black/5 cursor-pointer hover:bg-beige-50/50 transition-all duration-300"
+                    data-price={service.price}
+                    data-duration={service.duration}
+                  >
+                    <!-- HIDDEN DATA -->
+                    <div class="hidden drawer-source-title" data-i18n={service.nameKey}></div>
+                    <div class="hidden drawer-source-desc" data-i18n={service.descKey}></div>
+
+                    <div class="flex items-baseline justify-between gap-6 relative z-10">
+                      <div class="flex items-baseline gap-6 flex-grow">
+                        <span class="text-xs md:text-sm lg:text-base font-black text-beige-900/60 group-hover:text-beige-900 transition-colors">0{sIndex + 1}</span>
+                        <h4 class="text-base md:text-lg lg:text-xl font-black uppercase tracking-tighter text-black group-hover:translate-x-4 transition-transform duration-500" data-i18n={service.nameKey}></h4>
+                      </div>
+                      
+                      <div class="text-right flex items-center gap-6 flex-shrink-0">
+                        <div class="flex flex-col items-end">
+                          <span class="text-lg md:text-xl font-black text-black tracking-tight group-hover:text-beige-700 transition-colors">{service.price}</span>
+                          <span class="text-[10px] font-bold text-beige-900/60 uppercase tracking-widest mt-1">{service.duration}</span>
+                        </div>
+                        <div class="hidden md:flex w-8 h-8 rounded-full border border-black/10 items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
 
-    <div class="text-center mt-12">
-      <a
-        href={booksyUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-block bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition-colors duration-300 rounded-md"
-        data-i18n="hero.cta.book"
-      >
-        RESERVAR CITA
-      </a>
+      </div>
     </div>
   </div>
+
+  <!-- THE GLASS DRAWER -->
+  <div id="service-drawer" class="fixed inset-0 z-[100] pointer-events-none opacity-0 transition-opacity duration-500">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-md" id="drawer-backdrop"></div>
+    <div class="absolute bottom-0 left-0 right-0 md:top-0 md:left-auto md:w-[600px] h-[85vh] md:h-full bg-white shadow-2xl transform translate-y-full md:translate-x-full transition-transform duration-500 ease-out flex flex-col pointer-events-auto rounded-t-[2.5rem] md:rounded-none overflow-hidden" id="drawer-panel">
+      
+      <div class="absolute top-8 right-8 z-20">
+        <button id="close-drawer" class="p-3 bg-black text-white rounded-full hover:bg-beige-900 transition-colors shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-12 md:p-20 flex flex-col h-full overflow-y-auto">
+        <div class="mt-12 mb-auto space-y-8">
+           <div class="space-y-4">
+             <span class="inline-block px-4 py-1.5 text-[10px] font-black tracking-[0.2em] bg-beige-100 text-beige-900 rounded-full" id="drawer-duration"></span>
+             <h3 class="text-4xl md:text-5xl font-black uppercase leading-[0.9] tracking-tighter" id="drawer-title"></h3>
+           </div>
+           <div class="w-16 h-1.5 bg-black"></div>
+           <p class="text-base md:text-lg text-gray-700 leading-relaxed italic font-light" id="drawer-desc"></p>
+        </div>
+
+        <div class="mt-16 pt-12 border-t border-black/5">
+          <div class="flex justify-between items-end mb-8">
+            <span class="text-5xl font-black tracking-tighter" id="drawer-price"></span>
+          </div>
+          <a 
+            href={booksyUrl} 
+            target="_blank" 
+            class="block w-full py-6 bg-black text-white text-center font-black text-sm uppercase tracking-[0.4em] hover:bg-beige-900 transition-all duration-300 shadow-xl active:scale-95"
+            data-i18n="services.subs.reserve"
+          >
+            RESERVAR
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const accordionItems = document.querySelectorAll('.accordion-item');
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-    // Initialize first item height correctly
-    const firstItem = accordionItems[0];
-    const firstContent = firstItem?.querySelector('.accordion-content');
-    if (firstItem && firstContent) {
-       firstItem.setAttribute('data-active', 'true');
-       firstContent.style.maxHeight = firstContent.scrollHeight + "px";
-       firstContent.style.opacity = "1";
-       firstItem.querySelector('.accordion-icon').classList.add('bg-beige-900');
-       firstItem.querySelector('svg').classList.add('rotate-180');
+  .service-nav-item.active { opacity: 1 !important; }
+  
+  #service-drawer.drawer-open { opacity: 1; pointer-events: auto; }
+  #service-drawer.drawer-open #drawer-panel { transform: translate(0, 0); }
+
+  @media (max-width: 1023px) {
+    .mobile-nav-mask {
+      -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+      mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    }
+  }
+
+  :global(body.overflow-hidden) {
+    overflow: hidden !important;
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    function initAtelier() {
+      const navItems = document.querySelectorAll('.service-nav-item');
+      const serviceGroups = document.querySelectorAll('.service-group');
+      const serviceRows = document.querySelectorAll('.service-row');
+      const drawer = document.getElementById('service-drawer');
+      const backdrop = document.getElementById('drawer-backdrop');
+      const closeBtn = document.getElementById('close-drawer');
+
+      const dTitle = document.getElementById('drawer-title');
+      const dDesc = document.getElementById('drawer-desc');
+      const dPrice = document.getElementById('drawer-price');
+      const dDuration = document.getElementById('drawer-duration');
+
+      navItems.forEach(btn => {
+        btn.onclick = () => {
+          const targetId = btn.getAttribute('data-target');
+          navItems.forEach(b => {
+            b.classList.remove('active');
+            b.classList.add('opacity-40');
+          });
+          btn.classList.add('active');
+          btn.classList.remove('opacity-40');
+
+          serviceGroups.forEach(group => {
+            if (group.id === targetId) {
+              group.classList.remove('hidden');
+              setTimeout(() => group.classList.remove('opacity-0', 'translate-y-8'), 10);
+            } else {
+              group.classList.add('opacity-0', 'translate-y-8');
+              setTimeout(() => group.classList.add('hidden'), 400);
+            }
+          });
+        };
+      });
+
+      serviceRows.forEach(row => {
+        row.onclick = () => {
+          const price = row.getAttribute('data-price');
+          const duration = row.getAttribute('data-duration');
+          const titleSource = row.querySelector('.drawer-source-title');
+          const descSource = row.querySelector('.drawer-source-desc');
+
+          dTitle.innerHTML = titleSource ? titleSource.innerHTML : '';
+          dDesc.innerHTML = descSource ? descSource.innerHTML : '';
+          dPrice.innerText = price;
+          dDuration.innerText = duration;
+
+          document.body.classList.add('overflow-hidden');
+          drawer.classList.add('drawer-open');
+        };
+      });
+
+      const closeDrawer = () => {
+        document.body.classList.remove('overflow-hidden');
+        drawer.classList.remove('drawer-open');
+      };
+
+      closeBtn.onclick = closeDrawer;
+      backdrop.onclick = closeDrawer;
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('drawer-open')) closeDrawer();
+      });
     }
 
-    accordionItems.forEach(item => {
-      const header = item.querySelector('.accordion-header');
-      
-      header?.addEventListener('click', () => {
-        const isActive = item.getAttribute('data-active') === 'true';
-        const content = item.querySelector('.accordion-content');
-        const icon = item.querySelector('.accordion-icon');
-        const arrow = item.querySelector('svg');
-
-        // Close all other items
-        accordionItems.forEach(otherItem => {
-          if (otherItem !== item) {
-            otherItem.setAttribute('data-active', 'false');
-            const otherContent = otherItem.querySelector('.accordion-content');
-            const otherIcon = otherItem.querySelector('.accordion-icon');
-            const otherArrow = otherItem.querySelector('svg');
-            
-            if (otherContent) {
-              otherContent.style.maxHeight = '0px';
-              otherContent.style.opacity = '0';
-            }
-            otherIcon?.classList.remove('bg-beige-900');
-            otherArrow?.classList.remove('rotate-180');
-          }
-        });
-
-        // Toggle current item
-        if (!isActive) {
-          item.setAttribute('data-active', 'true');
-          if (content) {
-            content.style.maxHeight = content.scrollHeight + "px";
-            content.style.opacity = "1";
-          }
-          icon?.classList.add('bg-beige-900');
-          arrow?.classList.add('rotate-180');
-        } else {
-          item.setAttribute('data-active', 'false');
-          if (content) {
-            content.style.maxHeight = '0px';
-            content.style.opacity = '0';
-          }
-          icon?.classList.remove('bg-beige-900');
-          arrow?.classList.remove('rotate-180');
-        }
-      });
-    });
-  });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAtelier);
+    } else {
+      initAtelier();
+    }
+  })();
 </script>
