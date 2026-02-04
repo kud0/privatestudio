@@ -131,6 +131,21 @@ export const ui = {
     'days.sat': 'SABADOS',
     'days.sun': 'DOMINGO',
     'days.closed': 'CERRADO',
+
+    'prod.title': 'PRODUCTOS PREMIUM',
+    'prod.subtitle': 'Solo productos de calidad',
+    'prod.p1.name': 'Pomada Premium',
+    'prod.p1.desc': 'Fijación fuerte con brillo medio para estilos clásicos',
+    'prod.p2.name': 'Aceite de Barba',
+    'prod.p2.desc': 'Aceite nutritivo para una barba sana y suave',
+    'prod.p3.name': 'Arcilla de Peinado',
+    'prod.p3.desc': 'Acabado mate con fijación flexible para estilos texturizados',
+    'prod.p4.name': 'Kit de Afeitado',
+    'prod.p4.desc': 'Kit completo para el afeitado tradicional perfecto',
+
+    'brands.partner': 'Partner Oficial',
+    'brands.desc': 'En nuestra barbería confiamos en STMNT Grooming Goods. Productos de alto rendimiento seleccionados para ofrecerte resultados profesionales.',
+    'brands.quality': 'Calidad Premium',
   },
   en: {
     'nav.home': 'Home',
@@ -256,5 +271,20 @@ export const ui = {
     'days.sat': 'SATURDAY',
     'days.sun': 'SUNDAY',
     'days.closed': 'CLOSED',
+
+    'prod.title': 'PREMIUM PRODUCTS',
+    'prod.subtitle': 'Only quality products',
+    'prod.p1.name': 'Premium Pomade',
+    'prod.p1.desc': 'Strong hold with medium shine for classic styles',
+    'prod.p2.name': 'Beard Oil',
+    'prod.p2.desc': 'Nourishing oil for a healthy, soft beard',
+    'prod.p3.name': 'Styling Clay',
+    'prod.p3.desc': 'Matte finish with flexible hold for textured styles',
+    'prod.p4.name': 'Shaving Kit',
+    'prod.p4.desc': 'Complete kit for the perfect traditional shave',
+
+    'brands.partner': 'Official Partner',
+    'brands.desc': 'In our barbershop we trust STMNT Grooming Goods. High-performance products selected to offer you professional results.',
+    'brands.quality': 'Premium Quality',
   }
 };

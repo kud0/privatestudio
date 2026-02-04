@@ -1,27 +1,23 @@
 ---
 const products = [
   {
-    name: 'Premium Pomade',
-    description: 'Strong hold with medium shine for classic styles',
-    price: '$24.99',
+    nameKey: 'prod.p1.name',
+    descKey: 'prod.p1.desc',
     image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp'
   },
   {
-    name: 'Beard Oil',
-    description: 'Nourishing oil for a healthy, soft beard',
-    price: '$19.99',
+    nameKey: 'prod.p2.name',
+    descKey: 'prod.p2.desc',
     image: '/images/stmnt-master-product_styling-curl-cream_1-1-ratio.webp'
   },
   {
-    name: 'Styling Clay',
-    description: 'Matte finish with flexible hold for textured styles',
-    price: '$22.99',
+    nameKey: 'prod.p3.name',
+    descKey: 'prod.p3.desc',
     image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp'
   },
   {
-    name: 'Shaving Kit',
-    description: 'Complete kit for the perfect traditional shave',
-    price: '$49.99',
+    nameKey: 'prod.p4.name',
+    descKey: 'prod.p4.desc',
     image: '/images/stmnt-master_products-styling-hair-spray_1-1-ratio_2025.webp'
   }
 ];
@@ -29,8 +25,8 @@ const products = [
 
 <section id="products" class="py-20 bg-beige-100">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">PRODUCTOS PREMIUM</h2>
-    <p class="text-beige-900 text-center max-w-2xl mx-auto mb-12">Solo productos de calidad</p>
+    <h2 class="text-3xl md:text-4xl font-black text-center mb-4 uppercase tracking-tighter" data-i18n="prod.title">PRODUCTOS PREMIUM</h2>
+    <p class="text-beige-900/60 text-center max-w-2xl mx-auto mb-12 uppercase tracking-widest text-xs font-bold" data-i18n="prod.subtitle">Solo productos de calidad</p>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {products.map(product => (
@@ -38,15 +34,14 @@ const products = [
           <div class="mb-4 overflow-hidden">
             <img 
               src={product.image} 
-              alt={product.name} 
+              alt="Product" 
               class="w-full h-64 object-cover grayscale hover:grayscale-0 transition duration-500"
             />
           </div>
-          <h3 class="text-xl font-bold mb-2">{product.name}</h3>
-          <p class="text-gray-600 mb-4">{product.description}</p>
-     
+          <h3 class="text-xl font-bold mb-2 uppercase tracking-tight" data-i18n={product.nameKey}></h3>
+          <p class="text-gray-600 text-sm leading-relaxed" data-i18n={product.descKey}></p>
         </div>
       ))}
     </div>
   </div>
-</section> 
+</section>
