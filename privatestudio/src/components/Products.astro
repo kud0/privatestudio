@@ -3,22 +3,26 @@ const products = [
   {
     nameKey: 'prod.p1.name',
     descKey: 'prod.p1.desc',
-    image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp'
+    image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp',
+    alt: 'STMNT Pomada Premium - Fijación fuerte con brillo medio para estilos clásicos'
   },
   {
     nameKey: 'prod.p2.name',
     descKey: 'prod.p2.desc',
-    image: '/images/stmnt-master-product_styling-curl-cream_1-1-ratio.webp'
+    image: '/images/stmnt-master-product_styling-curl-cream_1-1-ratio.webp',
+    alt: 'STMNT Aceite de Barba - Aceite nutritivo para una barba sana y suave'
   },
   {
     nameKey: 'prod.p3.name',
     descKey: 'prod.p3.desc',
-    image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp'
+    image: '/images/stmnt-master_products-styling-matte-paste_1-1-ratio_2025.webp',
+    alt: 'STMNT Arcilla de Peinado - Acabado mate con fijación flexible'
   },
   {
     nameKey: 'prod.p4.name',
     descKey: 'prod.p4.desc',
-    image: '/images/stmnt-master_products-styling-hair-spray_1-1-ratio_2025.webp'
+    image: '/images/stmnt-master_products-styling-hair-spray_1-1-ratio_2025.webp',
+    alt: 'STMNT Kit de Afeitado - Kit completo para el afeitado tradicional'
   }
 ];
 ---
@@ -32,10 +36,11 @@ const products = [
       {products.map(product => (
         <div class="bg-white p-6 shadow-md hover:shadow-lg transition duration-300">
           <div class="mb-4 overflow-hidden">
-            <img 
-              src={product.image} 
-              alt="Product" 
+            <img
+              src={product.image}
+              alt={product.alt}
               class="w-full h-64 object-cover grayscale hover:grayscale-0 transition duration-500"
+              loading="lazy"
             />
           </div>
           <h3 class="text-xl font-bold mb-2 uppercase tracking-tight" data-i18n={product.nameKey}></h3>

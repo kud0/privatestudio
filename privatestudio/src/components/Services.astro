@@ -51,6 +51,7 @@ const serviceCategories = [
     nameKey: 'cat.corte',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M6 3L3 6M18 3L21 6M4 11L7 8M20 11L17 8M12 21V15M9 15L12 12L15 15M4 11H20V15C20 17.2091 18.2091 19 16 19H8C5.79086 19 4 17.2091 4 15V11Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
+      { id: 'corte-basic', nameKey: 'serv.corte.basic', descKey: 'serv.corte.basic.desc', price: '20,00 €', duration: '30min' },
       { id: 'corte-premium', nameKey: 'serv.corte.premium', descKey: 'serv.corte.premium.desc', price: '25,00 €', duration: '45min' },
       { id: 'corte-cejas', nameKey: 'serv.corte.cejas', descKey: 'serv.corte.cejas.desc', price: '28,00 €', duration: '45min' },
       { id: 'corte-largo', nameKey: 'serv.corte.largo', descKey: 'serv.corte.largo.desc', price: '25,00 €', duration: '45min' },
@@ -76,7 +77,8 @@ const serviceCategories = [
       { id: 'tinte-rubio', nameKey: 'serv.tinte.rubio', descKey: 'serv.tinte.rubio.desc', price: '80,00 €+', duration: '1h' },
       { id: 'tinte-pelo', nameKey: 'serv.tinte.pelo', descKey: 'serv.tinte.pelo.desc', price: '80,00 €+', duration: '30min' },
       { id: 'tinte-matiz', nameKey: 'serv.tinte.matiz', descKey: 'serv.tinte.matiz.desc', price: '10,00 €', duration: '15min' },
-      { id: 'tinte-mechas', nameKey: 'serv.tinte.mechas', descKey: 'serv.tinte.mechas.desc', price: '80,00 €+', duration: '1h' }
+      { id: 'tinte-mechas', nameKey: 'serv.tinte.mechas', descKey: 'serv.tinte.mechas.desc', price: '80,00 €+', duration: '1h' },
+      { id: 'tinte-hidratacion', nameKey: 'serv.tinte.hidratacion', descKey: 'serv.tinte.hidratacion.desc', price: '10,00 €', duration: '10min' }
     ]
   },
   {
@@ -85,7 +87,9 @@ const serviceCategories = [
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M12 4V20M4 12H20" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
       { id: 'cera-cejas', nameKey: 'serv.cera.cejas', descKey: 'serv.cera.cejas.desc', price: '10,00 €', duration: '10min' },
-      { id: 'cera-nariz', nameKey: 'serv.cera.nariz', descKey: 'serv.cera.nariz.desc', price: '10,00 €', duration: '10min' }
+      { id: 'cera-nariz', nameKey: 'serv.cera.nariz', descKey: 'serv.cera.nariz.desc', price: '10,00 €', duration: '10min' },
+      { id: 'cera-navaja', nameKey: 'serv.cera.navaja', descKey: 'serv.cera.navaja.desc', price: '4,00 €', duration: '30min' },
+      { id: 'cera-combo', nameKey: 'serv.cera.combo', descKey: 'serv.cera.combo.desc', price: '16,00 €', duration: '10min' }
     ]
   }
 ];
@@ -96,7 +100,7 @@ const serviceCategories = [
     
     <!-- HEADER -->
     <div class="text-center mb-20 md:mb-28 space-y-3">
-      <span class="text-beige-900/60 tracking-[0.4em] text-xs font-bold uppercase block animate-fade-in-up" data-i18n="services.label">Excelencia en cada detalle</span>
+      <span class="text-beige-900/60 tracking-[0.4em] text-xs font-bold uppercase block animate-fade-in-up" data-i18n="services.label">Barbería premium en Barcelona — excelencia en cada detalle</span>
       <h2 class="text-5xl md:text-7xl font-black text-black tracking-tighter uppercase leading-none">
         <span data-i18n="services.title.1">Nuestros</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-beige-500 to-black" data-i18n="services.title.2">Servicios</span>
       </h2>

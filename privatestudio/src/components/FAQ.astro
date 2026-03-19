@@ -1,0 +1,108 @@
+---
+const faqs = [
+  { qKey: 'faq.q1', aKey: 'faq.a1' },
+  { qKey: 'faq.q2', aKey: 'faq.a2' },
+  { qKey: 'faq.q3', aKey: 'faq.a3' },
+  { qKey: 'faq.q4', aKey: 'faq.a4' },
+  { qKey: 'faq.q5', aKey: 'faq.a5' },
+  { qKey: 'faq.q6', aKey: 'faq.a6' },
+  { qKey: 'faq.q7', aKey: 'faq.a7' },
+  { qKey: 'faq.q8', aKey: 'faq.a8' },
+  { qKey: 'faq.q9', aKey: 'faq.a9' },
+  { qKey: 'faq.q10', aKey: 'faq.a10' },
+  { qKey: 'faq.q11', aKey: 'faq.a11' },
+  { qKey: 'faq.q12', aKey: 'faq.a12' },
+];
+
+const faqSchemaEs = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "¿Qué es el visagismo y para qué sirve?", "acceptedAnswer": { "@type": "Answer", "text": "El visagismo es una técnica profesional que estudia la forma del rostro, las proporciones faciales y las características personales para determinar qué corte de pelo, barba y estilo favorecen más a cada persona. A diferencia de seguir tendencias, el visagismo diseña un look personalizado basado en tu fisonomía. En Private Studio Barcelona lo aplicamos como base de cada servicio." }},
+    { "@type": "Question", "name": "¿Qué corte de pelo le queda mejor a mi tipo de rostro?", "acceptedAnswer": { "@type": "Answer", "text": "Depende de tu forma facial: los rostros ovalados admiten casi cualquier estilo; los redondos se benefician de volumen arriba y lados cortos para alargar; los cuadrados se suavizan con texturas y degradados; los rectangulares necesitan volumen lateral. Un análisis de visagismo profesional identifica tu forma exacta y diseña el corte ideal. En Private Studio hacemos este análisis en cada visita." }},
+    { "@type": "Question", "name": "¿Cada cuánto tiempo debo cortarme el pelo?", "acceptedAnswer": { "@type": "Answer", "text": "La frecuencia ideal es cada 3 a 4 semanas para mantener la forma y el estilo del corte. Los degradados (fades) requieren mantenimiento cada 2-3 semanas, mientras que los cortes más largos pueden aguantar hasta 6 semanas. En Private Studio ofrecemos planes de suscripción para facilitar el mantenimiento regular." }},
+    { "@type": "Question", "name": "¿Cuál es la diferencia entre un degradado, un fade y un taper?", "acceptedAnswer": { "@type": "Answer", "text": "El fade (degradado) es una transición gradual de muy corto a más largo, y puede ser low (bajo), mid (medio) o high (alto) según dónde empiece. El taper es similar pero más sutil y conservador, con una transición más natural. El skin fade lleva el degradado hasta la piel. Tu barbero puede recomendarte cuál funciona mejor según tu forma de cabeza y estilo." }},
+    { "@type": "Question", "name": "¿Cómo cuidar la barba en casa correctamente?", "acceptedAnswer": { "@type": "Answer", "text": "Para mantener una barba sana: lávala 2-3 veces por semana con un champú específico para barba, aplica aceite de barba diariamente para hidratar la piel y el vello, cepíllala con un cepillo de cerdas naturales para distribuir los aceites, y recórtala cada 1-2 semanas. Los productos profesionales como STMNT Grooming marcan una gran diferencia en los resultados." }},
+    { "@type": "Question", "name": "¿Qué es el ritual de barba presidencial?", "acceptedAnswer": { "@type": "Answer", "text": "El ritual de barba presidencial es la experiencia de afeitado más completa y lujosa. Incluye toalla caliente aromatizada para abrir los poros, aplicación de espuma con brocha profesional, afeitado con navaja tradicional, hidratación post-afeitado y masaje facial. Es una experiencia relajante de unos 25 minutos que deja la piel perfecta. En Private Studio Barcelona es uno de nuestros servicios más solicitados." }},
+    { "@type": "Question", "name": "¿Vale la pena ir a una barbería premium en lugar de una peluquería normal?", "acceptedAnswer": { "@type": "Answer", "text": "Una barbería premium ofrece diferencias clave: análisis personalizado del rostro (visagismo), productos de alta gama, técnicas especializadas de barbería masculina, atención individualizada y un ambiente diseñado para el cuidado masculino. El resultado es un corte que realmente te favorece, no solo un corte estándar. Es una inversión en tu imagen personal y profesional." }},
+    { "@type": "Question", "name": "¿Cómo puedo reservar una cita en Private Studio Barcelona?", "acceptedAnswer": { "@type": "Answer", "text": "Puedes reservar a través de Booksy en nuestro sitio web, llamar al +34 624 367 153 o visitarnos en Carrer de Muntaner, 172, BAJO 01, Barcelona (Eixample). Abrimos de lunes a viernes de 10:00 a 20:00 y sábados de 10:00 a 15:00. Recomendamos reservar con antelación para garantizar tu horario preferido." }},
+    { "@type": "Question", "name": "¿Qué productos de peluquería masculina son mejores para el día a día?", "acceptedAnswer": { "@type": "Answer", "text": "Depende de tu tipo de cabello y estilo deseado: la pomada ofrece fijación fuerte con brillo para estilos clásicos; la arcilla (clay) da acabado mate con fijación flexible para texturas naturales; la cera es versátil para estilos intermedios; y el spray de sal aporta volumen y textura surfista. En Private Studio trabajamos con STMNT Grooming Goods y te asesoramos sobre el producto ideal para tu pelo." }},
+    { "@type": "Question", "name": "¿La coloración de cabello daña el pelo del hombre?", "acceptedAnswer": { "@type": "Answer", "text": "Con productos profesionales y técnica adecuada, el daño es mínimo. Las fórmulas actuales sin amoníaco son suaves y nutritivas. El Cover Gray para camuflar canas es especialmente sutil — no cambia tu color, solo atenúa las canas de forma natural y progresiva. En Private Studio usamos tintes profesionales y siempre incluimos tratamiento hidratante post-servicio." }},
+    { "@type": "Question", "name": "¿Ofrecen planes de suscripción en Private Studio?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, tenemos tres planes mensuales: Pack Cortes (3 cortes premium con descuento del 20%), Mix Express (corte + barba express) y Pack Presidencial (corte + ritual de barba completo). Todos incluyen 5% de descuento en productos STMNT, lavado capilar y asesoría personalizada." }},
+    { "@type": "Question", "name": "¿Hablan inglés en Private Studio Barcelona?", "acceptedAnswer": { "@type": "Answer", "text": "Sí, atendemos clientes internacionales y nos comunicamos en inglés durante toda la experiencia. Barcelona tiene una gran comunidad de expatriados y turistas, y en Private Studio queremos que todos se sientan cómodos. Nuestra web también está disponible en inglés." }}
+  ]
+};
+---
+
+<section id="faq" class="py-24 bg-black relative overflow-hidden">
+  <div class="absolute top-0 left-0 -ml-40 -mt-40 w-96 h-96 bg-beige-900 rounded-full blur-[120px] opacity-10 pointer-events-none"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-16 space-y-3">
+      <span class="text-beige-400 tracking-[0.4em] text-xs font-bold uppercase block" data-i18n="faq.label">Preguntas Frecuentes</span>
+      <h2 class="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">
+        <span data-i18n="faq.title1">Preguntas</span> <span class="text-transparent bg-clip-text bg-gradient-to-r from-beige-200 to-beige-500" data-i18n="faq.title2">Frecuentes</span>
+      </h2>
+    </div>
+
+    <div class="max-w-3xl mx-auto space-y-0">
+      {faqs.map((faq, index) => (
+        <div class="faq-item border-b border-white/10">
+          <button
+            class="faq-toggle w-full flex items-center justify-between py-6 text-left group"
+            aria-expanded="false"
+          >
+            <span class="flex items-center gap-4">
+              <span class="text-beige-500/40 text-xs font-bold">{String(index + 1).padStart(2, '0')}</span>
+              <span class="text-white font-bold text-base md:text-lg uppercase tracking-tight group-hover:text-beige-200 transition-colors" data-i18n={faq.qKey}></span>
+            </span>
+            <svg class="faq-icon w-5 h-5 text-beige-400 flex-shrink-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12" />
+            </svg>
+          </button>
+          <div class="faq-answer hidden overflow-hidden">
+            <p class="pb-6 pl-10 text-gray-400 leading-relaxed text-sm md:text-base" data-i18n={faq.aKey}></p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- FAQ Schema -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchemaEs)} />
+</section>
+
+<script is:inline>
+  (function() {
+    function initFAQ() {
+      document.querySelectorAll('.faq-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = btn.closest('.faq-item');
+          const answer = item.querySelector('.faq-answer');
+          const icon = btn.querySelector('.faq-icon');
+          const isOpen = !answer.classList.contains('hidden');
+
+          // Close all
+          document.querySelectorAll('.faq-item').forEach(el => {
+            el.querySelector('.faq-answer').classList.add('hidden');
+            el.querySelector('.faq-icon').classList.remove('rotate-45');
+            el.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+          });
+
+          // Toggle current
+          if (!isOpen) {
+            answer.classList.remove('hidden');
+            icon.classList.add('rotate-45');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFAQ);
+    } else {
+      initFAQ();
+    }
+  })();
+</script>

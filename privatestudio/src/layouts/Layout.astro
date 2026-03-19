@@ -1,40 +1,124 @@
 ---
 import '../styles/global.css';
 import '../styles/custom.css';
+import GoogleTagManager from '../components/GoogleTagManager.astro';
 
 export interface Props {
 	title: string;
+	description?: string;
 }
 
-const { title } = Astro.props;
+const canonicalDomain = 'https://www.barberbarcelona.es';
+const { title, description = 'Barbería premium en Barcelona especializada en visagismo y consultoría de imagen masculina. Cortes personalizados, ritual de barba y productos STMNT.' } = Astro.props;
+const canonicalUrl = canonicalDomain + Astro.url.pathname;
+const ogImage = canonicalDomain + '/images/ps-logo3.png';
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#1a1a1a" />
+		<link rel="canonical" href={canonicalUrl} />
 
-		<!-- Google Tag Manager -->
-		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-NRVVZX48');</script>
-		<!-- End Google Tag Manager -->
+		<!-- Google Search Console verification -->
+		<!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+
+		<!-- Hreflang -->
+		<link rel="alternate" hreflang="es" href={canonicalDomain + '/'} />
+		<link rel="alternate" hreflang="en" href={canonicalDomain + '/'} />
+
+		<!-- Open Graph -->
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale:alternate" content="en_US" />
+
+		<!-- Twitter Cards -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+
+		<GoogleTagManager />
 
 		<link rel="icon" type="image/png" href="/images/ps-logo3.png" />
+		<link rel="manifest" href="/manifest.json" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
-		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-SKTZTGVE8D"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
+		<!-- Structured Data: LocalBusiness -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BarberShop",
+			"name": "Private Studio",
+			"description": "Barbería premium en Barcelona especializada en visagismo y consultoría de imagen masculina",
+			"url": "https://www.barberbarcelona.es",
+			"telephone": "+34624367153",
+			"email": "privatestudio2@gmail.com",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "Carrer de Muntaner, 172, BAJO 01",
+				"addressLocality": "Barcelona",
+				"postalCode": "08036",
+				"addressRegion": "Cataluña",
+				"addressCountry": "ES"
+			},
+			"geo": {
+				"@type": "GeoCoordinates",
+				"latitude": 41.3925,
+				"longitude": 2.1530
+			},
+			"openingHoursSpecification": [
+				{
+					"@type": "OpeningHoursSpecification",
+					"dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+					"opens": "10:00",
+					"closes": "20:00"
+				},
+				{
+					"@type": "OpeningHoursSpecification",
+					"dayOfWeek": "Saturday",
+					"opens": "10:00",
+					"closes": "15:00"
+				}
+			],
+			"priceRange": "€€",
+			"image": "https://www.barberbarcelona.es/images/ps-logo3.png",
+			"sameAs": [
+				"https://www.instagram.com/private.studiobcn/",
+				"https://www.facebook.com/profile.php?id=61574816260980"
+			],
+			"founder": {
+				"@type": "Person",
+				"name": "Renato Rojas"
+			},
+			"foundingDate": "2024-02-02",
+			"hasMap": "https://maps.app.goo.gl/g1CY1yPGPptzhyWx7",
+			"paymentAccepted": "Cash, Credit Card",
+			"currenciesAccepted": "EUR"
+		}
+		</script>
 
-		  gtag('config', 'G-SKTZTGVE8D');
+		<!-- Structured Data: WebSite -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"name": "Private Studio",
+			"url": "https://www.barberbarcelona.es",
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": "https://www.barberbarcelona.es/?q={search_term_string}",
+				"query-input": "required name=search_term_string"
+			}
+		}
 		</script>
 	</head>
 	<body class="bg-white text-gray-900">

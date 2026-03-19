@@ -2,9 +2,10 @@
 import LanguageProvider from './LanguageProvider.astro';
 
 const navItems = [
-  { name: 'Home', url: '#', key: 'nav.home' },
-  { name: 'Nosotros', url: '#about', key: 'nav.about' },
-  { name: 'Servicios', url: '#services', key: 'nav.services' },
+  { name: 'Home', url: '/', key: 'nav.home' },
+  { name: 'Nosotros', url: '/#about', key: 'nav.about' },
+  { name: 'Servicios', url: '/#services', key: 'nav.services' },
+  { name: 'Blog', url: '/blog/', key: 'nav.blog' },
   { name: 'Reservar', url: 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona', isButton: true, key: 'nav.book' },
 ];
 ---
@@ -14,7 +15,7 @@ const navItems = [
 <header id="main-header" class="fixed w-full text-white z-50 transition-all duration-500 bg-transparent py-6">
   <nav class="container mx-auto px-4 flex justify-between items-center">
     <!-- Logo/Brand as a link to home -->
-    <a href="#" class="flex items-center hover:opacity-80 transition duration-300">
+    <a href="/" class="flex items-center hover:opacity-80 transition duration-300">
       <div class="w-12 h-12 flex items-center justify-center mr-3">
         <img src="/images/ps-logo3.png" alt="Private Studio Logo" class="w-10 h-10 object-contain rounded-xl" />
       </div>

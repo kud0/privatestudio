@@ -1,0 +1,226 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+const post = Astro.props;
+const { Content } = await post.render();
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "author": {
+    "@type": "Person",
+    "name": post.data.author
+  },
+  "datePublished": post.data.date.toISOString(),
+  "publisher": {
+    "@type": "Organization",
+    "name": "Private Studio",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://www.barberbarcelona.es/images/ps-logo3.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `https://www.barberbarcelona.es/blog/${post.slug}/`
+  }
+};
+
+const readingTime = Math.ceil(post.body.split(/\s+/).length / 200);
+---
+
+<Layout title={`${post.data.title} | Private Studio Blog`} description={post.data.description}>
+  <Navbar />
+
+  <article class="bg-black pt-32 pb-24 min-h-screen">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto">
+        <!-- Back link -->
+        <a href="/blog/" class="inline-flex items-center gap-2 text-beige-400 text-xs font-bold uppercase tracking-widest mb-12 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Blog
+        </a>
+
+        <!-- Header -->
+        <header class="mb-16">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="text-beige-400 text-[10px] font-bold uppercase tracking-widest">
+              {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+            <span class="text-gray-600">|</span>
+            <span class="text-gray-500 text-[10px] uppercase tracking-widest">{readingTime} min lectura</span>
+            <span class="text-gray-600">|</span>
+            <span class="text-gray-500 text-[10px] uppercase tracking-widest">{post.data.lang === 'en' ? 'English' : 'Español'}</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none mb-6">
+            {post.data.title}
+          </h1>
+          <p class="text-gray-400 text-lg leading-relaxed">{post.data.description}</p>
+
+          <div class="flex items-center gap-4 mt-8 pt-8 border-t border-white/10">
+            <div class="w-10 h-10 rounded-full overflow-hidden border border-beige-900">
+              <img src="/images/ps-logo3.png" alt={post.data.author} class="w-full h-full object-cover" />
+            </div>
+            <div>
+              <p class="text-white font-bold text-sm uppercase tracking-widest">{post.data.author}</p>
+              <p class="text-beige-500 text-xs uppercase tracking-wide">Private Studio</p>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <div class="blog-content">
+          {post.data.instagram && (
+            <div class="ig-embed">
+              <a href={post.data.instagram} target="_blank" rel="noopener noreferrer" class="ig-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                {post.data.lang === 'en' ? 'Watch on Instagram' : 'Ver en Instagram'}
+              </a>
+              <iframe
+                src={`${post.data.instagram.replace(/\/$/, '')}/embed/captioned/`}
+                frameborder="0"
+                scrolling="no"
+                allowtransparency="true"
+                style="border: none; overflow: hidden; width: 100%; min-height: 560px;"
+              ></iframe>
+            </div>
+          )}
+          <Content />
+        </div>
+
+        <!-- Tags -->
+        <div class="flex gap-2 mt-16 pt-8 border-t border-white/10">
+          {post.data.tags.map(tag => (
+            <span class="text-[10px] font-bold uppercase tracking-widest text-beige-500/60 border border-beige-500/20 px-3 py-1">{tag}</span>
+          ))}
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16 p-10 border border-white/10 text-center">
+          <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-4">Reserva tu cita</h3>
+          <p class="text-gray-400 mb-6">Descubre la diferencia de una barbería premium con visagismo en Barcelona.</p>
+          <a href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona" class="inline-block bg-beige-100 text-black px-10 py-4 font-bold tracking-wider uppercase hover:bg-white transition-colors">
+            Reservar
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+</Layout>
+
+<style>
+  .blog-content {
+    color: #d1d5db;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+  .blog-content :global(h2) {
+    color: #ffffff;
+    font-size: 1.875rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.025em;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .blog-content :global(h3) {
+    color: #Fdfbf7;
+    font-size: 1.375rem;
+    font-weight: 800;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .blog-content :global(p) {
+    color: #9ca3af;
+    margin-bottom: 1.5rem;
+  }
+  .blog-content :global(strong) {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .blog-content :global(a) {
+    color: #D1c0a0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  .blog-content :global(a:hover) {
+    color: #Fdfbf7;
+  }
+  .blog-content :global(ul),
+  .blog-content :global(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .blog-content :global(li) {
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+  }
+  .blog-content :global(em) {
+    color: #6b7280;
+  }
+  .blog-content :global(hr) {
+    border-color: rgba(255,255,255,0.1);
+    margin: 2rem 0;
+  }
+
+  /* Instagram embed — floated into the article text */
+  .ig-embed {
+    float: right;
+    width: 260px;
+    margin: 0.5rem 0 1.5rem 2rem;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ig-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #D1c0a0;
+    text-decoration: none !important;
+    transition: color 0.2s;
+  }
+  .ig-label:hover {
+    color: #Fdfbf7;
+  }
+  .ig-embed iframe {
+    display: block;
+    border-radius: 6px;
+  }
+
+  /* Mobile: full-width centered, no float */
+  @media (max-width: 768px) {
+    .ig-embed {
+      float: none;
+      width: 100%;
+      max-width: 340px;
+      margin: 1.5rem auto;
+    }
+  }
+</style>

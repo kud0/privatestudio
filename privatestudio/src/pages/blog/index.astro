@@ -1,0 +1,96 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const esPosts = posts.filter(p => p.data.lang === 'es');
+const enPosts = posts.filter(p => p.data.lang === 'en');
+---
+
+<Layout title="Blog | Private Studio - Barbería Premium Barcelona" description="Consejos de barbería, tendencias de cortes de pelo, cuidado de barba y visagismo. El blog de Private Studio, barbería premium en Barcelona.">
+  <Navbar />
+
+  <section class="bg-black pt-32 pb-24 min-h-screen">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16 space-y-3">
+        <span class="text-beige-400 tracking-[0.4em] text-xs font-bold uppercase block">Private Studio</span>
+        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-none">
+          Blog
+        </h1>
+        <p class="text-gray-400 max-w-xl mx-auto mt-4">Tendencias, consejos y todo sobre barbería premium, visagismo y cuidado masculino en Barcelona.</p>
+      </div>
+
+      <div class="max-w-4xl mx-auto space-y-0">
+        {posts.map((post, index) => (
+          <a href={`/blog/${post.slug}/`} class={`blog-post-item group block border-b border-white/10 py-10 hover:bg-white/5 transition-all duration-300 px-6 -mx-6 ${post.data.lang !== 'es' ? 'hidden' : ''}`} data-lang={post.data.lang}>
+            <div class="flex items-start justify-between gap-6">
+              <div class="flex-grow">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="text-beige-500/50 text-xs font-bold">{String(index + 1).padStart(2, '0')}</span>
+                  <span class="text-beige-400 text-[10px] font-bold uppercase tracking-widest">{post.data.date.toLocaleDateString(post.data.lang === 'en' ? 'en-US' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span class={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 ${post.data.lang === 'en' ? 'bg-blue-900/40 text-blue-300 border border-blue-500/30' : 'bg-beige-500/20 text-beige-300 border border-beige-500/30'}`}>
+                    {post.data.lang === 'en' ? 'EN' : 'ES'}
+                  </span>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black text-white uppercase tracking-tight group-hover:text-beige-200 transition-colors leading-tight">
+                  {post.data.title}
+                </h2>
+                <p class="text-gray-500 text-sm mt-2 line-clamp-2">{post.data.description}</p>
+                <div class="flex gap-2 mt-3">
+                  {post.data.tags.slice(0, 3).map(tag => (
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-beige-500/60 border border-beige-500/20 px-2 py-0.5">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <div class="hidden md:flex w-10 h-10 rounded-full border border-white/10 items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300 flex-shrink-0 mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<script is:inline>
+  (function() {
+    function filterBlogByLang(lang) {
+      document.querySelectorAll('.blog-post-item').forEach(function(post) {
+        if (post.getAttribute('data-lang') === lang) {
+          post.classList.remove('hidden');
+        } else {
+          post.classList.add('hidden');
+        }
+      });
+    }
+
+    function initBlogFilter() {
+      // Filter based on current language
+      var currentLang = window.currentLang || localStorage.getItem('lang') || 'es';
+      filterBlogByLang(currentLang);
+
+      // Hook into the navbar ES/EN switcher
+      var originalSetLanguage = window.setLanguage;
+      window.setLanguage = function(lang) {
+        if (originalSetLanguage) originalSetLanguage(lang);
+        filterBlogByLang(lang);
+      };
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBlogFilter);
+    } else {
+      initBlogFilter();
+    }
+  })();
+</script>

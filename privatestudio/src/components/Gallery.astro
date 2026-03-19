@@ -1,11 +1,11 @@
 ---
 const galleryImages = [
-  { src: '/images/gallery-1.jpg', alt: 'Classic haircut' },
-  { src: '/images/gallery-2.jpg', alt: 'Beard trim' },
-  { src: '/images/gallery-3.jpg', alt: 'Hot towel shave' },
-  { src: '/images/gallery-4.jpg', alt: 'Styling' },
-  { src: '/images/gallery-5.jpg', alt: 'Barbershop interior' },
-  { src: '/images/gallery-6.jpg', alt: 'Haircut process' },
+  { src: '/images/gallery-1.jpg', alt: 'Corte de cabello clásico premium en Private Studio Barcelona' },
+  { src: '/images/gallery-2.jpg', alt: 'Arreglo y perfilado de barba profesional con navaja tradicional' },
+  { src: '/images/gallery-3.jpg', alt: 'Ritual de barba presidencial con toalla caliente aromatizada' },
+  { src: '/images/gallery-4.jpg', alt: 'Estilismo y peinado personalizado con productos STMNT' },
+  { src: '/images/gallery-5.jpg', alt: 'Interior de Private Studio, barbería premium en Barcelona' },
+  { src: '/images/gallery-6.jpg', alt: 'Proceso de corte de cabello con técnica de visagismo' },
 ];
 ---
 
@@ -15,10 +15,11 @@ const galleryImages = [
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {galleryImages.map(image => (
         <div class="overflow-hidden group">
-          <img 
-            src={image.src} 
-            alt={image.alt} 
+          <img
+            src={image.src}
+            alt={image.alt}
             class="w-full h-80 object-cover grayscale transition duration-500 group-hover:scale-105"
+            loading="lazy"
           />
         </div>
       ))}
