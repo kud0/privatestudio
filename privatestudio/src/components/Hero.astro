@@ -1,100 +1,207 @@
-<section
-  class="relative h-screen flex items-center justify-center bg-black text-white"
->
-  <div
-    class="absolute inset-0 bg-gradient-to-b from-black to-transparent opacity-60 z-10"
-  >
-  </div>
+<section class="bg-black text-white">
 
-  <!-- Video Background -->
-  <div class="absolute inset-0 overflow-hidden">
-    <video class="w-full h-full object-cover" autoplay muted loop playsinline fetchpriority="high">
-      <source src="/images/herovideo.mp4" type="video/mp4" />
-      <!-- Fallback for browsers that don't support video -->
-      <img
-        src="/images/hero-bg.jpg"
-        alt="Interior de Private Studio, barbería premium en Barcelona con ambiente exclusivo"
-        class="w-full h-full object-cover grayscale"
-      />
-    </video>
-  </div>
+  <!-- ═══════════════════════════════════════
+       MOBILE  (<lg) — vídeo arriba, copy abajo
+       ═══════════════════════════════════════ -->
+  <div class="lg:hidden flex flex-col min-h-screen">
 
-  <div class="container mx-auto px-4 z-20 text-center">
-    <h1
-      class="text-[3rem] sm:text-5xl md:text-6xl lg:text-[7rem] font-black tracking-tighter mb-6 animate-fade-in leading-none"
-    >
-      <span
-        class="inline-block text-beige-100 drop-shadow-lg"
-        data-i18n="hero.concept"
+    <!-- Vídeo: protagonista, 62vh -->
+    <div class="relative overflow-hidden flex-shrink-0" style="height: 62vh;">
+      <video
+        id="reel-mobile"
+        class="w-full h-full object-cover object-center"
+        autoplay muted loop playsinline
+        fetchpriority="high"
       >
-        PRIVATESTUDIO
-      </span>
-    </h1>
-    <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a
-        href="#services"
-        class="group relative bg-beige-100 text-black px-10 py-4 font-bold tracking-wider transition-all duration-300 overflow-hidden hover:scale-105 shadow-xl hover:shadow-beige-400/20"
+        <source src="/images/renato-dinamico.mp4" type="video/mp4" />
+      </video>
+
+      <!-- Fade inferior hacia la sección de copy -->
+      <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
+
+      <!-- Barra superior para navbar legibility -->
+      <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black/50 to-transparent pointer-events-none"></div>
+
+      <!-- Mute mobile -->
+      <button
+        id="mute-btn-mobile"
+        aria-label="Activar sonido"
+        class="absolute bottom-6 right-5 z-10 w-9 h-9 rounded-full bg-black/55 border border-white/20 flex items-center justify-center backdrop-blur-sm"
       >
-        <span class="relative inline-flex items-center uppercase" data-i18n="hero.cta.services">
-          Nuestros Servicios
-        </span>
-      </a>
+        <svg id="icon-muted-m" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5v14a1 1 0 01-1.707.707L5.586 15z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+        </svg>
+        <svg id="icon-unmuted-m" xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M12 6v12m-6.414-3H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5v14a1 1 0 01-1.707.707L5.586 15z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Copy: negro sólido, compacto, directo -->
+    <div class="flex-1 flex flex-col justify-between px-6 pt-5 pb-8 bg-black">
+
+      <div>
+        <p class="text-[9px] font-bold tracking-[0.35em] uppercase text-beige-400 mb-5 animate-fade-in">
+          Private Studio · Barcelona
+        </p>
+
+        <h1
+          class="font-black uppercase leading-[0.88] tracking-tight mb-5 animate-fade-in"
+          style="font-size: clamp(1.9rem, 8vw, 2.5rem); animation-delay: 0.06s;"
+        >
+          ¿QUÉ DICE TU IMAGEN<br>
+          SOBRE TI CUANDO<br>
+          NO ESTÁS<br>
+          <span class="text-beige-400">HABLANDO?</span>
+        </h1>
+
+        <p
+          class="text-gray-400 font-light leading-relaxed text-[13px] mb-3 animate-fade-in"
+          style="animation-delay: 0.14s;"
+        >
+          Asesoría de imagen masculina basada en visagismo.
+        </p>
+        <p
+          class="text-white font-bold tracking-widest uppercase text-[10px] animate-fade-in"
+          style="animation-delay: 0.18s;"
+        >
+          No es un corte. Es una ventaja.
+        </p>
+      </div>
+
       <a
         href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
-        class="px-10 py-4 font-bold tracking-wider border border-beige-100 text-beige-100 hover:bg-beige-100 hover:text-black transition duration-300 uppercase"
-        data-i18n="hero.cta.book"
-        >Reservar Cita</a
+        class="block w-full bg-beige-100 text-black text-center font-black tracking-widest text-xs uppercase py-5 mt-6 hover:bg-white transition-colors duration-200 animate-fade-in"
+        style="animation-delay: 0.28s;"
       >
-    </div>
+        RESERVAR AHORA
+      </a>
 
-    <div class="mt-20 flex flex-col items-center animate-fade-in px-4" style="animation-delay: 0.5s;">
-      <div class="h-12 w-px bg-gradient-to-b from-transparent via-beige-400 to-transparent mb-8"></div>
-      
-      <p class="max-w-2xl text-center text-lg md:text-xl font-extralight text-gray-200 leading-relaxed tracking-wide">
-        <span class="font-medium text-white tracking-widest uppercase text-sm block mb-2" data-i18n="hero.concept">Private Studio</span>
-        <span data-i18n="hero.desc.1">Es un espacio de barbería premium en Barcelona especializado en</span> 
-        <span class="relative inline-block px-2 mx-1">
-          <span class="absolute inset-0 bg-beige-500/30 -rotate-1 rounded-sm"></span>
-          <span class="relative text-white font-semibold" data-i18n="hero.desc.highlight">asesoría de imagen masculina</span>
-        </span>. 
-        <span data-i18n="hero.desc.2">Nuestro enfoque va más allá del corte: analizamos el rostro, el estilo de vida y la identidad de cada cliente para crear estilos personalizados mediante</span> 
-        <span class="text-white font-normal italic" data-i18n="hero.visagismo">visagismo</span>.
-      </p>
     </div>
   </div>
+
+
+  <!-- ═══════════════════════════════════════
+       DESKTOP (lg+) — split layout
+       ═══════════════════════════════════════ -->
+  <div class="hidden lg:block relative h-screen overflow-hidden">
+
+    <!-- Right panel: reel structural, full height -->
+    <div class="absolute right-0 top-0 bottom-0 w-[43%] overflow-hidden">
+      <video
+        id="reel-desktop"
+        class="w-full h-full object-cover"
+        style="object-position: 28% center;"
+        autoplay muted loop playsinline
+      >
+        <source src="/images/renato-dinamico.mp4" type="video/mp4" />
+      </video>
+      <!-- Blend izquierdo: gradiente negro → transparente que funde el split -->
+      <div class="absolute inset-y-0 left-0 w-56 bg-gradient-to-r from-black to-transparent pointer-events-none"></div>
+      <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
+      <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+
+      <!-- Mute desktop -->
+      <button
+        id="mute-btn"
+        aria-label="Activar sonido"
+        class="absolute bottom-8 right-6 z-20 w-10 h-10 rounded-full bg-black/50 border border-white/20 flex items-center justify-center hover:bg-black/70 transition-colors backdrop-blur-sm"
+      >
+        <svg id="icon-muted" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5v14a1 1 0 01-1.707.707L5.586 15z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+        </svg>
+        <svg id="icon-unmuted" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M12 6v12m-6.414-3H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5v14a1 1 0 01-1.707.707L5.586 15z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Left panel: copy -->
+    <div class="absolute inset-y-0 left-0 w-[62%] flex flex-col justify-center pointer-events-none" style="padding-left: clamp(3.5rem, 8vw, 7rem); padding-right: 3rem;">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+
+      <div class="relative pointer-events-auto" style="max-width: 560px;">
+
+        <!-- H1: anclado a la izquierda, dominante -->
+        <h1
+          class="font-black uppercase leading-[0.88] tracking-tight mb-10 animate-fade-in"
+          style="font-size: clamp(3.2rem, 5.2vw, 5.2rem); animation-delay: 0.06s;"
+        >
+          ¿QUÉ DICE TU IMAGEN<br>
+          SOBRE TI CUANDO<br>
+          NO ESTÁS<br>
+          <span class="text-beige-400">HABLANDO?</span>
+        </h1>
+
+        <!-- Body: desplazado a la derecha, crea asimetría con el H1 -->
+        <div class="mb-3 animate-fade-in" style="padding-left: clamp(1.5rem, 4vw, 3rem); animation-delay: 0.14s;">
+          <p class="text-gray-400 font-light leading-relaxed" style="font-size: clamp(0.95rem, 1.2vw, 1.05rem); max-width: 340px;">
+            Un sistema de asesoría masculina basado en tipo de rostro,
+            estilo de vida y percepción de poder.
+          </p>
+        </div>
+
+        <!-- Claim: alineado a la derecha — contrapunto al H1 izquierdo -->
+        <p class="text-white font-bold tracking-widest uppercase text-right mb-10 animate-fade-in" style="font-size: 0.82rem; animation-delay: 0.2s;">
+          No es un corte.<br>Es una herramienta de posicionamiento.
+        </p>
+
+        <!-- CTA zone: centrada — zona de acción neutral -->
+        <div class="flex flex-col items-center animate-fade-in" style="animation-delay: 0.28s;">
+          <div class="w-px h-8 bg-beige-400/40 mb-5"></div>
+          <p class="text-white font-black tracking-[0.35em] uppercase mb-1" style="font-size: 0.78rem;">TU RESERVA ESPERA</p>
+          <p class="text-gray-500 font-light tracking-wider uppercase mb-7" style="font-size: 0.65rem;">Una experiencia digna de un caballero</p>
+          <a
+            href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
+            class="inline-block bg-beige-100 text-black px-14 py-5 font-black tracking-widest uppercase hover:bg-white transition-colors duration-200"
+            style="font-size: 0.82rem;"
+          >
+            RESERVAR AHORA
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
 </section>
 
 <style>
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-
-  .animate-gradient {
-    background-size: 200% auto;
-    animation: gradient 8s linear infinite;
-  }
-
   .animate-fade-in {
-    animation: fadeIn 1.5s ease-out forwards;
+    opacity: 0;
+    animation: fadeIn 0.85s ease-out forwards;
   }
 </style>
 
+<script>
+  // Desktop mute
+  const btn = document.getElementById('mute-btn');
+  const desktop = document.getElementById('reel-desktop') as HTMLVideoElement | null;
+  const iconMuted = document.getElementById('icon-muted');
+  const iconUnmuted = document.getElementById('icon-unmuted');
+  btn?.addEventListener('click', () => {
+    if (!desktop) return;
+    desktop.muted = !desktop.muted;
+    iconMuted?.classList.toggle('hidden', !desktop.muted);
+    iconUnmuted?.classList.toggle('hidden', desktop.muted);
+  });
+
+  // Mobile mute
+  const btnM = document.getElementById('mute-btn-mobile');
+  const mobile = document.getElementById('reel-mobile') as HTMLVideoElement | null;
+  const iconMutedM = document.getElementById('icon-muted-m');
+  const iconUnmutedM = document.getElementById('icon-unmuted-m');
+  btnM?.addEventListener('click', () => {
+    if (!mobile) return;
+    mobile.muted = !mobile.muted;
+    iconMutedM?.classList.toggle('hidden', !mobile.muted);
+    iconUnmutedM?.classList.toggle('hidden', mobile.muted);
+  });
+</script>
