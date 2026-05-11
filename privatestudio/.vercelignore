@@ -1,0 +1,11 @@
+# Excluir todos los vídeos grandes, mantener solo los necesarios en web
+public/images/*.mov
+public/images/renato-dinamico.mp4
+public/images/renato-subtitulado.mp4
+public/images/herovideo.mp4
+public/images/video.mp4
+public/images/hero_test.MP4
+public/*.mp4
+video/
+logs/
+src/docs/

@@ -13,7 +13,7 @@
         autoplay muted loop playsinline
         fetchpriority="high"
       >
-        <source src="/images/renato-dinamico.mp4" type="video/mp4" />
+        <source src="/images/renato-dinamico-web.mp4" type="video/mp4" />
       </video>
 
       <!-- Fade inferior hacia la sección de copy -->
@@ -39,46 +39,46 @@
     </div>
 
     <!-- Copy: negro sólido, compacto, directo -->
-    <div class="flex-1 flex flex-col justify-between px-6 pt-5 pb-8 bg-black">
+    <div class="flex-1 flex flex-col px-6 pt-3 pb-0 bg-black">
 
       <div>
-        <p class="text-[9px] font-bold tracking-[0.35em] uppercase text-beige-400 mb-5 animate-fade-in">
+        <p class="text-[9px] font-bold tracking-[0.35em] uppercase text-beige-400 mb-2 animate-fade-in">
           Private Studio · Barcelona
         </p>
 
-        <h1
-          class="font-black uppercase leading-[0.88] tracking-tight mb-5 animate-fade-in"
-          style="font-size: clamp(1.9rem, 8vw, 2.5rem); animation-delay: 0.06s;"
-        >
-          ¿QUÉ DICE TU IMAGEN<br>
-          SOBRE TI CUANDO<br>
-          NO ESTÁS<br>
-          <span class="text-beige-400">HABLANDO?</span>
-        </h1>
+        <div class="relative mb-2 animate-fade-in" style="min-height: clamp(8rem, 36vw, 11rem); animation-delay: 0.06s;">
+          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 1;">
+            ¿Y SI EL PROBLEMA<br>NO ES TU PELO…<br>SINO TU<br><span class="text-beige-400">TIPO DE ROSTRO?</span>
+          </h1>
+          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 0;">
+            ¿CANSADO DE PEDIR<br>"LO MISMO"<br>SIN SABER SI<br><span class="text-beige-400">TE FAVORECE?</span>
+          </h1>
+          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 0;">
+            ¿Y SI TUVIERAS<br>UN CORTE QUE<br>REALMENTE<br><span class="text-beige-400">TE REPRESENTE?</span>
+          </h1>
+        </div>
 
-        <p
-          class="text-gray-400 font-light leading-relaxed text-[13px] mb-3 animate-fade-in"
-          style="animation-delay: 0.14s;"
-        >
-          Asesoría de imagen masculina basada en visagismo.
-        </p>
-        <p
-          class="text-white font-bold tracking-widest uppercase text-[10px] animate-fade-in"
-          style="animation-delay: 0.18s;"
-        >
-          No es un corte. Es una ventaja.
-        </p>
+        <div class="animate-fade-in" style="animation-delay: 0.14s;">
+          <p class="text-white font-semibold text-[12px] leading-snug">Un corte correcto puede cambiar tu presencia.</p>
+          <p class="text-gray-500 font-light text-[12px] leading-snug">La mayoría elige un peinado.</p>
+          <p class="text-beige-400 font-semibold text-[12px] leading-snug">Nosotros elegimos el que te favorece.</p>
+        </div>
       </div>
 
-      <a
-        href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
-        class="block w-full bg-beige-100 text-black text-center font-black tracking-widest text-xs uppercase py-5 mt-6 hover:bg-white transition-colors duration-200 animate-fade-in"
-        style="animation-delay: 0.28s;"
-      >
-        RESERVAR AHORA
-      </a>
-
     </div>
+  </div>
+
+  <!-- CTA fijo en la parte inferior — solo mobile -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 animate-fade-in" style="animation-delay: 0.28s;">
+    <a
+      href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
+      class="block w-full bg-beige-100 text-black text-center font-black tracking-widest text-xs uppercase py-5 hover:bg-white transition-colors duration-200"
+    >
+      RESERVAR AHORA
+    </a>
   </div>
 
 
@@ -95,7 +95,7 @@
         style="object-position: 28% center;"
         autoplay muted loop playsinline
       >
-        <source src="/images/renato-dinamico.mp4" type="video/mp4" />
+        <source src="/images/renato-dinamico-web.mp4" type="video/mp4" />
       </video>
       <!-- Blend izquierdo: gradiente negro → transparente que funde el split -->
       <div class="absolute inset-y-0 left-0 w-56 bg-gradient-to-r from-black to-transparent pointer-events-none"></div>
@@ -124,16 +124,21 @@
 
       <div class="relative pointer-events-auto" style="max-width: 560px;">
 
-        <!-- H1: anclado a la izquierda, dominante -->
-        <h1
-          class="font-black uppercase leading-[0.88] tracking-tight mb-10 animate-fade-in"
-          style="font-size: clamp(3.2rem, 5.2vw, 5.2rem); animation-delay: 0.06s;"
-        >
-          ¿QUÉ DICE TU IMAGEN<br>
-          SOBRE TI CUANDO<br>
-          NO ESTÁS<br>
-          <span class="text-beige-400">HABLANDO?</span>
-        </h1>
+        <!-- H1 rotatorio -->
+        <div id="hero-headlines" class="mb-10 animate-fade-in" style="min-height: clamp(9rem, 16vw, 15rem); animation-delay: 0.06s; position: relative;">
+          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 1;">
+            ¿Y SI EL PROBLEMA<br>NO ES TU PELO…<br>SINO TU<br><span class="text-beige-400">TIPO DE ROSTRO?</span>
+          </h1>
+          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 0;">
+            ¿CANSADO DE PEDIR<br>"LO MISMO"<br>SIN SABER SI<br><span class="text-beige-400">TE FAVORECE?</span>
+          </h1>
+          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+              style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 0;">
+            ¿Y SI TUVIERAS<br>UN CORTE QUE<br>REALMENTE<br><span class="text-beige-400">TE REPRESENTE?</span>
+          </h1>
+        </div>
 
         <!-- Body: desplazado a la derecha, crea asimetría con el H1 -->
         <div class="mb-3 animate-fade-in" style="padding-left: clamp(1.5rem, 4vw, 3rem); animation-delay: 0.14s;">
@@ -143,10 +148,18 @@
           </p>
         </div>
 
-        <!-- Claim: alineado a la derecha — contrapunto al H1 izquierdo -->
-        <p class="text-white font-bold tracking-widest uppercase text-right mb-10 animate-fade-in" style="font-size: 0.82rem; animation-delay: 0.2s;">
-          No es un corte.<br>Es una herramienta de posicionamiento.
-        </p>
+        <!-- Claim -->
+        <div class="mb-10 animate-fade-in" style="padding-left: clamp(1.5rem, 4vw, 3rem); animation-delay: 0.2s;">
+          <p class="text-white font-semibold leading-snug" style="font-size: clamp(0.9rem, 1.1vw, 1rem);">
+            Un corte correcto puede cambiar tu presencia.
+          </p>
+          <p class="text-gray-500 font-light leading-snug" style="font-size: clamp(0.9rem, 1.1vw, 1rem);">
+            La mayoría elige un peinado.
+          </p>
+          <p class="text-beige-400 font-semibold leading-snug" style="font-size: clamp(0.9rem, 1.1vw, 1rem);">
+            Nosotros elegimos el que te favorece.
+          </p>
+        </div>
 
         <!-- CTA zone: centrada — zona de acción neutral -->
         <div class="flex flex-col items-center animate-fade-in" style="animation-delay: 0.28s;">
@@ -181,6 +194,24 @@
 </style>
 
 <script>
+  // Rotating headlines — desktop
+  const headlines = document.querySelectorAll('.hero-headline');
+  let current = 0;
+  setInterval(() => {
+    (headlines[current] as HTMLElement).style.opacity = '0';
+    current = (current + 1) % headlines.length;
+    (headlines[current] as HTMLElement).style.opacity = '1';
+  }, 7000);
+
+  // Rotating headlines — mobile
+  const headlinesM = document.querySelectorAll('.hero-headline-m');
+  let currentM = 0;
+  setInterval(() => {
+    (headlinesM[currentM] as HTMLElement).style.opacity = '0';
+    currentM = (currentM + 1) % headlinesM.length;
+    (headlinesM[currentM] as HTMLElement).style.opacity = '1';
+  }, 7000);
+
   // Desktop mute
   const btn = document.getElementById('mute-btn');
   const desktop = document.getElementById('reel-desktop') as HTMLVideoElement | null;

@@ -51,8 +51,8 @@ const serviceCategories = [
     nameKey: 'cat.corte',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M6 3L3 6M18 3L21 6M4 11L7 8M20 11L17 8M12 21V15M9 15L12 12L15 15M4 11H20V15C20 17.2091 18.2091 19 16 19H8C5.79086 19 4 17.2091 4 15V11Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      { id: 'corte-basic', nameKey: 'serv.corte.basic', descKey: 'serv.corte.basic.desc', price: '20,00 €', duration: '35min' },
       { id: 'corte-premium', nameKey: 'serv.corte.premium', descKey: 'serv.corte.premium.desc', price: '25,00 €', duration: '45min' },
+      { id: 'corte-basic', nameKey: 'serv.corte.basic', descKey: 'serv.corte.basic.desc', price: '20,00 €', duration: '35min' },
       { id: 'corte-cejas', nameKey: 'serv.corte.cejas', descKey: 'serv.corte.cejas.desc', price: '28,00 €', duration: '45min' },
       { id: 'corte-largo', nameKey: 'serv.corte.largo', descKey: 'serv.corte.largo.desc', price: '25,00 €', duration: '45min' },
       { id: 'barba-express', nameKey: 'serv.barba.express', descKey: 'serv.barba.express.desc', price: '30,00 €', duration: '50min' },
@@ -115,8 +115,8 @@ const serviceCategories = [
       </h2>
     </div>
 
-    <!-- MEMBERSHIPS -->
-    <div class="max-w-7xl mx-auto mb-36">
+    <!-- MEMBERSHIPS — hidden until decision is made -->
+    {false && <div class="max-w-7xl mx-auto mb-36">
         <h3 class="text-sm md:text-base font-black text-center mb-12 uppercase tracking-[0.3em] text-beige-900" data-i18n="services.subs.title">Planes & Membresías</h3>
         <div class="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-8 md:pb-0 px-4 md:px-0 -mx-4 md:mx-0 scrollbar-hide">
             {subscriptionGroups.map(group => (
@@ -256,7 +256,7 @@ const serviceCategories = [
         </div>
       </div>
     </div>
-  </div>
+  </div>}
 
 </section>
 
