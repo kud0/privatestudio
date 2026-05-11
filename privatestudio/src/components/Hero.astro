@@ -39,7 +39,7 @@
     </div>
 
     <!-- Copy: negro sólido, compacto, directo -->
-    <div class="flex-1 flex flex-col px-6 pt-3 pb-0 bg-black">
+    <div class="flex-1 flex flex-col px-6 pt-3 pb-20 bg-black">
 
       <div>
         <p class="text-[9px] font-bold tracking-[0.35em] uppercase text-beige-400 mb-2 animate-fade-in">
@@ -71,8 +71,8 @@
     </div>
   </div>
 
-  <!-- CTA fijo en la parte inferior — solo mobile -->
-  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 animate-fade-in" style="animation-delay: 0.28s;">
+  <!-- CTA fijo mobile -->
+  <div id="mobile-cta" class="lg:hidden fixed bottom-0 left-0 right-0 z-40">
     <a
       href="https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona"
       class="block w-full bg-beige-100 text-black text-center font-black tracking-widest text-xs uppercase py-5 hover:bg-white transition-colors duration-200"
@@ -223,6 +223,17 @@
     iconMuted?.classList.toggle('hidden', !desktop.muted);
     iconUnmuted?.classList.toggle('hidden', desktop.muted);
   });
+
+  // iOS Safari fix: reposition fixed CTA when address bar shows/hides
+  const mobileCta = document.getElementById('mobile-cta');
+  if (mobileCta && window.visualViewport) {
+    const updateCta = () => {
+      const offset = window.innerHeight - window.visualViewport!.height - window.visualViewport!.offsetTop;
+      mobileCta.style.transform = `translateY(${-offset}px)`;
+    };
+    window.visualViewport.addEventListener('resize', updateCta);
+    window.visualViewport.addEventListener('scroll', updateCta);
+  }
 
   // Mobile mute
   const btnM = document.getElementById('mute-btn-mobile');
