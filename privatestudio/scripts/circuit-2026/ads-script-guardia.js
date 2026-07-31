@@ -12,8 +12,7 @@
  *
  * Qué hace cada hora:
  *   1. Agenda: si CONTROL_URL dice {"estado":"pausa"} (sin huecos en 48 h), pausa.
- *      Si dice "activa", ajusta el presupuesto diario al que indique el control.
- *      Si no responde, NO toca nada.
+ *      Si no responde, NO toca nada. El importe diario no se toca: se fija a mano.
  *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
  *      pausa y avisa. Es la red de seguridad contra un error de configuración.
  *   3. Horario: fuera del horario de apertura, pausa. Complementa al ad schedule.
@@ -86,17 +85,6 @@ function main() {
     }
     Logger.log(registro.join(' | ') + ' → pausada por agenda llena');
     return;
-  }
-
-  // Presupuesto dinámico: el control indica cuánto merece la pena gastar hoy
-  // según los huecos que quedan por delante. Redistribuye, no añade gasto: el
-  // tope total sigue siendo TOPE_PERIODO.
-  if (control.presupuesto > 0) {
-    var presupuestoActual = campana.getBudget().getAmount();
-    if (Math.abs(presupuestoActual - control.presupuesto) > 0.01) {
-      campana.getBudget().setAmount(control.presupuesto);
-      registro.push('presupuesto=' + presupuestoActual + '→' + control.presupuesto);
-    }
   }
 
   // 2 · Tope de gasto del periodo

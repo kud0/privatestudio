@@ -49,16 +49,11 @@ const VENTANA = { inicio: '2026-08-01', fin: '2026-08-15' };
 // sentido pagar por clics de gente que no puede reservar en las próximas 48 h.
 const MINIMO_PARA_SEGUIR = 1;
 
-// Presupuesto diario según huecos libres en los próximos 3 días. Un día lleno con
-// los siguientes vacíos baja el gasto de hoy y lo deja disponible para mañana;
-// varios días vacíos por delante lo suben. El tope total de 200 € lo sigue
-// vigilando el guardián, así que esto redistribuye, no añade gasto.
-const TRAMOS_PRESUPUESTO = [
-  { hastaCitas: 5,        euros: 10 },
-  { hastaCitas: 15,       euros: 20 },
-  { hastaCitas: Infinity, euros: 30 }
-];
-const DIAS_HORIZONTE = 3;
+// Presupuesto diario fijo. Se probó a variarlo según huecos y se descartó: Google
+// reparte el gasto a lo largo del día y cambiarlo varias veces lo desestabiliza,
+// para un ahorro de pocos euros sobre un techo de 200 €. Lo que sí se automatiza
+// es la pausa cuando no hay dónde meter a nadie.
+const PRESUPUESTO_DIARIO = 20;
 
 const API = `https://es.booksy.com/core/v2/customer_api/me/businesses/${NEGOCIO}/appointments/time_slots`;
 const CABECERAS = {
@@ -206,34 +201,25 @@ async function main() {
   // ── 2 · Control dinámico según disponibilidad de hoy y mañana
   const hoy = new Date();
   const manana = new Date(hoy.getTime() + 86400000);
-  const horizonte = new Date(hoy.getTime() + (DIAS_HORIZONTE - 1) * 86400000);
-
   const corto = resumir(await consultar(iso(hoy), iso(manana)));
   const citas48h = corto.total;
-
-  // El presupuesto mira 3 días, no 2: si hoy está lleno pero pasado mañana está
-  // vacío, sigue mereciendo la pena gastar en captar para esos días.
-  const medio = resumir(await consultar(iso(hoy), iso(horizonte)));
-  const presupuesto = TRAMOS_PRESUPUESTO.find(t => medio.total <= t.hastaCitas).euros;
 
   const estado = citas48h >= MINIMO_PARA_SEGUIR ? 'activa' : 'pausa';
   const control = {
     estado,
-    presupuesto_diario: presupuesto,
+    presupuesto_diario: PRESUPUESTO_DIARIO,
     citas_48h: citas48h,
-    citas_horizonte: medio.total,
     detalle_48h: corto.porDia,
     citas_ventana: total,
     actualizado: momento,
     motivo: estado === 'activa'
-      ? `${citas48h} citas libres entre hoy y mañana · ${medio.total} en ${DIAS_HORIZONTE} días → €${presupuesto}/día`
+      ? `${citas48h} citas libres entre hoy y mañana`
       : 'agenda llena en las próximas 48 h: no se paga por clics que no pueden reservar'
   };
 
   const anterior = await estadoPublicado();
   const resultado = await publicar(control, anterior);
-  console.log(`\ncontrol: ${estado.toUpperCase()} · €${presupuesto}/día`);
-  console.log(`   ${citas48h} citas libres en 48 h · ${medio.total} en ${DIAS_HORIZONTE} días`);
+  console.log(`\ncontrol: ${estado.toUpperCase()} — ${citas48h} citas libres en 48 h`);
   console.log(`   ${resultado}`);
 }
 
