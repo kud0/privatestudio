@@ -15,8 +15,11 @@
  *      Si no responde, NO toca nada. El importe diario no se toca: se fija a mano.
  *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
  *      pausa y avisa. Es la red de seguridad contra un error de configuración.
- *   3. Horario: fuera del horario de apertura, pausa. Complementa al ad schedule.
- *   4. Aviso por email al llegar al 80% del tope.
+ *   3. Aviso por email al llegar al 80% del tope.
+ *
+ * El horario NO lo gestiona este script: lo hace el ad schedule nativo de la
+ * campaña (L–V 11–20, sáb 11–19, domingo nada). Duplicarlo aquí solo añadiría
+ * riesgo de dejar la campaña pausada por un fallo de lectura.
  *
  * Diseño: por defecto NO hace nada destructivo. Ante cualquier duda (fallo de red,
  * respuesta ilegible) deja la campaña como está y avisa. Preferimos gastar de más
@@ -33,23 +36,6 @@ var TOPE_PERIODO = 200;
 
 var INICIO = '2026-08-01';
 var FIN    = '2026-08-15';
-
-// Horario de apertura del estudio, hora de Madrid. 0 = domingo.
-// Fuente: configuración de Booksy (open_hours), contrastada con los huecos reales
-// y con el footer de la web. Verificado el 31 jul 2026.
-var HORARIO = {
-  0: null,          // domingo cerrado
-  1: [11, 20],
-  2: [11, 20],
-  3: [11, 20],
-  4: [11, 20],
-  5: [11, 20],
-  6: [11, 19]       // sábado
-};
-
-// Excepción: domingo 2 de agosto, franja de tarde solo para reserva online
-// del día siguiente (el estudio está cerrado, pero Booksy acepta reservas).
-var DOMINGO_2_TARDE = { fecha: '2026-08-02', desde: 17, hasta: 23 };
 
 // Control publicado por el cron de Booksy. Formato:
 //   {"estado":"activa"|"pausa", "presupuesto_diario": 10|20|30, "motivo": "..."}
@@ -70,10 +56,9 @@ function main() {
     return;
   }
 
-  var ahora = new Date();
   var registro = [];
 
-  // 1 · Interruptor manual (tiene prioridad sobre todo lo demás)
+  // 1 · Agenda: si no hay huecos en 48 h, pausar
   var control = leerControl();
   registro.push('control=' + control.estado);
 
@@ -109,19 +94,11 @@ function main() {
     marcarAvisoEnviado();
   }
 
-  // 3 · Horario de servicio
-  var debeEstarActiva = dentroDeHorario(ahora);
-  registro.push('horario=' + (debeEstarActiva ? 'abierto' : 'cerrado'));
-
-  if (!debeEstarActiva && campana.isEnabled()) {
-    campana.pause();
-    Logger.log(registro.join(' | ') + ' → pausada por horario');
-    return;
-  }
-
-  if (debeEstarActiva && !campana.isEnabled() && control.estado !== 'pausa') {
+  // 3 · Reactivar si vuelve a haber huecos y la campaña estaba pausada
+  if (control.estado === 'activa' && !campana.isEnabled()) {
     campana.enable();
-    Logger.log(registro.join(' | ') + ' → reactivada por horario');
+    avisar('Campaña reactivada', 'Vuelve a haber huecos: ' + control.motivo);
+    Logger.log(registro.join(' | ') + ' → reactivada');
     return;
   }
 
@@ -168,22 +145,6 @@ function leerControl() {
     Logger.log('Control ilegible (' + e + '). No se toca nada.');
     return vacio;
   }
-}
-
-/** ¿Está el estudio abierto en este momento? Hora de Madrid. */
-function dentroDeHorario(fecha) {
-  var zona = AdsApp.currentAccount().getTimeZone();
-  var dia  = parseInt(Utilities.formatDate(fecha, zona, 'u'), 10) % 7;  // 7=domingo → 0
-  var hora = parseInt(Utilities.formatDate(fecha, zona, 'H'), 10);
-  var hoy  = Utilities.formatDate(fecha, zona, 'yyyy-MM-dd');
-
-  if (hoy === DOMINGO_2_TARDE.fecha) {
-    return hora >= DOMINGO_2_TARDE.desde && hora < DOMINGO_2_TARDE.hasta;
-  }
-
-  var franja = HORARIO[dia];
-  if (!franja) return false;
-  return hora >= franja[0] && hora < franja[1];
 }
 
 function avisar(asunto, cuerpo) {
