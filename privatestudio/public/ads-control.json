@@ -2,12 +2,11 @@
   "estado": "activa",
   "presupuesto_diario": 20,
   "citas_48h": 9,
-  "citas_horizonte": 9,
   "detalle_48h": {
     "2026-08-01": 8,
     "2026-07-31": 1
   },
   "citas_ventana": 215,
-  "actualizado": "2026-07-31T12:50:57.586Z",
-  "motivo": "9 citas libres entre hoy y mañana · 9 en 3 días → €20/día"
+  "actualizado": "2026-07-31T12:54:00.384Z",
+  "motivo": "9 citas libres entre hoy y mañana"
 }
