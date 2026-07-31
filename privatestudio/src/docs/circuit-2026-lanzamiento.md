@@ -261,7 +261,7 @@ Orden de clicks:
 8. Pegar keywords y negativas (bloques abajo).
 9. **Recursos:** ubicación (requiere GBP vinculado) · llamada **+34 624 367 153** · enlaces de sitio (Reservar / Servicios / Cómo llegar) · textos destacados (Eixample, LGBTQ+ friendly).
 10. Pegar RSAs (bloques abajo).
-11. **Conversiones:** llamadas desde anuncio (nativo de Ads) + clic saliente a Booksy vía GTM (contenedor `GTM-MR7LGNJL` ya en la web). Si el evento GTM no da tiempo antes de las 13:00: quedan las llamadas y el clic Booksy se monta el sábado a primera hora. Con 1h30 debería dar.
+11. **Conversiones:** llamadas desde anuncio (nativo de Ads) + clic saliente a Booksy vía GTM (contenedor propio `GTM-WSZS5CV5`, sustituye al de terceros). Si el evento GTM no da tiempo antes de las 13:00: quedan las llamadas y el clic Booksy se monta el sábado a primera hora. Con 1h30 debería dar.
 
 ## Bloques para pegar
 

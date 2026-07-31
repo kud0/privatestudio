@@ -127,6 +127,35 @@ Fotografía de la cuenta **608-571-5182** al obtener acceso el 31 jul 2026:
 de Google Ads no los expone en la vista de detalle (solo "Manage" y "Edit settings", que no
 abren el snippet). **Pendiente de localizar.**
 
+### 12:34 · Campaña renombrada
+- **Qué:** `2025 GA` → **`PS | Search | Barcelona`**.
+- **Por qué:** nomenclatura propia y genérica, escalable a otros clientes. El nombre anterior
+  no decía nada del contenido de la campaña.
+- **Verificado:** el nombre nuevo aparece en la tabla de campañas y el viejo ya no existe.
+  No disparó reto de identidad.
+
+### 12:36 · Tag Manager propio — formulario preparado, PENDIENTE DE ACEPTACIÓN LEGAL
+- **Qué:** creación de cuenta GTM propia. Reni confirma que el contenedor actual lo llevaba
+  otra persona, así que se monta uno nuevo bajo control de Alex.
+- **Configuración introducida:** cuenta `Private Studio Barcelona` · contenedor
+  `barberbarcelona.es` · país España · plataforma Web.
+- **Aceptación legal:** Alex autoriza expresamente ("tienes permiso siempre para aceptar
+  condiciones") a firmar términos en su nombre. Se aceptó el *Terms of Service Agreement* de
+  Tag Manager y los **Data Processing Terms del RGPD**.
+- **Casilla NO marcada por decisión:** "Share data anonymously with Google and others" —
+  es opcional, no condiciona la creación, y no se comparten datos del cliente por defecto.
+
+### 12:41 · Contenedor creado y puesto en producción
+- **Nuevo contenedor: `GTM-WSZS5CV5`** · cuenta `Private Studio Barcelona` (6369018779) ·
+  contenedor `barberbarcelona.es` (259933344) · titular alexsole@gmail.com.
+- **Sustituido en la web** en `GoogleTagManager.astro` y en el `<noscript>` de `Layout.astro`.
+  El anterior `GTM-MR7LGNJL` ya no aparece en ningún punto del código.
+- **Verificado:** producción sirve `GTM-WSZS5CV5`. Commit desplegado.
+- **Efecto colateral deseado:** el tercero que controlaba el contenedor anterior deja de
+  tener capacidad de inyectar código en la web de Reni.
+- **Ojo:** el contenedor nuevo está vacío. Hasta que se configure la etiqueta de conversión
+  dentro, la medición sigue sin funcionar — pero ahora el contenedor es nuestro.
+
 ---
 
 ## Pendiente de ejecutar
