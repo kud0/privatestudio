@@ -1,12 +1,11 @@
 {
   "estado": "activa",
   "presupuesto_diario": 20,
-  "citas_48h": 9,
+  "citas_48h": 7,
   "detalle_48h": {
-    "2026-08-01": 8,
-    "2026-07-31": 1
+    "2026-08-01": 7
   },
-  "citas_ventana": 215,
-  "actualizado": "2026-07-31T12:54:00.384Z",
-  "motivo": "9 citas libres entre hoy y mañana"
+  "citas_ventana": 214,
+  "actualizado": "2026-07-31T15:00:01.259Z",
+  "motivo": "7 citas libres entre hoy y mañana"
 }
