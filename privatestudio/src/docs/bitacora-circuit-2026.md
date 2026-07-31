@@ -156,6 +156,34 @@ abren el snippet). **Pendiente de localizar.**
 - **Ojo:** el contenedor nuevo está vacío. Hasta que se configure la etiqueta de conversión
   dentro, la medición sigue sin funcionar — pero ahora el contenedor es nuestro.
 
+### 13:45 · 🔴 CAUSA RAÍZ DEFINITIVA: la conversión es una Floodlight de Campaign Manager 360
+
+Tras varios intentos de localizar el snippet de "Reserva cita booksy", Google devolvió el
+mensaje que lo explica todo:
+
+> *"Couldn't edit conversion action. You can't edit **Floodlight** conversion actions because
+> your account in **Campaign Manager 360** doesn't have permission."*
+
+**No es una conversión de Google Ads.** Es una etiqueta **Floodlight**, el sistema de medición
+de Campaign Manager 360 (la plataforma empresarial de DoubleClick). La agencia anterior la
+creó desde *su* cuenta de CM360, a la que no tenemos —ni tendremos— acceso.
+
+Esto encaja con todo lo observado y cierra el diagnóstico:
+- No se puede editar desde Google Ads → es de otra plataforma.
+- No aparece ningún snippet AW-… → las Floodlight no usan ese formato.
+- Figura como "managed through Google Tag" y "Not installed yet".
+- Lleva desde enero de 2025 con **0 conversiones** y estado `Inactive`.
+- El origen de datos apuntaba a **booksy.com**, dominio que no controlamos.
+
+**Decisión: se abandona.** No se intenta reparar una etiqueta alojada en la plataforma de un
+tercero. Se crea una **conversión nativa de Google Ads** que dispararemos desde nuestro propio
+contenedor `GTM-WSZS5CV5` en el clic saliente a Booksy.
+
+**Hallazgo secundario del escaneo:** hay una propiedad de Google Analytics llamada
+**"Private studio" (509516958) ya vinculada** a la cuenta de Ads. Puede servir como fuente de
+conversiones adicional y conviene revisarla — aparece también `benasout-3c98f` (546148157),
+sin vincular, con pinta de proyecto de Firebase ajeno.
+
 ---
 
 ## Pendiente de ejecutar
