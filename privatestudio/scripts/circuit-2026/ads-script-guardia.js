@@ -1,0 +1,200 @@
+/**
+ * GUARDIÁN DE CAMPAÑA — Circuit Festival 2026 · Private Studio (608-571-5182)
+ *
+ * Qué es: un Google Ads Script. Se ejecuta DENTRO de Google Ads, con los permisos
+ * de la cuenta. No necesita developer token, ni OAuth, ni que nadie tenga sesión
+ * abierta — por eso es el único mecanismo fiable cuando Alex no está delante.
+ *
+ * Instalación (una vez, con la campaña ya creada):
+ *   Google Ads → Herramientas → Acciones masivas → Scripts → +
+ *   Pegar este archivo · Autorizar · Vista previa · Guardar
+ *   Programar: "Cada hora"
+ *
+ * Qué hace cada hora:
+ *   1. Interruptor manual: si CONTROL_URL devuelve {"estado":"pausa"}, pausa. Si
+ *      devuelve {"estado":"activa"}, reactiva. Si no responde, NO toca nada.
+ *   2. Tope de gasto del periodo: si el gasto acumulado 1–9 ago supera TOPE_PERIODO,
+ *      pausa y avisa. Es la red de seguridad contra un error de configuración.
+ *   3. Horario: fuera del horario de apertura, pausa. Complementa al ad schedule.
+ *   4. Aviso por email al llegar al 80% del tope.
+ *
+ * Diseño: por defecto NO hace nada destructivo. Ante cualquier duda (fallo de red,
+ * respuesta ilegible) deja la campaña como está y avisa. Preferimos gastar de más
+ * un día que apagar la campaña por un error de lectura en pleno pico.
+ */
+
+// ─── Configuración ──────────────────────────────────────────────────────────
+
+var CAMPANA = 'PONER_NOMBRE_EXACTO_DE_LA_CAMPANA';
+
+// Tope de gasto de toda la ventana del festival, en euros.
+// Se calcula como (huecos libres 1–9 ago) × (ticket medio) × MARGEN_SEGURIDAD.
+// Pendiente del dato de Reni: no inventar esta cifra.
+var TOPE_PERIODO = 0;
+
+var INICIO = '2026-08-01';
+var FIN    = '2026-08-09';
+
+// Horario de apertura del estudio, hora de Madrid. 0 = domingo.
+// Fuente: configuración de Booksy (open_hours), contrastada con los huecos reales
+// y con el footer de la web. Verificado el 31 jul 2026.
+var HORARIO = {
+  0: null,          // domingo cerrado
+  1: [11, 20],
+  2: [11, 20],
+  3: [11, 20],
+  4: [11, 20],
+  5: [11, 20],
+  6: [11, 19]       // sábado
+};
+
+// Excepción: domingo 2 de agosto, franja de tarde solo para reserva online
+// del día siguiente (el estudio está cerrado, pero Booksy acepta reservas).
+var DOMINGO_2_TARDE = { fecha: '2026-08-02', desde: 17, hasta: 23 };
+
+// URL con el estado de la agenda. Formato esperado:
+//   {"estado":"activa"}  ·  {"estado":"pausa"}  ·  {"estado":"auto"}
+// "auto" = el script decide solo por horario y tope.
+var CONTROL_URL = 'https://www.barberbarcelona.es/ads-control.json';
+
+var EMAIL_AVISOS = 'alexsole@gmail.com';
+
+var UMBRAL_AVISO = 0.8;   // avisar al consumir este % del tope
+
+// ─── Ejecución ──────────────────────────────────────────────────────────────
+
+function main() {
+  var campana = buscarCampana(CAMPANA);
+  if (!campana) {
+    avisar('Guardián: campaña no encontrada',
+           'No existe ninguna campaña llamada "' + CAMPANA + '". El guardián no ha hecho nada.');
+    return;
+  }
+
+  var ahora = new Date();
+  var registro = [];
+
+  // 1 · Interruptor manual (tiene prioridad sobre todo lo demás)
+  var control = leerControl();
+  registro.push('control=' + control);
+
+  if (control === 'pausa') {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada por interruptor manual',
+             'La campaña "' + CAMPANA + '" se ha pausado porque el control externo indica "pausa".');
+    }
+    Logger.log(registro.join(' | ') + ' → pausada por interruptor');
+    return;
+  }
+
+  // 2 · Tope de gasto del periodo
+  var gastado = gastoPeriodo(campana);
+  registro.push('gastado=' + gastado.toFixed(2));
+
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO) {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: tope de periodo alcanzado',
+             'Gasto acumulado del 1 al 9 de agosto: €' + gastado.toFixed(2) +
+             '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '. La campaña queda pausada.');
+    }
+    Logger.log(registro.join(' | ') + ' → pausada por tope');
+    return;
+  }
+
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO * UMBRAL_AVISO && !avisoYaEnviado()) {
+    avisar('Aviso: ' + Math.round(UMBRAL_AVISO * 100) + '% del presupuesto consumido',
+           'Gasto acumulado: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) +
+           '. La campaña sigue activa.');
+    marcarAvisoEnviado();
+  }
+
+  // 3 · Horario de servicio
+  var debeEstarActiva = dentroDeHorario(ahora);
+  registro.push('horario=' + (debeEstarActiva ? 'abierto' : 'cerrado'));
+
+  if (!debeEstarActiva && campana.isEnabled()) {
+    campana.pause();
+    Logger.log(registro.join(' | ') + ' → pausada por horario');
+    return;
+  }
+
+  if (debeEstarActiva && !campana.isEnabled() && control !== 'pausa') {
+    campana.enable();
+    Logger.log(registro.join(' | ') + ' → reactivada por horario');
+    return;
+  }
+
+  Logger.log(registro.join(' | ') + ' → sin cambios');
+}
+
+// ─── Auxiliares ─────────────────────────────────────────────────────────────
+
+function buscarCampana(nombre) {
+  var it = AdsApp.campaigns().withCondition('Name = "' + nombre + '"').get();
+  return it.hasNext() ? it.next() : null;
+}
+
+/** Gasto acumulado de la campaña dentro de la ventana del festival. */
+function gastoPeriodo(campana) {
+  var desde = INICIO.replace(/-/g, '');
+  var hasta = FIN.replace(/-/g, '');
+  var stats = campana.getStatsFor(desde, hasta);
+  return stats.getCost();
+}
+
+/**
+ * Lee el estado externo. Devuelve 'activa', 'pausa' o 'auto'.
+ * Ante cualquier fallo devuelve 'auto': no tocar nada por un error de red.
+ */
+function leerControl() {
+  if (!CONTROL_URL) return 'auto';
+  try {
+    var resp = UrlFetchApp.fetch(CONTROL_URL, {
+      muteHttpExceptions: true,
+      followRedirects: true
+    });
+    if (resp.getResponseCode() !== 200) return 'auto';
+    var datos = JSON.parse(resp.getContentText());
+    var estado = String(datos.estado || '').toLowerCase();
+    return (estado === 'pausa' || estado === 'activa') ? estado : 'auto';
+  } catch (e) {
+    Logger.log('Control ilegible (' + e + '). Se asume "auto".');
+    return 'auto';
+  }
+}
+
+/** ¿Está el estudio abierto en este momento? Hora de Madrid. */
+function dentroDeHorario(fecha) {
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var dia  = parseInt(Utilities.formatDate(fecha, zona, 'u'), 10) % 7;  // 7=domingo → 0
+  var hora = parseInt(Utilities.formatDate(fecha, zona, 'H'), 10);
+  var hoy  = Utilities.formatDate(fecha, zona, 'yyyy-MM-dd');
+
+  if (hoy === DOMINGO_2_TARDE.fecha) {
+    return hora >= DOMINGO_2_TARDE.desde && hora < DOMINGO_2_TARDE.hasta;
+  }
+
+  var franja = HORARIO[dia];
+  if (!franja) return false;
+  return hora >= franja[0] && hora < franja[1];
+}
+
+function avisar(asunto, cuerpo) {
+  if (!EMAIL_AVISOS) return;
+  MailApp.sendEmail(EMAIL_AVISOS,
+    '[Private Studio · Circuit] ' + asunto,
+    cuerpo + '\n\nCuenta 608-571-5182 · campaña "' + CAMPANA + '"' +
+    '\nGenerado por el guardián automático el ' + new Date());
+}
+
+/** Evita repetir el aviso de 80% en cada ejecución horaria. */
+function avisoYaEnviado() {
+  var etiqueta = AdsApp.labels().withCondition('Name = "aviso-80-enviado"').get();
+  return etiqueta.hasNext();
+}
+
+function marcarAvisoEnviado() {
+  AdsApp.createLabel('aviso-80-enviado', 'Marca interna del guardián: aviso de 80% ya enviado');
+}

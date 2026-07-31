@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrategia Google Ads — Circuit Festival 2026 | Private Studio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    background: #e8e8e8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 24px auto;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page {
+      margin: 0;
+      box-shadow: none;
+      page-break-after: always;
+    }
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 60px;
+    min-height: 297mm;
+  }
+
+  .cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .cover-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 100px;
+  }
+
+  .cover-date {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.4;
+    letter-spacing: 0.15em;
+    text-align: right;
+  }
+
+  .cover-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    padding: 40px 0;
+  }
+
+  .cover-kicker {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #c9a96e;
+  }
+
+  .cover-main h1 {
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 0.98;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+  }
+
+  .cover-main h1 span { color: #c9a96e; }
+
+  .cover-main p {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.55;
+    max-width: 420px;
+    line-height: 1.7;
+  }
+
+  .cover-line {
+    width: 60px;
+    height: 3px;
+    background: #c9a96e;
+  }
+
+  .cover-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .cover-meta-item label {
+    display: block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.35;
+    margin-bottom: 6px;
+  }
+
+  .cover-meta-item span {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .cover-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 32px;
+  }
+
+  .cover-client {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  .cover-confidential {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0.25;
+  }
+
+  /* ── CONTENT ── */
+  .content-page {
+    background: #fff;
+    padding: 48px 56px 56px;
+    display: flex;
+    flex-direction: column;
+    min-height: 297mm;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 32px;
+  }
+
+  .page-header-brand {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .page-header-num {
+    font-size: 9px;
+    font-weight: 700;
+    color: #ccc;
+    letter-spacing: 0.15em;
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #c9a96e;
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: 26px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-intro {
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: #555;
+    max-width: 520px;
+    margin-bottom: 28px;
+  }
+
+  .page-footer {
+    margin-top: auto;
+    padding-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #bbb;
+  }
+
+  /* Cards / grids */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  .card {
+    border: 1px solid #eee;
+    padding: 20px 22px;
+    page-break-inside: avoid;
+  }
+
+  .card h3 {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .card p, .card li {
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: #555;
+  }
+
+  .card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card li::before {
+    content: "–";
+    color: #c9a96e;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .card-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #c9a96e;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+
+  .highlight-box {
+    background: #faf8f4;
+    border-left: 3px solid #c9a96e;
+    padding: 16px 18px;
+    margin: 18px 0;
+  }
+
+  .highlight-box h4 {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .highlight-box p {
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: #555;
+  }
+
+  .note-box {
+    background: #f7f7f7;
+    border: 1px solid #eee;
+    padding: 14px 18px;
+    font-size: 11px;
+    line-height: 1.65;
+    color: #555;
+    margin-top: 16px;
+  }
+
+  .note-box strong { color: #1a1a1a; }
+
+  .danger-box {
+    background: #fdf6f4;
+    border: 1px solid #f0d9d2;
+    border-left: 3px solid #c45c3e;
+    padding: 14px 18px;
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: #555;
+    margin: 16px 0;
+  }
+
+  .danger-box strong { color: #8b3a28; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin: 12px 0 20px;
+  }
+
+  th {
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #999;
+    padding: 10px 12px;
+    border-bottom: 2px solid #1a1a1a;
+  }
+
+  td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    line-height: 1.5;
+    color: #333;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td strong { font-weight: 700; color: #1a1a1a; }
+
+  .tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: #f0ebe0;
+    color: #8a7340;
+  }
+
+  .tag-off {
+    background: #f0f0f0;
+    color: #888;
+  }
+
+  .tag-hot {
+    background: #1a1a1a;
+    color: #c9a96e;
+  }
+
+  /* Calendar */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .cal-day {
+    border: 1px solid #eee;
+    padding: 14px 14px 16px;
+    min-height: 110px;
+  }
+
+  .cal-day.closed {
+    background: #fafafa;
+    opacity: 0.72;
+  }
+
+  .cal-day.peak {
+    border-color: #c9a96e;
+    background: #fdfbf7;
+  }
+
+  .cal-day .dow {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c9a96e;
+    margin-bottom: 4px;
+  }
+
+  .cal-day.closed .dow { color: #bbb; }
+
+  .cal-day .date {
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+
+  .cal-day p {
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: #666;
+  }
+
+  /* Checklist */
+  .check-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .check-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #333;
+    padding: 12px 14px;
+    border: 1px solid #eee;
+  }
+
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #c9a96e;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .kpi {
+    border: 1px solid #eee;
+    padding: 18px 20px;
+  }
+
+  .kpi .label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  .kpi .value {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .kpi .hint {
+    font-size: 11px;
+    color: #777;
+    line-height: 1.5;
+  }
+
+  .bullet-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .bullet-list li {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #444;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .bullet-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    background: #c9a96e;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .code-line {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px;
+    background: #f6f6f6;
+    padding: 8px 12px;
+    color: #333;
+    border-left: 2px solid #c9a96e;
+  }
+
+  .split-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    gap: 20px;
+  }
+
+  .split-header .section-intro {
+    margin-bottom: 0;
+    text-align: right;
+    max-width: 280px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ 01 COVER ═══════════════════ -->
+<div class="page cover">
+  <div class="cover-top">
+    <div class="cover-badge">Google Ads · Captación</div>
+    <div class="cover-date">JULIO 2026<br>CONFIDENCIAL</div>
+  </div>
+
+  <div class="cover-main">
+    <div class="cover-kicker">Estrategia de campaña</div>
+    <div class="cover-line"></div>
+    <h1>Circuit Festival<br><span>2026</span></h1>
+    <p>
+      Plan de Google Ads para captar el máximo de reservas durante el festival
+      LGBTQ+ internacional en Barcelona (1–9 agosto), con restricciones reales
+      de horario y capacidad de Private Studio.
+    </p>
+  </div>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <label>Cliente</label>
+      <span>Private Studio BCN</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>Ventana</label>
+      <span>1–9 agosto 2026</span>
+    </div>
+    <div class="cover-meta-item">
+      <label>Canal</label>
+      <span>Google Search + Maps</span>
+    </div>
+  </div>
+
+  <div class="cover-bottom">
+    <div class="cover-client">Preparado para Renato Rojas</div>
+    <div class="cover-confidential">Uso interno · No distribuir</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ 02 CONTEXTO ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">02 / 09</div>
+  </div>
+
+  <div class="section-label">Oportunidad</div>
+  <div class="section-title">Qué es el Circuit<br>y por qué importa</div>
+  <p class="section-intro">
+    Circuit Festival es el mayor festival LGBTQ+ internacional de Barcelona.
+    Durante nueve días la ciudad se llena de visitantes de fuera que buscan
+    verse bien para fiestas, pool parties y el main event. No es un sábado suelto:
+    es un pico de demanda de grooming de casi una semana.
+  </p>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-num">01</div>
+      <h3>Fechas</h3>
+      <p>1–9 agosto 2026, confirmado en programa oficial. Big Opening, Guapo, Waterpark, Macho en Luz de Gas, Sundia, Main Event y closing La Leche.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">02</div>
+      <h3>Público</h3>
+      <p>Decenas de miles de visitantes internacionales — 70.000+ según guías del festival — con EN como lengua franca, en un contexto de máxima imagen.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">03</div>
+      <h3>Ventaja local</h3>
+      <p>Private Studio en Muntaner 172 (Eixample). La fiesta Macho (5 ago) es en Luz de Gas, Muntaner 246 — misma calle. Confirmado en programa oficial.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top: 28px;">
+    <h4>Insight central</h4>
+    <p>
+      No optimizamos “una barbería local en agosto”. Capturamos
+      <strong>demanda temporal, multiidioma, mobile y same-day</strong>
+      de un festival internacional de 9 días en la misma ciudad.
+      El cliente local sigue ahí; el <em>delta</em> del Circuit es el turista de fiesta.
+    </p>
+  </div>
+
+  <div class="note-box">
+    <strong>Fuente de evento:</strong> circuitfestival.net/barcelona — programa oficial 2026, fechas y fiestas verificadas a 30 jul.
+    No usamos la marca “Circuit” en creatividades de pago (política de marcas registradas y poco elegante);
+    usamos geo + keywords de barbería/haircut + mensaje operativo.
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 03 OBJETIVO + LÍMITES ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">03 / 09</div>
+  </div>
+
+  <div class="section-label">Marco</div>
+  <div class="section-title">Objetivo y<br>límites reales</div>
+
+  <div class="two-col" style="margin-bottom: 24px;">
+    <div class="card">
+      <h3>Objetivo primario</h3>
+      <p style="margin-bottom: 12px;">Maximizar <strong>reservas nuevas</strong> (y walk-ins controlados) del 1 al 9 de agosto, sin quemar presupuesto en clics sin hueco.</p>
+      <ul>
+        <li>Reservas Booksy atribuidas a Ads</li>
+        <li>Llamadas desde anuncio / Maps</li>
+        <li>Visitas a dirección (secundario)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Objetivo secundario</h3>
+      <p style="margin-bottom: 12px;">Dejar la cuenta Google Ads operativa para el resto del año: tracking, estructura ES/EN, negativas y ficha Maps alineada.</p>
+      <ul>
+        <li>Base post-festival lista</li>
+        <li>Datos reales de CPC y conversión BCN</li>
+        <li>Playbook reutilizable en otros picos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top: 8px;">Restricciones confirmadas</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Restricción</th>
+        <th>Implicación en Ads</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Domingo cerrado</strong> (confirmado por Reni)</td>
+        <td>Dom 9 ads OFF (fin de festival). Dom 2: solo franja tarde-noche con “reserva online para mañana” — Booksy, sin recurso de llamada, presupuesto mínimo. No prometer “open 7 days”.</td>
+      </tr>
+      <tr>
+        <td><strong>Horario</strong> L–V 11:00–20:00 · Sáb 11:00–19:00</td>
+        <td>Verificado en Booksy (31 jul): el sábado es jornada completa, no media. Ads en horario de servicio; el sábado 8 es el día más valioso porque el Main Event es esa noche. Noche de fiesta no = silla abierta.</td>
+      </tr>
+      <tr>
+        <td><strong>Capacidad Booksy</strong></td>
+        <td>Si no hay huecos, se pausa o se baja presupuesto. Capacidad manda sobre el spend.</td>
+      </tr>
+      <tr>
+        <td><strong>Un solo local</strong> · Muntaner 172</td>
+        <td>Geo Barcelona ciudad. No pujar Cataluña entera ni “toda España”.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="danger-box">
+    <strong>Regla de oro:</strong> sin hueco en agenda o sin respuesta al teléfono → se pausa la campaña.
+    Cada clic sin posibilidad de cita es dinero quemado. La operativa manda sobre el media.
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 04 AUDIENCIA ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">04 / 09</div>
+  </div>
+
+  <div class="section-label">Demanda</div>
+  <div class="section-title">A quién hablamos<br>y cómo busca</div>
+  <p class="section-intro">
+    Dos públicos en paralelo. El error típico es optimizar solo el local de siempre
+    y dejar fuera el pico del festival — o al revés, olvidar el español y el cliente de barrio.
+  </p>
+
+  <div class="two-col">
+    <div class="card">
+      <span class="tag" style="margin-bottom: 12px;">Base todo el año</span>
+      <h3>Local / hispanohablante</h3>
+      <p style="margin: 10px 0 12px;">Hombre en Barcelona o Eixample que busca barbería premium, corte o barba. Durante el festival el presupuesto se concentra en el pico EN; ES vuelve a plena carga en septiembre.</p>
+      <ul>
+        <li>barbería Barcelona</li>
+        <li>barbero Eixample</li>
+        <li>corte de pelo hombre Barcelona</li>
+        <li>barbería cerca de mí</li>
+        <li>visagismo Barcelona (menor volumen, alta afinidad)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag-hot tag" style="margin-bottom: 12px;">Pico Circuit</span>
+      <h3>Internacional / festival</h3>
+      <p style="margin: 10px 0 12px;">Visitante con Google en inglés (u otro idioma), mobile, quiere verse bien <em>hoy o mañana</em>.</p>
+      <ul>
+        <li>barber Barcelona</li>
+        <li>barbershop Barcelona</li>
+        <li>haircut Barcelona</li>
+        <li>men's haircut Barcelona</li>
+        <li>barber near me / beard trim</li>
+        <li>english speaking barber (volumen y CPC a validar en Keyword Planner)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h4>Por qué el inglés es central (no opcional)</h4>
+    <p>
+      Circuit atrae público de todo el mundo. Si solo pujamos en español, perdemos
+      una parte grande del pico. Google no “traduce solo”: hacen falta keywords + anuncios
+      en inglés. ES y EN van en <strong>ad groups separados</strong> para no mezclar relevancia.
+    </p>
+  </div>
+
+  <div class="section-label" style="margin-top: 8px;">Servicios con más tirón en festival</div>
+  <div class="three-col">
+    <div class="card">
+      <h3>“Festival Express”</h3>
+      <p>Corte + barba en ~45 min, precio cerrado y premium. La oferta bookable de la semana: los huecos son escasos — no se descuenta.</p>
+    </div>
+    <div class="card">
+      <h3>Cejas y wax</h3>
+      <p>Detalle rápido, alto impacto visual. Ideal same-day y ticket medio-bajo de entrada.</p>
+    </div>
+    <div class="card">
+      <h3>Barba sola</h3>
+      <p>Mantenimiento entre fiestas. Buen hueco de agenda entre cortes largos.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 05 ESTRUCTURA CAMPAÑA ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">05 / 09</div>
+  </div>
+
+  <div class="section-label">Estructura</div>
+  <div class="section-title">Cómo se monta<br>la cuenta</div>
+  <p class="section-intro">
+    Una campaña de búsqueda local, ad groups limpios, foco en intención alta.
+    Maps y llamada pesan más que un scroll largo de marca.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Capa</th>
+        <th>Configuración</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Campaña</strong></td>
+        <td>Search — “PS | Circuit 2026 | BCN Local”. Puja: <strong>Maximizar clics con límite de CPC (~1–1,5 €)</strong> durante el festival — cuenta nueva, presupuesto pequeño y 8 días no dan para que la puja por conversiones salga del aprendizaje. Post-festival, con datos, se pasa a conversiones.</td>
+      </tr>
+      <tr>
+        <td><strong>Redes</strong></td>
+        <td>Solo Búsqueda de Google (+ socios de búsqueda opcional, desactivado al inicio). Sin Display genérico.</td>
+      </tr>
+      <tr>
+        <td><strong>Ubicación</strong></td>
+        <td>Barcelona (ciudad) como base, presencia: personas <em>en la ubicación</em>. Ajuste de puja <strong>+20–25% en radio ~1 km sobre el Gaixample</strong> — proximidad andable al estudio + densidad del distrito. Nota: el ajuste solo opera con Maximizar clics (Smart Bidding lo ignora) y se aplica por encima del límite de CPC.</td>
+      </tr>
+      <tr>
+        <td><strong>Idiomas cuenta</strong></td>
+        <td><strong>Todos los idiomas.</strong> Google segmenta por idioma de interfaz del usuario, no por lo que escribe: un alemán con el móvil en alemán que busca “barber barcelona” quedaría fuera con solo ES+EN. Las keywords ya hacen el filtrado.</td>
+      </tr>
+      <tr>
+        <td><strong>Ad groups</strong></td>
+        <td>
+          1) EN — Barber / haircut (núcleo: ~90% del presupuesto del festival)<br>
+          2) Marca — Private Studio (defensa, céntimos)<br>
+          3) ES — Genéricas: en mínimos durante el festival — a plena carga en septiembre<br>
+          4) Opcional: servicios (barba / cejas) si hay volumen
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Ad schedule</strong></td>
+        <td>L–V 11:00–20:00 · Sáb 11:00–19:00 · <strong>Dom 2 solo tarde-noche (Booksy, sin llamada) · Dom 9 OFF</strong>. Valorar pujas un poco antes de abrir (búsqueda matinal post-fiesta).</td>
+      </tr>
+      <tr>
+        <td><strong>Dispositivos</strong></td>
+        <td>Prioridad móvil (turista). Ajuste de puja desktop a la baja si el CPC no convierte.</td>
+      </tr>
+      <tr>
+        <td><strong>Recursos (assets)</strong></td>
+        <td>Ubicación (requiere GBP vinculado a la cuenta de Ads) · Llamada (+34 624 367 153) · Enlaces de sitio (Reservar / Servicios / Cómo llegar) · Texto (Eixample, same-day si aplica).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Sí hacemos</h3>
+      <ul>
+        <li>Search + presencia fuerte en Maps</li>
+        <li>ES y EN separados</li>
+        <li>Marca + genéricas</li>
+        <li>Negativas desde el día 1</li>
+        <li>Pausa si no hay huecos</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>No hacemos (en este pico)</h3>
+      <ul>
+        <li>Display genérico / YouTube frío</li>
+        <li>Performance Max sin datos</li>
+        <li>Target “todo el mundo” sin geo</li>
+        <li>Mezclar ES+EN en el mismo ad group</li>
+        <li>Prometer domingo abierto</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 06 KEYWORDS + COPY ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">06 / 09</div>
+  </div>
+
+  <div class="section-label">Mensaje</div>
+  <div class="section-title">Keywords, anuncios<br>y negativas</div>
+
+  <div class="two-col" style="margin-bottom: 20px;">
+    <div>
+      <div class="section-label">ES — seeds</div>
+      <div class="stack">
+        <div class="code-line">barbería Barcelona</div>
+        <div class="code-line">barbero Eixample</div>
+        <div class="code-line">corte de pelo hombre Barcelona</div>
+        <div class="code-line">barbería cerca de mí</div>
+        <div class="code-line">arreglo de barba Barcelona</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">EN — seeds</div>
+      <div class="stack">
+        <div class="code-line">barber Barcelona</div>
+        <div class="code-line">barbershop Barcelona</div>
+        <div class="code-line">haircut Barcelona</div>
+        <div class="code-line">men's haircut Barcelona</div>
+        <div class="code-line">barber near me</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Dirección de copy (RSA)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Idioma</th>
+        <th>Ángulo de headline</th>
+        <th>Ángulo de descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ES</strong></td>
+        <td>Barbería premium Eixample · Corte + barba · Reserva online</td>
+        <td>Muntaner 172 · Asesoría de imagen · Booksy · Llámanos</td>
+      </tr>
+      <tr>
+        <td><strong>EN</strong></td>
+        <td>Premium Barber Barcelona · Men's Haircut Eixample · Book Today</td>
+        <td>Muntaner 172 · Beard & brows · Call or book online · Same-day if available</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-box" style="margin-bottom: 18px;">
+    <strong>Concordancia:</strong> frase para las seeds, exacta para las 3–4 de más volumen.
+    Nada de concordancia amplia: en una cuenta nueva sin datos de conversión es el agujero clásico de presupuesto.<br>
+    <strong>Tono:</strong> operativo y claro, no solo branding. En paid de festival gana
+    “dónde / cuándo / cómo reservar”. El storytelling de visagismo vive en la web;
+    el anuncio debe convertir el clic.
+  </div>
+
+  <div class="section-label">Negativas (día 1)</div>
+  <div class="two-col">
+    <div class="card">
+      <h3>Intención basura</h3>
+      <ul>
+        <li>empleo / job / trabajo / vacante</li>
+        <li>curso / school / academy / formación</li>
+        <li>barato / cheap / free / gratis</li>
+        <li>mujer / women / ladies (si no aplica)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Fuera de servicio</h3>
+      <ul>
+        <li>a domicilio / home visit (si no se ofrece)</li>
+        <li>otras ciudades (Madrid, Valencia…)</li>
+        <li>DIY / tutorial / how to cut</li>
+        <li>productos solo / shop online</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 07 LANDING + TRACKING ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">07 / 09</div>
+  </div>
+
+  <div class="section-label">Conversión</div>
+  <div class="section-title">Landing, Maps<br>y medición</div>
+
+  <div class="two-col" style="margin-bottom: 22px;">
+    <div class="card">
+      <div class="card-num">Web</div>
+      <h3>barberbarcelona.es</h3>
+      <p style="margin-top: 8px;">La web es bilingüe, pero el idioma se resuelve en cliente y la primera visita carga ES. <strong>URL final de los anuncios EN: /?lang=en</strong> (soportado en la web). Valorar URL de Booksy en inglés. CTA a Booksy y teléfono visibles sin scroll; revisar que el popup de packs no frene la reserva del visitante frío.</p>
+    </div>
+    <div class="card">
+      <div class="card-num">Maps</div>
+      <h3>Google Business Profile</h3>
+      <p style="margin-top: 8px;">Ficha <strong>vinculada a la cuenta de Ads</strong> — sin eso no hay recurso de ubicación ni presencia de pago en Maps. Horario real (dom cerrado, L–V 11–20, sáb 11–19). Atributo <strong>“LGBTQ+ friendly”</strong>: gratis y relevante para este público. Fotos, categoría y teléfono correctos. Muchas búsquedas “near me” terminan en Maps, no en la web.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Tracking mínimo viable (48 h)</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Evento</th>
+        <th>Prioridad</th>
+        <th>Notas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Clic a Booksy</strong></td>
+        <td><span class="tag-hot tag">P0</span></td>
+        <td>Proxy de reserva si no hay pixel de booking completo. GTM ya en web (GTM-MR7LGNJL).</td>
+      </tr>
+      <tr>
+        <td><strong>Llamada desde anuncio</strong></td>
+        <td><span class="tag-hot tag">P0</span></td>
+        <td>Recurso de llamada + conteo en Google Ads. Crítico para turista.</td>
+      </tr>
+      <tr>
+        <td><strong>Clic a dirección / how to get there</strong></td>
+        <td><span class="tag">P1</span></td>
+        <td>Señal de visita física; no es reserva.</td>
+      </tr>
+      <tr>
+        <td><strong>Reserva confirmada Booksy</strong></td>
+        <td><span class="tag">P1</span></td>
+        <td>Ideal offline conversion o bridge; si no da tiempo el día 1, se completa en la semana.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <h4>Cómo decidimos si “funciona”</h4>
+    <p>
+      No solo CTR. Cruzamos: spend diario · clics · llamadas · clics Booksy ·
+      <strong>huecos rellenados en agenda</strong> (revisión manual con Reni).
+      Si hay clics y la agenda no se mueve, el problema es landing, horario, precio percibido o respuesta al teléfono — no “más presupuesto”.
+    </p>
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 08 CALENDARIO ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">08 / 09</div>
+  </div>
+
+  <div class="section-label">Calendario operativo</div>
+  <div class="section-title">1–9 agosto<br>día a día</div>
+  <p class="section-intro">
+    Alineado a fiestas del festival y a que el domingo el estudio no abre.
+    “Peak” = priorizar huecos en Booksy y vigilar presupuesto.
+  </p>
+
+  <div class="cal-grid">
+    <div class="cal-day peak">
+      <div class="dow">Sábado · Peak</div>
+      <div class="date">01 ago</div>
+      <p>Big Opening de noche. Estudio 11:00–19:00, jornada completa. 11 citas libres en agenda.</p>
+    </div>
+    <div class="cal-day closed">
+      <div class="dow">Domingo · Cerrado</div>
+      <div class="date">02 ago</div>
+      <p>Guapo + Guyz de noche. Ads mínimos en tarde-noche: “reserva online para mañana”, solo Booksy, sin llamada.</p>
+    </div>
+    <div class="cal-day peak">
+      <div class="dow">Lunes · Peak</div>
+      <div class="date">03 ago</div>
+      <p>Recuperación post-finde + pre-semana. Buen día de captación EN.</p>
+    </div>
+    <div class="cal-day">
+      <div class="dow">Martes</div>
+      <div class="date">04 ago</div>
+      <p>Waterpark (día/noche) + Candy. Mañana y mediodía útiles para corte/barba.</p>
+    </div>
+    <div class="cal-day peak">
+      <div class="dow">Miércoles · Peak local</div>
+      <div class="date">05 ago</div>
+      <p>Macho en Luz de Gas · Muntaner 246. Misma calle que el estudio. Destacar ubicación en el copy.</p>
+    </div>
+    <div class="cal-day">
+      <div class="dow">Jueves</div>
+      <div class="date">06 ago</div>
+      <p>Sundia (tarde) + PervertXXL (noche). Agenda normal con pestaña a tarde.</p>
+    </div>
+    <div class="cal-day peak">
+      <div class="dow">Viernes · Peak</div>
+      <div class="date">07 ago</div>
+      <p>Pre-Main Event y día clave: el sábado es media jornada, así que el grueso del “haircut before Saturday” se captura hoy.</p>
+    </div>
+    <div class="cal-day peak">
+      <div class="dow">Sábado · Peak</div>
+      <div class="date">08 ago</div>
+      <p>Main Event esa noche. Estudio 11:00–19:00. Día de máxima inversión: 17 citas libres.</p>
+    </div>
+    <div class="cal-day closed">
+      <div class="dow">Domingo · Cerrado</div>
+      <div class="date">09 ago</div>
+      <p>Closing La Leche. Ads OFF. Cierre de informe de la ventana Circuit.</p>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top: 20px;">
+    <strong>Presupuesto: se deriva de los huecos, no al revés.</strong>
+    Primera pregunta a Reni: ¿cuántos huecos libres hay del 1 al 9 y a qué ticket medio?
+    Techo racional ≈ huecos × ticket medio. La bolsa exacta se fija con ese dato
+    (días abiertos + franja mínima del dom 2 tarde), con daily cap y subidas en peak solo si quedan huecos.
+    El ad spend lo paga el cliente en la plataforma; la gestión es aparte según acuerdo.
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ 09 CHECKLIST + KPIs ═══════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <div class="page-header-brand">Private Studio — Google Ads Circuit 2026</div>
+    <div class="page-header-num">09 / 09</div>
+  </div>
+
+  <div class="section-label">Arranque</div>
+  <div class="section-title">Checklist y<br>cómo medimos</div>
+
+  <div class="section-label" style="margin-top: 4px;">Antes de gastar 1 €</div>
+  <ul class="check-list" style="margin-bottom: 28px;">
+    <li>
+      <div class="check-box"></div>
+      <div>Acceso admin Google Ads (cuenta de Reni) + método de pago activo</div>
+    </li>
+    <li>
+      <div class="check-box"></div>
+      <div>Google Business Profile vinculado a la cuenta de Ads · horario real (dom cerrado, sáb 10–15) · teléfono correcto · atributo “LGBTQ+ friendly”</div>
+    </li>
+    <li>
+      <div class="check-box"></div>
+      <div>Huecos Booksy contados 1–9 ago (excepto domingos) → de ahí sale el techo de presupuesto · regla de pausa si full</div>
+    </li>
+    <li>
+      <div class="check-box"></div>
+      <div>Techo de inversión festival acordado + daily cap</div>
+    </li>
+    <li>
+      <div class="check-box"></div>
+      <div>Conversiones mínimas: clic Booksy + llamadas · GTM verificado · anuncios EN aterrizan en /?lang=en</div>
+    </li>
+    <li>
+      <div class="check-box"></div>
+      <div>Quién contesta el teléfono en horario de anuncio (y si hay inglés en silla)</div>
+    </li>
+  </ul>
+
+  <div class="section-label">KPIs de la ventana</div>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="label">Coste por reserva (proxy)</div>
+      <div class="value">Spend ÷ citas</div>
+      <div class="hint">Citas nuevas en ventana Circuit atribuidas a Ads / llamada. Objetivo: por debajo del margen de un servicio de entrada.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Tasa de utilidad del clic</div>
+      <div class="value">Llamadas + Booksy</div>
+      <div class="hint">Si hay clics y casi cero acciones, se revisa anuncio, landing o recurso — no se sube budget a ciegas.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Split ES / EN</div>
+      <div class="value">% spend &amp; citas</div>
+      <div class="hint">Validar si el inglés paga el pico. Si EN convierte, se mantiene post-festival en menor escala.</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Días peak vs resto</div>
+      <div class="value">1 · 3 · 5 · 7 · 8</div>
+      <div class="hint">Comparar coste y reservas. Reasignar presupuesto al día siguiente si un peak se llena.</div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top: 24px;">
+    <h4>Siguiente paso — timing crítico</h4>
+    <p>
+      El festival empieza el sábado 1: cuenta, facturación, verificación del anunciante y revisión de anuncios
+      deben quedar cerrados <strong>entre hoy y el viernes 31 por la mañana</strong>. Si no llega al sábado,
+      el primer día real es el lunes 3 — se pierde un peak, no la campaña. Al cerrar el 9 ago: informe corto
+      de resultados y decisión de presupuesto “régimen normal” para el resto de agosto.
+    </p>
+  </div>
+
+  <div style="margin-top: 36px; text-align: center;">
+    <div style="width: 60px; height: 3px; background: #c9a96e; margin: 0 auto 20px;"></div>
+    <p style="font-size: 11px; font-weight: 600; color: #999; letter-spacing: 0.12em;">PRIVATE STUDIO · BARCELONA</p>
+    <p style="font-size: 18px; font-weight: 900; margin-top: 8px; letter-spacing: -0.02em;">Muntaner 172 · Eixample</p>
+    <p style="font-size: 12px; color: #777; margin-top: 8px;">barberbarcelona.es · +34 624 367 153</p>
+  </div>
+
+  <div class="page-footer">
+    <span>PRIVATE STUDIO</span>
+    <span>CIRCUIT FESTIVAL 2026</span>
+  </div>
+</div>
+
+</body>
+</html>
