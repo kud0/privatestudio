@@ -24,3 +24,7 @@ pnpm-debug.log*
 .idea/
 .vercel
 .env*.local
+
+# Bitácora Circuit: datos operativos, no código
+scripts/circuit-2026/agenda-historico.jsonl
+scripts/circuit-2026/snapshot.log

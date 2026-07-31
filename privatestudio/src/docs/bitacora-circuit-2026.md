@@ -1,0 +1,109 @@
+# Bitácora — Private Studio · Google Ads
+
+Registro de todo lo que se toca, con fecha, motivo y resultado. Sirve para dos cosas:
+evaluar después si cada decisión fue acertada, y poder deshacer cualquier cambio sabiendo
+exactamente qué había antes.
+
+**Formato:** cada entrada dice QUÉ se cambió, POR QUÉ, cuál era el ESTADO ANTERIOR y cómo
+se VERIFICÓ. Las entradas nuevas van al final de su día.
+
+---
+
+## Estado de partida (antes de tocar nada)
+
+Fotografía de la cuenta **608-571-5182** al obtener acceso el 31 jul 2026:
+
+| Concepto | Valor |
+|---|---|
+| Histórico | Desde 30 nov 2024 · €3.672,16 · 11.836 clics · CPC €0,31 |
+| Campañas | 5 (2 activas, 3 paradas/terminadas) |
+| Presupuesto activo | €1,00/día (dos campañas a €0,50) |
+| "2025 GA" (Search) | Max clics · 835 conv · €1,33/conv · €1.110,86 |
+| "Tu Barbería y Peluquería" (P.Max) | Max conversiones · 48 conv · €37,09/conv · €1.780,35 |
+| Estructura de "2025 GA" | **Un solo ad group** ("Gruppo di annunci 1") con ES y EN mezclados |
+| Conversión "Book appointment" | **Misconfigured** (3 de 5 campañas) |
+| "barberia cerca de mi" | **Rarely shown (low Quality Score)** |
+| Dominio privatestudiobarber.com | 885 clics facturados · HTTP 522 (caído) |
+
+---
+
+## 31 julio 2026
+
+### 09:50 · Cuenta manager: tipo de empresa y uso declarado
+- **Qué:** en el API Center del manager 797-490-8380, `Company type` pasó de
+  `Independent Google Ads Developer` a `Agency/SEM`. `Intended use` reescrito en inglés
+  describiendo gestión de cuentas de clientes y automatización ligada a capacidad de agenda.
+- **Por qué:** la opción anterior dice literalmente *"You do not manage Google Ads campaigns
+  for clients"*, lo contrario del caso real. El texto anterior decía "solo cuentas propias".
+- **Resultado:** al guardar, el developer token subió solo de `Test Account` a
+  **`Explorer Access`**, que sí permite operar cuentas de producción (2.880 ops/día).
+- **Verificado:** Access level en pantalla tras recargar.
+
+### 10:35 · Vinculación de la cuenta de Reni al manager
+- **Qué:** solicitud de vinculación 608-571-5182 → manager 797-490-8380. Aceptada por Reni.
+- **Incidencia:** dos intentos fallidos antes. Causa 1: Google exige el reto *"Confirm it's
+  you"* en acciones sensibles, que un navegador automatizado no supera. Causa 2: el campo
+  quedó con el ID escrito dos veces, lo que deshabilitaba el botón sin mensaje claro.
+- **Verificado:** aparece como sub-cuenta "Client (EUR)", vinculada 10:36.
+
+### ~11:00 · Auditoría completa de la cuenta
+- **Qué:** lectura de campañas, keywords, anuncios, páginas de destino, conversiones y
+  facturación. Resultados en `circuit-2026-lanzamiento.md`.
+- **Hallazgo principal:** la conversión de reserva está rota, así que las 883 "conversiones"
+  son mayoritariamente llamadas telefónicas y no citas.
+- **Falsa alarma descartada:** la ruta `/barberia/barcelona` del anuncio parecía un enlace
+  roto; es display path cosmético y el destino real responde 200.
+
+### ~12:00 · Corrección de horarios en la web (desplegado)
+- **Qué:** `Layout.astro` (schema LocalBusiness) y `FAQ.astro` (schema FAQPage) declaraban
+  L–V 10:00–20:00 y sábado 10:00–15:00. Corregido a **L–V 11:00–20:00, sábado 11:00–19:00**.
+- **Por qué:** Reni detectó el error. La web se contradecía a sí misma: el footer y la FAQ
+  visible ya decían lo correcto, pero los datos estructurados —los que lee Google para Maps
+  y los resultados de búsqueda— decían otra cosa.
+- **Fuente autorizada:** `open_hours` de la configuración de Booksy.
+- **Duda abierta:** Booksy dice sábado hasta 20:00; la web dice 19:00. Los últimos huecos
+  libres de los dos sábados (18:20 y 18:15, frente a 19:15 entre semana) encajan con 19:00.
+  **Pendiente de confirmar con Reni.**
+- **Verificado:** producción sirve `opens 11:00 / closes 20:00` y `11:00 / 19:00`.
+  Commit `ed93dfc`.
+
+### ~12:10 · Retirada de la keyword "gay friendly barber"
+- **Qué:** eliminada de los tres documentos y del plan.
+- **Por qué:** es una decisión de posicionamiento de marca que corresponde a Reni y no se
+  había hablado con él. Además su volumen nunca se verificó. Sustituida por
+  `english speaking barber` y `barber eixample`.
+- **Nota:** el atributo "LGBTQ+ friendly" de la ficha de Google es otra cosa —lo marca el
+  propio negocio, no pasa por publicidad— y sigue recomendado.
+
+### 10:16 · Línea base de agenda: primer snapshot
+- **Qué:** script `booksy-snapshot.mjs` + cron a las 09, 13, 17 y 21 h.
+- **Por qué:** faltaba el dato que separa lo que aporta la campaña de lo que se llenaría
+  igualmente. Comparando snapshots se obtiene la velocidad natural de reserva.
+- **Primer dato:** **123 huecos libres** del 1 al 9 de agosto (sáb 1: 11 · lun 3: 16 ·
+  mar 4: 22 · mié 5: 11 · jue 6: 22 · vie 7: 24 · sáb 8: 17).
+- **Verificado:** snapshot guardado en `agenda-historico.jsonl`; cron listado y probado con
+  la ruta real de node (`/opt/homebrew/bin/node`).
+
+### Decisión tomada · Arreglar "2025 GA", no crear campaña nueva
+- **Motivo:** ya tiene las keywords en ES y EN, 20 meses de histórico y quality score. Una
+  campaña nueva competiría contra ella por las mismas búsquedas, encareciendo el CPC y
+  partiendo de calidad cero.
+- **Aprobado por Alex el 31 jul.**
+
+---
+
+## Pendiente de ejecutar
+
+1. Reparar la conversión **Book appointment** (prioridad cero: sin ella no hay criterio).
+2. Separar el ad group único en **ES** y **EN**, con anuncios propios.
+3. Añadir keywords EN que faltan: `haircut barcelona`, `men's haircut barcelona`,
+   `beard trim barcelona`, `english speaking barber`, `barber eixample`.
+4. Programación horaria real y presupuesto de la ventana 1–9 ago.
+5. Instalar los dos Google Ads Scripts (`ads-script-guardia.js`, `ads-script-informe-diario.js`).
+
+## Pendiente de terceros
+
+- **Reni:** confirmar cierre del sábado (19:00 o 20:00) y estimar cuántos huecos se llenan
+  sin publicidad en una semana normal de agosto.
+- **Google:** solicitud de Basic Access (5 días laborables), a pedir la semana que viene con
+  la cuenta ya vinculada al manager.
