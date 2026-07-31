@@ -11,9 +11,10 @@
  *   Programar: "Cada hora"
  *
  * Qué hace cada hora:
- *   1. Interruptor manual: si CONTROL_URL devuelve {"estado":"pausa"}, pausa. Si
- *      devuelve {"estado":"activa"}, reactiva. Si no responde, NO toca nada.
- *   2. Tope de gasto del periodo: si el gasto acumulado 1–9 ago supera TOPE_PERIODO,
+ *   1. Agenda: si CONTROL_URL dice {"estado":"pausa"} (sin huecos en 48 h), pausa.
+ *      Si dice "activa", ajusta el presupuesto diario al que indique el control.
+ *      Si no responde, NO toca nada.
+ *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
  *      pausa y avisa. Es la red de seguridad contra un error de configuración.
  *   3. Horario: fuera del horario de apertura, pausa. Complementa al ad schedule.
  *   4. Aviso por email al llegar al 80% del tope.
@@ -51,9 +52,9 @@ var HORARIO = {
 // del día siguiente (el estudio está cerrado, pero Booksy acepta reservas).
 var DOMINGO_2_TARDE = { fecha: '2026-08-02', desde: 17, hasta: 23 };
 
-// URL con el estado de la agenda. Formato esperado:
-//   {"estado":"activa"}  ·  {"estado":"pausa"}  ·  {"estado":"auto"}
-// "auto" = el script decide solo por horario y tope.
+// Control publicado por el cron de Booksy. Formato:
+//   {"estado":"activa"|"pausa", "presupuesto_diario": 10|20|30, "motivo": "..."}
+// Si no responde o es ilegible, el guardián no toca ni estado ni presupuesto.
 var CONTROL_URL = 'https://www.barberbarcelona.es/ads-control.json';
 
 var EMAIL_AVISOS = 'alexsole@gmail.com';
@@ -75,16 +76,27 @@ function main() {
 
   // 1 · Interruptor manual (tiene prioridad sobre todo lo demás)
   var control = leerControl();
-  registro.push('control=' + control);
+  registro.push('control=' + control.estado);
 
-  if (control === 'pausa') {
+  if (control.estado === 'pausa') {
     if (campana.isEnabled()) {
       campana.pause();
-      avisar('Campaña pausada por interruptor manual',
-             'La campaña "' + CAMPANA + '" se ha pausado porque el control externo indica "pausa".');
+      avisar('Campaña pausada: agenda llena',
+             'La campaña "' + CAMPANA + '" se ha pausado. Motivo: ' + control.motivo);
     }
-    Logger.log(registro.join(' | ') + ' → pausada por interruptor');
+    Logger.log(registro.join(' | ') + ' → pausada por agenda llena');
     return;
+  }
+
+  // Presupuesto dinámico: el control indica cuánto merece la pena gastar hoy
+  // según los huecos que quedan por delante. Redistribuye, no añade gasto: el
+  // tope total sigue siendo TOPE_PERIODO.
+  if (control.presupuesto > 0) {
+    var presupuestoActual = campana.getBudget().getAmount();
+    if (Math.abs(presupuestoActual - control.presupuesto) > 0.01) {
+      campana.getBudget().setAmount(control.presupuesto);
+      registro.push('presupuesto=' + presupuestoActual + '→' + control.presupuesto);
+    }
   }
 
   // 2 · Tope de gasto del periodo
@@ -95,7 +107,7 @@ function main() {
     if (campana.isEnabled()) {
       campana.pause();
       avisar('Campaña pausada: tope de periodo alcanzado',
-             'Gasto acumulado del 1 al 9 de agosto: €' + gastado.toFixed(2) +
+             'Gasto acumulado del periodo: €' + gastado.toFixed(2) +
              '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '. La campaña queda pausada.');
     }
     Logger.log(registro.join(' | ') + ' → pausada por tope');
@@ -119,7 +131,7 @@ function main() {
     return;
   }
 
-  if (debeEstarActiva && !campana.isEnabled() && control !== 'pausa') {
+  if (debeEstarActiva && !campana.isEnabled() && control.estado !== 'pausa') {
     campana.enable();
     Logger.log(registro.join(' | ') + ' → reactivada por horario');
     return;
@@ -144,23 +156,29 @@ function gastoPeriodo(campana) {
 }
 
 /**
- * Lee el estado externo. Devuelve 'activa', 'pausa' o 'auto'.
- * Ante cualquier fallo devuelve 'auto': no tocar nada por un error de red.
+ * Lee el control publicado por el cron de Booksy.
+ * Devuelve {estado, presupuesto, motivo}. Ante cualquier fallo devuelve estado
+ * 'auto' y presupuesto 0: no se toca nada por un error de red.
  */
 function leerControl() {
-  if (!CONTROL_URL) return 'auto';
+  var vacio = { estado: 'auto', presupuesto: 0, motivo: 'control no disponible' };
+  if (!CONTROL_URL) return vacio;
   try {
     var resp = UrlFetchApp.fetch(CONTROL_URL, {
       muteHttpExceptions: true,
       followRedirects: true
     });
-    if (resp.getResponseCode() !== 200) return 'auto';
+    if (resp.getResponseCode() !== 200) return vacio;
     var datos = JSON.parse(resp.getContentText());
     var estado = String(datos.estado || '').toLowerCase();
-    return (estado === 'pausa' || estado === 'activa') ? estado : 'auto';
+    return {
+      estado: (estado === 'pausa' || estado === 'activa') ? estado : 'auto',
+      presupuesto: Number(datos.presupuesto_diario) || 0,
+      motivo: datos.motivo || ''
+    };
   } catch (e) {
-    Logger.log('Control ilegible (' + e + '). Se asume "auto".');
-    return 'auto';
+    Logger.log('Control ilegible (' + e + '). No se toca nada.');
+    return vacio;
   }
 }
 
