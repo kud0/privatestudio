@@ -184,6 +184,29 @@ contenedor `GTM-WSZS5CV5` en el clic saliente a Booksy.
 conversiones adicional y conviene revisarla — aparece también `benasout-3c98f` (546148157),
 sin vincular, con pinta de proyecto de Firebase ajeno.
 
+### 14:18 · 🚀 PRESUPUESTO SUBIDO — decisión de Alex: 200 € del 1 al 15 de agosto
+
+- **Campaña `PS | Search | Barcelona`** (campaignId `22697186771`): presupuesto diario
+  **€0,50 → €20,00**.
+- **Reparto acordado:** 20 €/día del 1 al 8 (festival) y 10 €/día del 10 al 15 (cola).
+  Son 13 días abiertos —los domingos 2 y 9 cierra— y suma **200 € exactos**.
+- **Por qué se pesa más el festival:** es cuando existe la demanda incremental; la semana
+  siguiente vuelve al público local de siempre.
+- **Verificado:** tras recargar, la campaña muestra `€20.00/day`, estado `Eligible`,
+  y el optimization score subió de 69,9% a **86,1%**.
+- **Pendiente:** bajar a 10 €/día el **lunes 10 de agosto**.
+
+### 14:26 · Horario de anuncios configurado (antes: 24/7)
+
+- **Estado anterior:** *"Your ads are eligible to show all the time"* — sin ninguna
+  programación. Con €0,50/día apenas importaba; con €20/día se pagarían clics de
+  madrugada y en domingo con el estudio cerrado.
+- **Configurado:** L–V **11:00–20:00** · Sábados **11:00–19:00** · **Domingos: nada**.
+- **Verificado** tras recargar, los seis tramos existen por separado:
+  Mondays / Tuesdays / Wednesdays / Thursdays / Fridays 11:00 AM – 8:00 PM,
+  Saturdays 11:00 AM – 7:00 PM. Sin tramo de domingo.
+- Zona horaria de la cuenta: (GMT+02:00) Central European Time — correcta.
+
 ---
 
 ## Pendiente de ejecutar

@@ -25,15 +25,14 @@
 
 // ─── Configuración ──────────────────────────────────────────────────────────
 
-var CAMPANA = 'PONER_NOMBRE_EXACTO_DE_LA_CAMPANA';
+var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
 
-// Tope de gasto de toda la ventana del festival, en euros.
-// Se calcula como (huecos libres 1–9 ago) × (ticket medio) × MARGEN_SEGURIDAD.
-// Pendiente del dato de Reni: no inventar esta cifra.
-var TOPE_PERIODO = 0;
+// Tope de gasto acordado con el cliente para toda la ventana, en euros.
+// Decisión de Alex el 31 jul: 200 € del 1 al 15 de agosto.
+var TOPE_PERIODO = 200;
 
 var INICIO = '2026-08-01';
-var FIN    = '2026-08-09';
+var FIN    = '2026-08-15';
 
 // Horario de apertura del estudio, hora de Madrid. 0 = domingo.
 // Fuente: configuración de Booksy (open_hours), contrastada con los huecos reales

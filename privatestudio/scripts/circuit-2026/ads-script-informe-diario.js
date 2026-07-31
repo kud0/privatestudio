@@ -12,9 +12,9 @@
  * apagado y aunque nadie tenga sesión abierta en ningún sitio.
  */
 
-var CAMPANA = 'PONER_NOMBRE_EXACTO_DE_LA_CAMPANA';
+var CAMPANA = 'PS | Search | Barcelona';
 var INICIO  = '2026-08-01';
-var FIN     = '2026-08-09';
+var FIN     = '2026-08-15';
 var EMAIL   = 'alexsole@gmail.com';
 
 // Enlace directo a la agenda, para resolver la comprobación desde el móvil.
