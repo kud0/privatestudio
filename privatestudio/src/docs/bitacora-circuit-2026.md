@@ -90,6 +90,43 @@ Fotografía de la cuenta **608-571-5182** al obtener acceso el 31 jul 2026:
   partiendo de calidad cero.
 - **Aprobado por Alex el 31 jul.**
 
+### ~12:30 · Diagnóstico de la conversión rota — CAUSA RAÍZ ENCONTRADA
+
+- **La acción se llama "Reserva cita booksy"** (ctId 7021274783), creada el 23 ene 2025.
+  Tipo Website · evento manual · Primary · optimiza "Book appointments" · valor por defecto
+  **18 €** · ventana de clic 7 días · atribución basada en datos.
+- **Estado real: `Inactive`, 0,00 conversiones registradas.**
+- **Por qué:** verificado en el navegador contra la web en producción —
+  - GTM (`GTM-MR7LGNJL`) **carga correctamente**;
+  - `window.gtag` **no existe**;
+  - el dataLayer solo tiene los 3 eventos de arranque del propio GTM;
+  - **cero peticiones a `googleadservices` o `doubleclick`**;
+  - los enlaces a Booksy son `<a href>` planos, sin onclick ni atributos de evento.
+
+  **El contenedor de GTM está instalado pero vacío: no dispara ninguna etiqueta.**
+  La conversión existe en Google Ads pero nada en la web la activa. Lleva así desde que se
+  rehízo la web en Astro, como mínimo.
+
+- **🔴 Bloqueo nuevo: no tenemos acceso a Tag Manager.** `tagmanager.google.com` con
+  alexsole@gmail.com muestra **cero cuentas** ("Create Account"). El contenedor
+  `GTM-MR7LGNJL` que corre en la web de Reni **lo controla un tercero** — probablemente la
+  agencia anterior. Y la cuenta de Ads está configurada como *"Enhanced conversions for leads:
+  Managed through Google Tag Manager"*, es decir, apunta a un contenedor que no manejamos.
+
+  Esto es además un riesgo de negocio para Reni que conviene que sepa: un tercero tiene
+  capacidad de inyectar o retirar etiquetas en su web.
+
+**Dos vías para arreglarlo:**
+
+| Vía | Qué implica | Valoración |
+|---|---|---|
+| A · Recuperar acceso a GTM | Preguntar a Reni de quién es el contenedor y que añada a alexsole@gmail.com | Correcta a largo plazo, pero depende de Reni **y de un tercero**. No llega para mañana |
+| B · Implementar la etiqueta en la web (Astro) | Añadir el Google tag + evento en el clic a Booksy, en el repo | **Recomendada.** Bajo nuestro control, versionada, testeable, sin depender de nadie |
+
+**Falta para ejecutar la vía B:** el ID de conversión (`AW-…`) y el nombre del evento. La UI
+de Google Ads no los expone en la vista de detalle (solo "Manage" y "Edit settings", que no
+abren el snippet). **Pendiente de localizar.**
+
 ---
 
 ## Pendiente de ejecutar
