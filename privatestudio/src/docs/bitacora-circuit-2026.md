@@ -207,6 +207,40 @@ sin vincular, con pinta de proyecto de Firebase ajeno.
   Saturdays 11:00 AM – 7:00 PM. Sin tramo de domingo.
 - Zona horaria de la cuenta: (GMT+02:00) Central European Time — correcta.
 
+### 14:41 · Gasto dinámico según ocupación — circuito montado (falta instalar el guardián)
+
+**Cómo funciona el lazo completo:**
+
+```
+cron 4×/día → lee agenda de HOY+MAÑANA en Booksy
+            → decide activa/pausa
+            → escribe public/ads-control.json → git push → Vercel despliega
+            → guardián en Google Ads lo lee cada hora → pausa o reactiva la campaña
+```
+
+- **Regla:** si en las próximas 48 h quedan menos de `MINIMO_PARA_SEGUIR` (=1) citas
+  libres, la campaña se pausa sola. Al liberarse un hueco, vuelve.
+- **Por qué 48 h y no solo hoy:** el turista reserva para hoy *o mañana*. Pausar porque
+  hoy esté lleno perdería las reservas del día siguiente.
+- **Por qué un fichero en la web:** un Google Ads Script no puede consultar Booksy ni
+  autenticarse contra nada. Una URL pública es la única superficie que sabe leer.
+- **Verificado:** `https://www.barberbarcelona.es/ads-control.json` responde **200** con
+  `{"estado":"activa","citas_48h":9,...}`.
+
+**Dos errores propios detectados y corregidos por el camino:**
+
+1. **Línea base envenenada.** Al ampliar la ventana de 1–9 a 1–15 ago, el script comparó
+   totales de rangos distintos y reportó "+95 huecos liberados". Falso: eran 6 días más.
+   Ahora cada snapshot guarda su `ventana` y solo se compara contra la misma. Histórico
+   saneado a mano conservando el dato bueno.
+2. **Publicación que nunca salía.** Comparaba el estado contra el fichero local que
+   acababa de escribir, así que siempre creía que no había cambios y no publicaba nunca.
+   Ahora compara contra lo commiteado (`git show HEAD:…`) y decide con `git status`: si
+   una publicación falla, el siguiente ciclo la reintenta solo.
+
+**Primer dato real de línea base:** entre las 10:16 y las 11:00 se reservaron
+**2 citas sin publicidad** (ventana 1–9 ago, de 123 a 121 huecos).
+
 ---
 
 ## Pendiente de ejecutar
