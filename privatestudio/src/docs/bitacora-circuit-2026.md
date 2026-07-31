@@ -265,6 +265,39 @@ que es el orden equivocado. Motivos técnicos para descartarlo:
 
 **Queda:** 20 €/día fijos + pausa automática cuando no hay huecos en 48 h.
 
+### 17:05 · Audio de Reni — tres peticiones, una ya diagnosticada
+
+Transcripción del audio (31 jul, 1:18 min):
+
+1. **Llamadas de fuera de Barcelona** (menciona Mataró) y competencia con otras barberías.
+   Pide que se enfoque solo en Barcelona centro.
+2. **Confusión de marca:** dice que había anuncios donde la gente pensaba que era otra
+   peluquería, con otro nombre. Pide verificar que salga el nombre correcto, el teléfono
+   y las opciones de reserva.
+3. **Prioridad a las llamadas esta semana:** "los guiris ponen llamadas y ven si está
+   abierto". Quiere el teléfono destacado.
+
+**Diagnóstico del punto 1 — confirmado con datos:**
+
+La segmentación geográfica es **5,0 km alrededor de Calle de Muntaner, 172** — correcta y
+ajustada, no es Mataró. El problema está en la **opción de ubicación**:
+
+| Métrica | Valor |
+|---|---|
+| Clics desde la ubicación segmentada | 4.478 |
+| Clics totales de la campaña | 5.386 |
+| **Clics de fuera del radio** | **908 (17%)** |
+
+Esos 908 entran por la opción *"presencia **o interés**"*, que incluye a quien busca
+"barbería barcelona" desde Mataró. **La corrección es cambiarla a "presencia" a secas.**
+
+**No aplicado todavía:** la pantalla de ajustes de campaña dejó de cargar (la sesión quedó
+tocada tras el intento de autorización OAuth del script). Pendiente de reintentar.
+
+**Puntos 2 y 3 sin verificar aún.** El punto 2 puede venir de la P.Max "Tu Barbería y
+Peluquería", que genera títulos automáticos y manda tráfico a business.google.com — encaja
+con "parecía otra peluquería". Pendiente de revisar los assets.
+
 ---
 
 ## Pendiente de ejecutar
