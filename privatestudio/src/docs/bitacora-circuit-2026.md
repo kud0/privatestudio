@@ -241,6 +241,30 @@ cron 4×/día → lee agenda de HOY+MAÑANA en Booksy
 **Primer dato real de línea base:** entre las 10:16 y las 11:00 se reservaron
 **2 citas sin publicidad** (ventana 1–9 ago, de 123 a 121 huecos).
 
+### 15:40 · Guardián simplificado — pendiente de instalar (requiere a Alex)
+
+- **Retirada la gestión de horario del script.** La cubre ya el ad schedule nativo de la
+  campaña; duplicarla solo añadía riesgo de dejarla pausada por un fallo de lectura.
+  El guardián queda en 166 líneas con lo que Google no cubre: **pausa por agenda llena,
+  tope de 200 € y avisos por correo**.
+- **Retirado también el presupuesto variable** (ver decisión más abajo).
+- **Instalación no automatizable:** el editor de Google Ads Scripts es un editor de código
+  propio que no acepta pegado fiable por automatización, y la autorización es un consent
+  de Google que solo puede completar el titular. **Lo instala Alex** desde
+  Herramientas → Acciones masivas → Scripts → **+**.
+
+### Decisión revertida · Presupuesto variable según ocupación → descartado
+
+Alex propuso variar el importe diario según huecos. Se implementó y **luego** se evaluó,
+que es el orden equivocado. Motivos técnicos para descartarlo:
+
+1. Google reparte el gasto a lo largo del día; cambiar el presupuesto varias veces
+   reinicia ese cálculo y vuelve la entrega errática.
+2. Los tramos (5/15 citas → 10/20/30 €) no tenían ningún dato detrás.
+3. El ahorro potencial era de pocos euros sobre un techo de 200 €.
+
+**Queda:** 20 €/día fijos + pausa automática cuando no hay huecos en 48 h.
+
 ---
 
 ## Pendiente de ejecutar
