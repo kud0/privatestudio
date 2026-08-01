@@ -183,7 +183,7 @@ function publicarMetricas(campana) {
     ['fin', FIN],
     // Deja constancia de que el informe diario salió, sin depender de abrir el
     // correo para comprobarlo.
-    ['ultimo_informe', ultimoInforme(zona)]
+    ['ultimo_informe', ultimoInforme()]
   ];
 
   var hoja = SpreadsheetApp.openById(HOJA_ID).getSheets()[0];
@@ -195,7 +195,7 @@ function publicarMetricas(campana) {
  * Fecha del último informe enviado. Se deduce de las etiquetas «informe-AAAA-MM-DD»
  * que deja `informeDiarioSiToca`, que son la misma marca que evita repetirlo.
  */
-function ultimoInforme(zona) {
+function ultimoInforme() {
   var ultima = '';
   var it = AdsApp.labels().withCondition('Name CONTAINS "informe-"').get();
   while (it.hasNext()) {
