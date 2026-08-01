@@ -49,12 +49,14 @@
   .dia .n{font-size:11px;color:var(--ink2)}
 
   .dinero{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
-  .dinero .fila{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-  .gasto{font-size:26px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+  .dinero .fila{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+  .gasto{font-size:28px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
   .tope{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
   .barra{height:6px;background:var(--line);border-radius:100px;overflow:hidden}
-  .barra i{display:block;height:100%;width:2%;background:var(--gold);border-radius:100px}
-  .marcas{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-top:4px}
+  .barra i{display:block;height:100%;width:0;background:var(--gold);border-radius:100px;
+    transition:width .5s ease}
+  .marcas{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--ink3);margin-top:4px}
+  .marcas span:nth-child(2){text-align:center}
 
   .extra{display:grid;grid-template-columns:1fr 1fr;gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -85,7 +87,7 @@
       <div class="titulo">Campaña Circuit</div>
       <div class="sub">Private Studio · 1–15 agosto</div>
     </div>
-    <span class="estado warn">● Pausada: agenda llena</span>
+    <span class="estado warn" id="estado">● Pausada: agenda llena</span>
   </header>
 
   <h2 class="seccion">Huecos libres en los próximos días abiertos</h2>
@@ -102,20 +104,32 @@
       </div>
   </div>
 
+  <h2 class="seccion">Dinero gastado</h2>
+  <div class="dinero">
+    <div class="fila">
+      <div><span class="gasto" id="gasto">—</span><span class="tope" id="de-tope"> de 200 €</span></div>
+      <div class="tope" id="restante"></div>
+    </div>
+    <div class="barra"><i id="barra"></i></div>
+    <div class="marcas">
+      <span>1 ago</span>
+      <span id="sello">leyendo el gasto real…</span>
+      <span>15 ago</span>
+    </div>
+  </div>
+
+  <div class="extra">
+    <div><div class="k">Hoy</div><div class="v" id="hoy">—</div></div>
+    <div><div class="k">Clics</div><div class="v" id="clics">—</div></div>
+    <div><div class="k">Se ha visto</div><div class="v" id="impresiones">—</div></div>
+    <div><div class="k">Coste por clic</div><div class="v" id="cpc">—</div></div>
+  </div>
+
   <div class="extra">
     <div><div class="k">Reservadas hoy</div><div class="v">14</div></div>
     <div><div class="k">Libres 1–15 ago</div><div class="v">177</div></div>
-    <div><div class="k">Ritmo</div><div class="v">36<small>/día</small></div></div>
+    <div><div class="k">Ritmo</div><div class="v">35<small>/día</small></div></div>
     <div><div class="k">Radio</div><div class="v">2,5 km</div></div>
-  </div>
-
-  <div class="dinero">
-    <div class="fila">
-      <div><span class="gasto">20 €</span><span class="tope"> al día máximo</span></div>
-      <div class="tope">tope total 200 €</div>
-    </div>
-    <div class="barra"><i></i></div>
-    <div class="marcas"><span>1 ago</span><span>el gasto real llega por correo cada mañana</span><span>15 ago</span></div>
   </div>
 
   <div class="prot">
@@ -126,8 +140,77 @@
     </ul>
   </div>
 
-  <footer>Actualizado el 1 ago · 17:00 · se refresca solo 4 veces al día</footer>
+  <footer>Huecos actualizados el 1 ago · 17:02 · el gasto se lee de Google Ads al abrir esta página</footer>
 
 </div>
+
+<script>
+/* El gasto no puede venir del generador del panel: sólo Google Ads lo sabe.
+   El guardián lo vuelca cada hora en una hoja publicada como CSV, y aquí se
+   lee al abrir la página. Si falla, se dice que falla — nunca un número
+   inventado ni una barra decorativa. */
+(function () {
+  var CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQFDtzeZFuF68CwZCuBTt858Ysn9VIpej9rSOQpycXoQu_Qf7hXRJ5jl1JwMHedtw3qeGLkT9nKE-KP/pub?output=csv';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var euros = function (n) {
+    return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  };
+
+  function parsear(texto) {
+    var datos = {};
+    texto.trim().split(/\r?\n/).forEach(function (linea) {
+      var corte = linea.indexOf(',');
+      if (corte < 0) return;
+      var clave = linea.slice(0, corte).trim();
+      var valor = linea.slice(corte + 1).trim().replace(/^"|"$/g, '');
+      datos[clave] = valor;
+    });
+    return datos;
+  }
+
+  function pintar(d) {
+    var gastado = parseFloat(d.gastado_periodo);
+    var tope = parseFloat(d.tope_periodo);
+    if (isNaN(gastado) || isNaN(tope)) return fallo('datos incompletos');
+
+    $('gasto').textContent = euros(gastado);
+    $('de-tope').textContent = ' de ' + euros(tope);
+    $('restante').textContent = 'quedan ' + euros(Math.max(0, tope - gastado));
+    $('barra').style.width = Math.min(100, (gastado / tope) * 100).toFixed(1) + '%';
+
+    var hoy = parseFloat(d.gastado_hoy);
+    var diario = parseFloat(d.presupuesto_diario);
+    $('hoy').textContent = isNaN(hoy) ? '—'
+      : euros(hoy) + (isNaN(diario) ? '' : ' de ' + Math.round(diario) + ' €');
+    $('clics').textContent = d.clics_periodo || '0';
+    $('impresiones').textContent = (d.impresiones_periodo || '0') + ' veces';
+    $('cpc').textContent = parseFloat(d.cpc_medio) > 0 ? euros(parseFloat(d.cpc_medio)) : '—';
+
+    if (d.estado) {
+      var e = $('estado');
+      var pausada = d.estado === 'pausada';
+      e.textContent = pausada ? 'Pausada' : 'En marcha';
+      e.className = 'estado ' + (pausada ? 'warn' : 'ok');
+    }
+
+    if (d.actualizado) {
+      var p = d.actualizado.split('T');
+      $('sello').textContent = 'gasto real de Google Ads · ' + p[1] + ' h';
+    }
+  }
+
+  function fallo(motivo) {
+    $('gasto').textContent = 'sin dato';
+    $('de-tope').textContent = ' de 200 €';
+    $('sello').textContent = 'no se ha podido leer el gasto (' + motivo + ')';
+  }
+
+  fetch(CSV + '&t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function (t) { pintar(parsear(t)); })
+    .catch(function (e) { fallo(e.message); });
+})();
+</script>
 </body>
 </html>

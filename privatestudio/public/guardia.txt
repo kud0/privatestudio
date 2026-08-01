@@ -57,8 +57,20 @@ var HORA_INFORME = 8;
 var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
 var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
 
+// Hoja «PS Circuit 2026 — gasto». Publicada como CSV para que el panel pueda
+// leer el gasto real sin necesidad de credenciales:
+//   .../2PACX-1vQFDtzeZFuF68CwZCuBTt858Ysn9VIpej9rSOQpycXoQu_Qf7hXRJ5jl1JwMHedtw3qeGLkT9nKE-KP/pub?output=csv
+// Es el único puente entre lo que Google Ads sabe y lo que el panel enseña.
+var HOJA_ID = '16n-xk77i2ep7Vk5HKxbm8QEvme-RcIhcnm-vC5i6uf0';
+
 // ─── Ejecución ──────────────────────────────────────────────────────────────
 
+/**
+ * Separa las dos responsabilidades: `proteger` decide y actúa sobre el dinero,
+ * `publicarMetricas` solo informa. La publicación va en un finally para que
+ * salga por cualquiera de las tres salidas de `proteger`, y dentro de su propio
+ * try/catch: un fallo escribiendo la hoja nunca puede tumbar la protección.
+ */
 function main() {
   var campana = buscarCampana(CAMPANA);
   if (!campana) {
@@ -67,6 +79,15 @@ function main() {
     return;
   }
 
+  try {
+    proteger(campana);
+  } finally {
+    try { publicarMetricas(campana); }
+    catch (e) { Logger.log('No se pudo publicar en la hoja: ' + e); }
+  }
+}
+
+function proteger(campana) {
   var registro = [];
 
   // 0 · Informe diario (antes que nada: debe salir aunque luego se pause)
@@ -117,6 +138,46 @@ function main() {
   }
 
   Logger.log(registro.join(' | ') + ' → sin cambios');
+}
+
+// ─── Publicación de métricas ────────────────────────────────────────────────
+
+/**
+ * Vuelca el estado real de la campaña en la hoja, en pares clave/valor, que es
+ * lo más fácil de leer para el panel desde el CSV publicado.
+ */
+function publicarMetricas(campana) {
+  if (!HOJA_ID) return;
+
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var periodo = campana.getStatsFor(INICIO.replace(/-/g, ''), FIN.replace(/-/g, ''));
+  var hoy = campana.getStatsFor('TODAY');
+  var control = leerControl();
+
+  var coste = periodo.getCost();
+  var clics = periodo.getClicks();
+
+  var filas = [
+    ['clave', 'valor'],
+    ['actualizado', Utilities.formatDate(new Date(), zona, "yyyy-MM-dd'T'HH:mm")],
+    ['estado', campana.isEnabled() ? 'activa' : 'pausada'],
+    ['motivo', control.motivo || ''],
+    ['gastado_periodo', coste.toFixed(2)],
+    ['tope_periodo', TOPE_PERIODO.toFixed(2)],
+    ['gastado_hoy', hoy.getCost().toFixed(2)],
+    ['presupuesto_diario', campana.getBudget().getAmount().toFixed(2)],
+    ['clics_periodo', String(clics)],
+    ['impresiones_periodo', String(periodo.getImpressions())],
+    ['cpc_medio', clics > 0 ? (coste / clics).toFixed(2) : '0.00'],
+    ['clics_hoy', String(hoy.getClicks())],
+    ['impresiones_hoy', String(hoy.getImpressions())],
+    ['inicio', INICIO],
+    ['fin', FIN]
+  ];
+
+  var hoja = SpreadsheetApp.openById(HOJA_ID).getSheets()[0];
+  hoja.clear();
+  hoja.getRange(1, 1, filas.length, 2).setValues(filas);
 }
 
 // ─── Auxiliares ─────────────────────────────────────────────────────────────
