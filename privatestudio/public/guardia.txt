@@ -52,7 +52,7 @@ var UMBRAL_AVISO = 0.8;   // avisar al consumir este % del tope
 
 // Hora (0-23) a la que se envía el informe diario. La ejecución horaria que
 // caiga en esta hora lo dispara; las demás no.
-var HORA_INFORME = 17;
+var HORA_INFORME = 8;
 
 var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
 var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
