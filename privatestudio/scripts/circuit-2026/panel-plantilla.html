@@ -161,6 +161,14 @@
     return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
   };
 
+  // «2026-08-01» → «1 de agosto». Nadie lee fechas ISO de un vistazo.
+  var enCastellano = function (fechaIso) {
+    var p = fechaIso.split('-');
+    var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+                 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    return Number(p[2]) + ' de ' + (meses[Number(p[1]) - 1] || p[1]);
+  };
+
   function parsear(texto) {
     var datos = {};
     texto.trim().split(/\r?\n/).forEach(function (linea) {
@@ -208,7 +216,7 @@
         'para no gastar a ciegas y volverá cuando se restablezca.';
     } else {
       var informe = d.ultimo_informe && d.ultimo_informe.indexOf('-') > 0
-        ? 'último informe por correo el ' + d.ultimo_informe
+        ? 'último informe por correo el ' + enCastellano(d.ultimo_informe)
         : 'el primer informe sale mañana a las 8:00';
       salud.className = 'salud bien';
       salud.innerHTML = '<b>Todo funcionando.</b> La agenda se revisa cada hora y ' +
