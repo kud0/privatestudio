@@ -75,6 +75,12 @@
   .prot li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;
     border-radius:50%;background:var(--ok)}
 
+  .salud{font-size:11.5px;line-height:1.5;border-radius:10px;padding:10px 13px}
+  .salud:empty{display:none}
+  .salud.bien{color:var(--ok);background:var(--ok-bg);border:1px solid var(--ok)}
+  .salud.mal{color:var(--warn);background:var(--warn-bg);border:1px solid var(--warn)}
+  .salud b{font-weight:700}
+
   footer{font-size:10.5px;color:var(--ink3);text-align:center;line-height:1.5}
 
   @media(min-width:620px){
@@ -145,7 +151,9 @@
     </ul>
   </div>
 
-  <footer>Huecos actualizados el 1 ago · 18:16 · el gasto se lee de Google Ads al abrir esta página</footer>
+  <div class="salud" id="salud"></div>
+
+  <footer>Huecos actualizados el 1 ago · 18:19 · el gasto se lee de Google Ads al abrir esta página</footer>
 
 </div>
 
@@ -196,6 +204,24 @@
       var pausada = d.estado === 'pausada';
       e.textContent = pausada ? 'Pausada' : 'En marcha';
       e.className = 'estado ' + (pausada ? 'warn' : 'ok');
+    }
+
+    // Estado del propio sistema, para no tener que fiarse de que "va solo".
+    // Si el ordenador que publica la agenda se apaga o el sistema de reservas
+    // cambia, aquí se ve — la campaña se para sola, pero conviene saberlo.
+    var salud = $('salud');
+    if (d.control === 'caducado') {
+      salud.className = 'salud mal';
+      salud.innerHTML = '<b>Atención:</b> la agenda no se está actualizando (' +
+        (d.motivo || 'motivo desconocido') + '). La campaña se ha parado sola ' +
+        'para no gastar a ciegas y volverá cuando se restablezca.';
+    } else {
+      var informe = d.ultimo_informe && d.ultimo_informe.indexOf('-') > 0
+        ? 'último informe por correo el ' + d.ultimo_informe
+        : 'el primer informe sale mañana a las 8:00';
+      salud.className = 'salud bien';
+      salud.innerHTML = '<b>Todo funcionando.</b> La agenda se revisa cada hora y ' +
+        'el gasto también · ' + informe + '.';
     }
 
     // La barra cuenta solo del 1 al 15 de agosto. Lo gastado antes de esa
