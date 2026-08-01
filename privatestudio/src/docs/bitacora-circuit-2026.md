@@ -536,3 +536,92 @@ El resto de lo que se ve en los datos:
 - Hay búsquedas **en alemán** (`friseur in der nähe`, `barbershop in der nähe`).
   Señal real pero pequeña: 5 impresiones. No se ha creado grupo alemán, sería
   especular con el dinero de Reni.
+
+---
+
+## 1 agosto 2026 · Tarde-noche — dos fallos de criterio, no de código
+
+### 18:05 · 19,99 € gastados fuera de la ventana por un error de orden
+
+**Qué preguntó Alex.** De dónde salieron los ~20 € del 31 de julio.
+
+**Qué dicen los datos** (consultados a Google Ads, no de memoria):
+
+| Día | Total cuenta | De dónde |
+|---|---|---|
+| 29/07 | 0,38 € | `PS \| Search \| Barcelona` — 7 clics |
+| 30/07 | 0,46 € | `PS \| Search \| Barcelona` — 6 clics |
+| **31/07** | **19,99 €** | `PS \| Search \| Barcelona` — 66 clics, 1.266 impresiones |
+| 01/08 | 13,52 € | `PS \| Search \| Barcelona` — 39 clics |
+
+Ninguna otra campaña de la cuenta gastó un céntimo. No fue la agencia anterior:
+`PS | Search | Barcelona` **es** la campaña de siempre, renombrada por nosotros.
+
+**El error.** El 31 de julio se subió el presupuesto de ~0,50 € a 20 €/día
+cuando el guardián todavía no estaba operativo. La campaña gastó los 20 € de un
+día que no estaba en la ventana pactada y con la agenda ya casi llena — el
+propio snapshot de ese día registraba que las citas se llenaban solas a 11–42
+por día. Era información disponible y no se usó.
+
+**Regla que sale de aquí:** el presupuesto se sube DESPUÉS de que la protección
+automática esté activa y validada. Nunca antes, ni "un día para ir arrancando".
+
+**Corrección aplicada.** `TOPE_PERIODO` baja de 200 € a 180 €. Así el total que
+paga la barbería sigue siendo los 200 € acordados y el error lo absorbemos
+nosotros, no el cliente. El panel enseña ahora las dos cifras y su suma, para
+que cuadre con lo que Google cobra de verdad.
+
+### 18:14 · El domingo apagaba la campaña con el lunes lleno de huecos
+
+**Qué preguntó Alex.** Cómo se contabilizan las 48 horas cuando el domingo, que
+está cerrado, cae en medio.
+
+**Lo que se encontró al mirar el código.** El criterio de pausa usaba
+`hoy` y `mañana` en días **naturales**. La lista de días abiertos —que sí salta
+el domingo— se calculaba, pero solo para pintar el panel: no decidía nada.
+
+**Consecuencia real, activa en ese momento:**
+
+```
+sábado 1 ago:  0 huecos    ← lleno
+domingo 2 ago: cerrado      ← cuenta como 0
+lunes 3 ago:   9 huecos     ← no se miraba
+→ "0 citas libres en 48 h" → CAMPAÑA PAUSADA
+```
+
+La campaña llevaba horas apagada un sábado por la tarde teniendo **nueve citas
+libres el lunes**. Quien buscara "barbería barcelona" esa tarde para reservar el
+lunes no veía el anuncio. No es gasto de más: es negocio que no se hizo, que en
+plena semana del Circuit es peor.
+
+**Arreglo.** La decisión pasa a usar los dos próximos días **abiertos**, la misma
+lista que ya usaba el panel. Verificado en ejecución real:
+
+```
+antes:   control: PAUSA  — 0 citas libres en 48 h
+después: control: ACTIVA — 9 citas libres hoy y lunes
+```
+
+Campaña reactivada y confirmada en la hoja de métricas (`estado,activa`).
+
+**Lo que esto enseña:** el fallo no estaba en el código, que hacía lo que decía
+hacer. Estaba en confundir "48 horas" con "dos días de trabajo". Son cosas
+distintas en cualquier negocio que cierre algún día, y aquí costaba clientes.
+
+### 18:00 · Medición de reservas, por fin funcionando
+
+Se creó la acción de conversión **«Clic en Reservar (web)»** (categoría *Book
+appointment*, conteo *One*) y se instaló en la web mediante
+`src/components/MedicionReservas.astro`.
+
+Detecta por el destino del enlace, no por clase CSS: los botones de reservar
+están repartidos en seis componentes y algunos se generan en bucle. Cuando la
+barbería migre de Booksy a otro sistema, basta añadir el dominio nuevo a
+`DESTINOS_RESERVA`.
+
+**Verificado en producción**, no en teoría: al pulsar Reservar sale la petición
+`googleadservices.com/pagead/conversion/16802951890/?...&label=JIb2CN2vr9ocENLlosw-`.
+Esa prueba deja **1 conversión de test** en los datos del 1 de agosto.
+
+Mide *intención*, no reservas cerradas: un clic en Reservar no garantiza que la
+cita se haga. Sirve para comparar keywords entre sí, no para contar clientes.
