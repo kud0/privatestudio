@@ -140,7 +140,7 @@
     </ul>
   </div>
 
-  <footer>Huecos actualizados el 1 ago · 17:02 · el gasto se lee de Google Ads al abrir esta página</footer>
+  <footer>Huecos actualizados el 1 ago · 17:09 · el gasto se lee de Google Ads al abrir esta página</footer>
 
 </div>
 
@@ -194,10 +194,12 @@
       e.className = 'estado ' + (pausada ? 'warn' : 'ok');
     }
 
-    if (d.actualizado) {
-      var p = d.actualizado.split('T');
-      $('sello').textContent = 'gasto real de Google Ads · ' + p[1] + ' h';
-    }
+    // Sheets reescribe el valor como fecha y se come la T del ISO, así que la
+    // hora se busca por patrón en vez de partir por un separador que puede faltar.
+    var hora = (d.actualizado || '').match(/(\d{1,2}:\d{2})/);
+    $('sello').textContent = hora
+      ? 'gasto real de Google Ads · ' + hora[1] + ' h'
+      : 'gasto real de Google Ads';
   }
 
   function fallo(motivo) {
