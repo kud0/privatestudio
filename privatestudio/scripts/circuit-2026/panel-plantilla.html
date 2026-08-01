@@ -57,6 +57,10 @@
     transition:width .5s ease}
   .marcas{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--ink3);margin-top:4px}
   .marcas span:nth-child(2){text-align:center}
+  .total{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-top:9px;
+    padding-top:9px;border-top:1px solid var(--line)}
+  .total:empty{display:none}
+  .total b{color:var(--ink);font-variant-numeric:tabular-nums}
 
   .extra{display:grid;grid-template-columns:1fr 1fr;gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -107,6 +111,7 @@
       <span id="sello">leyendo el gasto real…</span>
       <span>15 ago</span>
     </div>
+    <div class="total" id="total"></div>
   </div>
 
   <div class="extra">
@@ -182,6 +187,18 @@
       var pausada = d.estado === 'pausada';
       e.textContent = pausada ? 'Pausada' : 'En marcha';
       e.className = 'estado ' + (pausada ? 'warn' : 'ok');
+    }
+
+    // La barra cuenta solo del 1 al 15 de agosto. Lo gastado antes de esa
+    // fecha se enseña aparte para que el número cuadre con lo que Google cobra
+    // de verdad, sin que nadie tenga que sumar dos cifras de dos sitios.
+    var antes = parseFloat(d.gastado_antes);
+    var acordado = parseFloat(d.tope_acordado);
+    if (!isNaN(antes) && antes > 0) {
+      $('total').innerHTML =
+        'Antes de la ventana, el 31 de julio, se gastaron <b>' + euros(antes) + '</b>. ' +
+        'Total pagado hasta ahora: <b>' + euros(antes + gastado) + '</b>' +
+        (isNaN(acordado) ? '' : ' de los <b>' + euros(acordado) + '</b> acordados') + '.';
     }
 
     // Sheets reescribe el valor como fecha y se come la T del ISO, así que la
