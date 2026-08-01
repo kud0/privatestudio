@@ -1,71 +1,309 @@
 /**
- * CONSULTA DE GASTO POR CAMPAÑA Y DÍA — solo lectura, no cambia nada
+ * GUARDIÁN DE CAMPAÑA — Circuit Festival 2026 · Private Studio (608-571-5182)
  *
- * Alex pregunta de dónde salieron los ~20 € del 31 de julio: de la campaña que
- * ahora llevamos nosotros o de alguna de las que dejó la agencia anterior.
- * La interfaz no deja fijar un rango de un solo día sin pelearse, así que se
- * pregunta directamente.
+ * Qué es: un Google Ads Script. Se ejecuta DENTRO de Google Ads, con los permisos
+ * de la cuenta. No necesita developer token, ni OAuth, ni que nadie tenga sesión
+ * abierta — por eso es el único mecanismo fiable cuando Alex no está delante.
  *
- * No modifica nada: solo escribe en el log.
+ * Instalación (una vez, con la campaña ya creada):
+ *   Google Ads → Herramientas → Acciones masivas → Scripts → +
+ *   Pegar este archivo · Autorizar · Vista previa · Guardar
+ *   Programar: "Cada hora"
+ *
+ * Qué hace cada hora:
+ *   1. Agenda: si CONTROL_URL dice {"estado":"pausa"} (sin huecos en 48 h), pausa.
+ *      Si no responde, NO toca nada. El importe diario no se toca: se fija a mano.
+ *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
+ *      pausa y avisa. Es la red de seguridad contra un error de configuración.
+ *   3. Aviso por email al llegar al 80% del tope.
+ *   4. Informe diario por correo: una vez al día, en la ejecución de las 8 h.
+ *      Va dentro del guardián a propósito — un script aparte exigiría una
+ *      autorización nueva de Google con passkey, y esto debe funcionar sin
+ *      depender de que Alex esté delante.
+ *
+ * El horario NO lo gestiona este script: lo hace el ad schedule nativo de la
+ * campaña (L–V 11–20, sáb 11–19, domingo nada). Duplicarlo aquí solo añadiría
+ * riesgo de dejar la campaña pausada por un fallo de lectura.
+ *
+ * Diseño: por defecto NO hace nada destructivo. Ante cualquier duda (fallo de red,
+ * respuesta ilegible) deja la campaña como está y avisa. Preferimos gastar de más
+ * un día que apagar la campaña por un error de lectura en pleno pico.
  */
 
-var DIAS = ['20260729', '20260730', '20260731', '20260801'];
+// ─── Configuración ──────────────────────────────────────────────────────────
 
+var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
+
+// Tope de gasto acordado con el cliente para toda la ventana, en euros.
+// Decisión de Alex el 31 jul: 200 € del 1 al 15 de agosto.
+var TOPE_PERIODO = 200;
+
+var INICIO = '2026-08-01';
+var FIN    = '2026-08-15';
+
+// Control publicado por el cron de Booksy. Formato:
+//   {"estado":"activa"|"pausa", "presupuesto_diario": 10|20|30, "motivo": "..."}
+// Si no responde o es ilegible, el guardián no toca ni estado ni presupuesto.
+var CONTROL_URL = 'https://www.barberbarcelona.es/ads-control.json';
+
+var EMAIL_AVISOS = 'alexsole@gmail.com';
+
+var UMBRAL_AVISO = 0.8;   // avisar al consumir este % del tope
+
+// Hora (0-23) a la que se envía el informe diario. La ejecución horaria que
+// caiga en esta hora lo dispara; las demás no.
+var HORA_INFORME = 8;
+
+var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
+var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
+
+// Hoja «PS Circuit 2026 — gasto». Publicada como CSV para que el panel pueda
+// leer el gasto real sin necesidad de credenciales:
+//   .../2PACX-1vQFDtzeZFuF68CwZCuBTt858Ysn9VIpej9rSOQpycXoQu_Qf7hXRJ5jl1JwMHedtw3qeGLkT9nKE-KP/pub?output=csv
+// Es el único puente entre lo que Google Ads sabe y lo que el panel enseña.
+var HOJA_ID = '16n-xk77i2ep7Vk5HKxbm8QEvme-RcIhcnm-vC5i6uf0';
+
+// ─── Ejecución ──────────────────────────────────────────────────────────────
+
+/**
+ * Separa las dos responsabilidades: `proteger` decide y actúa sobre el dinero,
+ * `publicarMetricas` solo informa. La publicación va en un finally para que
+ * salga por cualquiera de las tres salidas de `proteger`, y dentro de su propio
+ * try/catch: un fallo escribiendo la hoja nunca puede tumbar la protección.
+ */
 function main() {
-  Logger.log('GASTO POR CAMPAÑA Y DÍA (todas las campañas de la cuenta)');
-  Logger.log('');
-
-  for (var d = 0; d < DIAS.length; d++) {
-    var dia = DIAS[d];
-    var lineas = [];
-    var totalDia = 0;
-
-    var it = AdsApp.campaigns().get();
-    while (it.hasNext()) {
-      var c = it.next();
-      var s = c.getStatsFor(dia, dia);
-      var coste = s.getCost();
-      totalDia += coste;
-      if (coste > 0 || s.getImpressions() > 0) {
-        lineas.push('    ' + c.getName() + ': €' + coste.toFixed(2) +
-                    '  (' + s.getClicks() + ' clics, ' + s.getImpressions() + ' impr.)');
-      }
-    }
-
-    // Performance Max y otros tipos no salen en AdsApp.campaigns()
-    var itP = AdsApp.performanceMaxCampaigns().get();
-    while (itP.hasNext()) {
-      var p = itP.next();
-      var sp = p.getStatsFor(dia, dia);
-      var costeP = sp.getCost();
-      totalDia += costeP;
-      if (costeP > 0 || sp.getImpressions() > 0) {
-        lineas.push('    [PMax] ' + p.getName() + ': €' + costeP.toFixed(2) +
-                    '  (' + sp.getClicks() + ' clics, ' + sp.getImpressions() + ' impr.)');
-      }
-    }
-
-    Logger.log(formatearDia(dia) + '  —  TOTAL CUENTA €' + totalDia.toFixed(2));
-    Logger.log(lineas.length ? lineas.join('\n') : '    (sin actividad)');
-    Logger.log('');
+  var campana = buscarCampana(CAMPANA);
+  if (!campana) {
+    avisar('Guardián: campaña no encontrada',
+           'No existe ninguna campaña llamada "' + CAMPANA + '". El guardián no ha hecho nada.');
+    return;
   }
 
-  // Cuándo se cambió el presupuesto a 20 €/día y quién lo hizo
-  Logger.log('PRESUPUESTO ACTUAL POR CAMPAÑA');
-  var it2 = AdsApp.campaigns().get();
-  while (it2.hasNext()) {
-    var c2 = it2.next();
-    Logger.log('    ' + c2.getName() + ': €' + c2.getBudget().getAmount().toFixed(2) +
-               '/día · ' + (c2.isEnabled() ? 'activa' : 'pausada'));
-  }
-  var it3 = AdsApp.performanceMaxCampaigns().get();
-  while (it3.hasNext()) {
-    var p3 = it3.next();
-    Logger.log('    [PMax] ' + p3.getName() + ': €' + p3.getBudget().getAmount().toFixed(2) +
-               '/día · ' + (p3.isEnabled() ? 'activa' : 'pausada'));
+  try {
+    proteger(campana);
+  } finally {
+    try { publicarMetricas(campana); }
+    catch (e) { Logger.log('No se pudo publicar en la hoja: ' + e); }
   }
 }
 
-function formatearDia(d) {
-  return d.slice(6, 8) + '/' + d.slice(4, 6);
+function proteger(campana) {
+  var registro = [];
+
+  // 0 · Informe diario (antes que nada: debe salir aunque luego se pause)
+  informeDiarioSiToca(campana);
+
+  // 1 · Agenda: si no hay huecos en 48 h, pausar
+  var control = leerControl();
+  registro.push('control=' + control.estado);
+
+  if (control.estado === 'pausa') {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: agenda llena',
+             'La campaña "' + CAMPANA + '" se ha pausado. Motivo: ' + control.motivo);
+    }
+    Logger.log(registro.join(' | ') + ' → pausada por agenda llena');
+    return;
+  }
+
+  // 2 · Tope de gasto del periodo
+  var gastado = gastoPeriodo(campana);
+  registro.push('gastado=' + gastado.toFixed(2));
+
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO) {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: tope de periodo alcanzado',
+             'Gasto acumulado del periodo: €' + gastado.toFixed(2) +
+             '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '. La campaña queda pausada.');
+    }
+    Logger.log(registro.join(' | ') + ' → pausada por tope');
+    return;
+  }
+
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO * UMBRAL_AVISO && !avisoYaEnviado()) {
+    avisar('Aviso: ' + Math.round(UMBRAL_AVISO * 100) + '% del presupuesto consumido',
+           'Gasto acumulado: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) +
+           '. La campaña sigue activa.');
+    marcarAvisoEnviado();
+  }
+
+  // 3 · Reactivar si vuelve a haber huecos y la campaña estaba pausada
+  if (control.estado === 'activa' && !campana.isEnabled()) {
+    campana.enable();
+    avisar('Campaña reactivada', 'Vuelve a haber huecos: ' + control.motivo);
+    Logger.log(registro.join(' | ') + ' → reactivada');
+    return;
+  }
+
+  Logger.log(registro.join(' | ') + ' → sin cambios');
+}
+
+// ─── Publicación de métricas ────────────────────────────────────────────────
+
+/**
+ * Vuelca el estado real de la campaña en la hoja, en pares clave/valor, que es
+ * lo más fácil de leer para el panel desde el CSV publicado.
+ */
+function publicarMetricas(campana) {
+  if (!HOJA_ID) return;
+
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var periodo = campana.getStatsFor(INICIO.replace(/-/g, ''), FIN.replace(/-/g, ''));
+  var hoy = campana.getStatsFor('TODAY');
+  var control = leerControl();
+
+  var coste = periodo.getCost();
+  var clics = periodo.getClicks();
+
+  var filas = [
+    ['clave', 'valor'],
+    ['actualizado', Utilities.formatDate(new Date(), zona, "yyyy-MM-dd'T'HH:mm")],
+    ['estado', campana.isEnabled() ? 'activa' : 'pausada'],
+    ['motivo', control.motivo || ''],
+    ['gastado_periodo', coste.toFixed(2)],
+    ['tope_periodo', TOPE_PERIODO.toFixed(2)],
+    ['gastado_hoy', hoy.getCost().toFixed(2)],
+    ['presupuesto_diario', campana.getBudget().getAmount().toFixed(2)],
+    ['clics_periodo', String(clics)],
+    ['impresiones_periodo', String(periodo.getImpressions())],
+    ['cpc_medio', clics > 0 ? (coste / clics).toFixed(2) : '0.00'],
+    ['clics_hoy', String(hoy.getClicks())],
+    ['impresiones_hoy', String(hoy.getImpressions())],
+    ['inicio', INICIO],
+    ['fin', FIN]
+  ];
+
+  var hoja = SpreadsheetApp.openById(HOJA_ID).getSheets()[0];
+  hoja.clear();
+  hoja.getRange(1, 1, filas.length, 2).setValues(filas);
+}
+
+// ─── Auxiliares ─────────────────────────────────────────────────────────────
+
+function buscarCampana(nombre) {
+  var it = AdsApp.campaigns().withCondition('Name = "' + nombre + '"').get();
+  return it.hasNext() ? it.next() : null;
+}
+
+/** Gasto acumulado de la campaña dentro de la ventana del festival. */
+function gastoPeriodo(campana) {
+  var desde = INICIO.replace(/-/g, '');
+  var hasta = FIN.replace(/-/g, '');
+  var stats = campana.getStatsFor(desde, hasta);
+  return stats.getCost();
+}
+
+/**
+ * Lee el control publicado por el cron de Booksy.
+ * Devuelve {estado, presupuesto, motivo}. Ante cualquier fallo devuelve estado
+ * 'auto' y presupuesto 0: no se toca nada por un error de red.
+ */
+function leerControl() {
+  var vacio = { estado: 'auto', presupuesto: 0, motivo: 'control no disponible' };
+  if (!CONTROL_URL) return vacio;
+  try {
+    var resp = UrlFetchApp.fetch(CONTROL_URL, {
+      muteHttpExceptions: true,
+      followRedirects: true
+    });
+    if (resp.getResponseCode() !== 200) return vacio;
+    var datos = JSON.parse(resp.getContentText());
+    var estado = String(datos.estado || '').toLowerCase();
+    return {
+      estado: (estado === 'pausa' || estado === 'activa') ? estado : 'auto',
+      presupuesto: Number(datos.presupuesto_diario) || 0,
+      motivo: datos.motivo || ''
+    };
+  } catch (e) {
+    Logger.log('Control ilegible (' + e + '). No se toca nada.');
+    return vacio;
+  }
+}
+
+/**
+ * Envía el informe una sola vez al día. Usa una etiqueta con la fecha como
+ * marca para no repetirlo si el script se ejecuta dos veces en la misma hora.
+ */
+function informeDiarioSiToca(campana) {
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var ahora = new Date();
+  if (parseInt(Utilities.formatDate(ahora, zona, 'H'), 10) !== HORA_INFORME) return;
+
+  var hoy = Utilities.formatDate(ahora, zona, 'yyyy-MM-dd');
+  var marca = 'informe-' + hoy;
+  if (AdsApp.labels().withCondition('Name = "' + marca + '"').get().hasNext()) return;
+  AdsApp.createLabel(marca, 'Marca interna: informe diario ya enviado');
+
+  var ayer = campana.getStatsFor('YESTERDAY');
+  var periodo = campana.getStatsFor(INICIO.replace(/-/g, ''), FIN.replace(/-/g, ''));
+  var control = leerControl();
+
+  var l = [];
+  l.push('AYER');
+  l.push('  Inversión     €' + ayer.getCost().toFixed(2));
+  l.push('  Clics         ' + ayer.getClicks());
+  l.push('  Impresiones   ' + ayer.getImpressions());
+  l.push('  Conversiones  ' + ayer.getConversions());
+  l.push('');
+  l.push('ACUMULADO ' + INICIO + ' → ' + FIN);
+  l.push('  Inversión     €' + periodo.getCost().toFixed(2) + '  de €' + TOPE_PERIODO.toFixed(2));
+  l.push('  Restante      €' + Math.max(0, TOPE_PERIODO - periodo.getCost()).toFixed(2));
+  l.push('  Clics         ' + periodo.getClicks());
+  l.push('  Conversiones  ' + periodo.getConversions());
+  l.push('');
+  l.push('ESTADO AHORA');
+  l.push('  Campaña       ' + (campana.isEnabled() ? 'activa' : 'PAUSADA'));
+  l.push('  Presupuesto   €' + campana.getBudget().getAmount().toFixed(2) + '/día');
+  l.push('  Agenda        ' + control.motivo);
+  l.push('');
+  l.push('BÚSQUEDAS QUE MÁS GASTARON AYER');
+  l.push(terminosDeAyer());
+  l.push('');
+  l.push('La pausa por agenda llena es automática, cada hora.');
+  l.push('');
+  l.push('Panel:  ' + URL_PANEL);
+  l.push('Agenda: ' + URL_AGENDA);
+
+  MailApp.sendEmail(EMAIL_AVISOS,
+    '[Private Studio · Circuit] Informe ' + Utilities.formatDate(ahora, zona, 'd MMM'),
+    l.join('\n'));
+}
+
+/** Los diez términos que más gasto generaron ayer, para cazar negativas. */
+function terminosDeAyer() {
+  var filas = [];
+  try {
+    var informe = AdsApp.report(
+      'SELECT search_term_view.search_term, metrics.clicks, metrics.cost_micros ' +
+      'FROM search_term_view WHERE segments.date DURING YESTERDAY ' +
+      'AND campaign.name = "' + CAMPANA + '" ' +
+      'ORDER BY metrics.cost_micros DESC LIMIT 10');
+    var it = informe.rows();
+    while (it.hasNext()) {
+      var f = it.next();
+      filas.push('  ' + f['search_term_view.search_term'] + '  —  ' +
+                 f['metrics.clicks'] + ' clics, €' + (f['metrics.cost_micros'] / 1000000).toFixed(2));
+    }
+  } catch (e) { return '  (no disponibles: ' + e + ')'; }
+  return filas.length ? filas.join('\n') : '  (ninguna todavía)';
+}
+
+function avisar(asunto, cuerpo) {
+  if (!EMAIL_AVISOS) return;
+  MailApp.sendEmail(EMAIL_AVISOS,
+    '[Private Studio · Circuit] ' + asunto,
+    cuerpo + '\n\nCuenta 608-571-5182 · campaña "' + CAMPANA + '"' +
+    '\nGenerado por el guardián automático el ' + new Date());
+}
+
+/** Evita repetir el aviso de 80% en cada ejecución horaria. */
+function avisoYaEnviado() {
+  var etiqueta = AdsApp.labels().withCondition('Name = "aviso-80-enviado"').get();
+  return etiqueta.hasNext();
+}
+
+function marcarAvisoEnviado() {
+  AdsApp.createLabel('aviso-80-enviado', 'Marca interna del guardián: aviso de 80% ya enviado');
 }
