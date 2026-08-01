@@ -625,3 +625,46 @@ Esa prueba deja **1 conversión de test** en los datos del 1 de agosto.
 
 Mide *intención*, no reservas cerradas: un clic en Reservar no garantiza que la
 cita se haga. Sirve para comparar keywords entre sí, no para contar clientes.
+
+### 18:21 · El sistema ahora detecta cuando se le muere una pata
+
+**El agujero.** El guardián leía `ads-control.json` y se lo creía siempre. Si el
+Mac que publica ese fichero se apaga, se queda sin red, o la barbería migra de
+Booksy a otro sistema de reservas, el fichero **sigue respondiendo 200 y
+diciendo «activa»** — congelado en el último estado bueno. El guardián habría
+seguido pagando clics durante días sin saber si quedaba un solo hueco.
+
+Era el único punto donde un fallo pasaba desapercibido y costaba dinero.
+
+**Arreglo.** El control ahora caduca a las 8 horas. Pasado ese plazo el guardián
+deja de creérselo, **pausa la campaña y manda un correo** explicando que la
+agenda no se actualiza. Se reactiva sola en cuanto el control vuelve.
+
+Ocho horas porque el hueco mayor entre ejecuciones del cron es de 21:00 a 9:00,
+pero de noche no se anuncia; cuando la campaña arranca a las 11:00 el control
+tiene como mucho dos horas.
+
+**Probado antes de instalarlo**, replicando la lógica con controles falsos:
+
+| Antigüedad del control | Decisión |
+|---|---|
+| recién publicado | sigue |
+| 4 h | sigue |
+| 9 h | **pausa + aviso** |
+| 3 días | **pausa + aviso** |
+| sin fecha | **pausa + aviso** |
+
+**Esto también responde al pendiente de la migración a otracita.** El conector
+nuevo habrá que escribirlo igual, pero el día que Booksy deje de funcionar la
+campaña se para sola y llega un aviso, en vez de gastar a ciegas hasta que
+alguien lo note.
+
+### El panel dice ahora si el sistema está vivo
+
+Un panel que solo enseña números bonitos no sirve si la maquinaria que hay
+detrás está muerta. Se añadió una franja de estado que dice, sin rodeos, si
+todo funciona y cuándo salió el último informe — o, si algo falla, qué falla y
+que la campaña ya se ha parado sola.
+
+Con eso, comprobar que el informe diario funciona no exige abrir el correo:
+la fecha del último envío se ve en el panel.
