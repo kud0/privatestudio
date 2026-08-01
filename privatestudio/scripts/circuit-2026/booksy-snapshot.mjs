@@ -36,6 +36,10 @@ const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = join(AQUI, '..', '..');
 const HISTORICO = join(AQUI, 'agenda-historico.jsonl');
 const CONTROL = join(RAIZ, 'public', 'ads-control.json');
+// Nombre no adivinable: el panel muestra datos de negocio del cliente.
+const PANEL_NOMBRE = 'panel-76380b752010.html';
+const PANEL = join(RAIZ, 'public', PANEL_NOMBRE);
+const PLANTILLA = join(AQUI, 'panel-plantilla.html');
 
 const NEGOCIO = 90283;
 // CORTE DE CABELLO / MENS HAIR CUT — 20,00 € · 35 min. Servicio de referencia:
@@ -130,16 +134,58 @@ async function estadoPublicado() {
  * el estado en memoria: así una publicación fallida se reintenta sola en la
  * siguiente ejecución, en vez de quedarse escrita solo en local para siempre.
  */
-async function publicar(control, anterior) {
+const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+/** Rellena la plantilla del panel con los datos de este snapshot. */
+async function generarPanel(control, historial) {
+  let html;
+  try { html = await readFile(PLANTILLA, 'utf8'); } catch { return null; }
+
+  const tarjetas = control.proximos_abiertos.map((d, i) => {
+    const f = new Date(d.fecha + 'T12:00:00');
+    const etiqueta = i === 0 ? 'Hoy' : DIAS[f.getDay()][0].toUpperCase() + DIAS[f.getDay()].slice(1);
+    const lleno = d.citas === 0;
+    return `<div class="dia${lleno ? ' lleno' : ''}">
+        <div class="k">${etiqueta} ${f.getDate()} ${MESES[f.getMonth()]}</div>
+        <div class="v">${d.citas}</div>
+        <div class="n">${lleno ? 'sin huecos' : d.citas === 1 ? 'hueco libre' : 'huecos libres'}</div>
+      </div>`;
+  }).join('\n      ');
+
+  // Reservas del día: comparación con el primer snapshot de hoy, misma ventana.
+  const hoyISO = control.actualizado.slice(0, 10);
+  const deHoy = historial.filter(s => s.momento.slice(0, 10) === hoyISO && s.ventana);
+  const reservadasHoy = deHoy.length > 1 ? Math.max(0, deHoy[0].total - deHoy.at(-1).total) : 0;
+
+  const sello = new Date(control.actualizado);
+  const hora = String(sello.getHours()).padStart(2, '0') + ':' + String(sello.getMinutes()).padStart(2, '0');
+
+  return html
+    .replace('{{DIAS}}', tarjetas)
+    .replace('{{ESTADO}}', control.estado === 'activa' ? '● En marcha' : '● Pausada: agenda llena')
+    .replace('{{CLASE_ESTADO}}', control.estado === 'activa' ? 'ok' : 'warn')
+    .replace('{{VENTANA}}', control.citas_ventana)
+    .replace('{{RESERVADAS}}', reservadasHoy)
+    .replace('{{ACTUALIZADO}}', `${sello.getDate()} ${MESES[sello.getMonth()]} · ${hora}`);
+}
+
+async function publicar(control, anterior, historial) {
   await mkdir(dirname(CONTROL), { recursive: true });
   await writeFile(CONTROL, JSON.stringify(control, null, 2) + '\n');
 
+  const panel = await generarPanel(control, historial);
+  if (panel) await writeFile(PANEL, panel);
+
   if (process.argv.includes('--sin-push')) return 'escrito en local (--sin-push)';
 
-  const { stdout } = await git('status', '--porcelain', 'public/ads-control.json');
+  const ficheros = ['public/ads-control.json'];
+  if (panel) ficheros.push('public/' + PANEL_NOMBRE);
+
+  const { stdout } = await git('status', '--porcelain', ...ficheros);
   if (!stdout.trim()) return 'idéntico a lo publicado, nada que hacer';
 
-  await git('add', 'public/ads-control.json');
+  await git('add', ...ficheros);
   await git('commit', '-m',
     `control: campana ${control.estado} (${control.citas_48h} citas libres en 48h)`);
   await git('push', 'origin', 'main');
@@ -204,11 +250,22 @@ async function main() {
   const corto = resumir(await consultar(iso(hoy), iso(manana)));
   const citas48h = corto.total;
 
+  // Próximos 2 días ABIERTOS: el domingo no cuenta, así que si mañana es domingo
+  // se mira el lunes. Es lo que de verdad importa para decidir si seguir gastando.
+  const diasAbiertos = [];
+  for (let i = 0; diasAbiertos.length < 2 && i < 5; i++) {
+    const d = new Date(hoy.getTime() + i * 86400000);
+    if (d.getDay() !== 0) diasAbiertos.push(iso(d));
+  }
+  const proximos = resumir(await consultar(diasAbiertos[0], diasAbiertos.at(-1)));
+  const abiertos = diasAbiertos.map(f => ({ fecha: f, citas: proximos.porDia[f] ?? 0 }));
+
   const estado = citas48h >= MINIMO_PARA_SEGUIR ? 'activa' : 'pausa';
   const control = {
     estado,
     presupuesto_diario: PRESUPUESTO_DIARIO,
     citas_48h: citas48h,
+    proximos_abiertos: abiertos,
     detalle_48h: corto.porDia,
     citas_ventana: total,
     actualizado: momento,
@@ -218,7 +275,7 @@ async function main() {
   };
 
   const anterior = await estadoPublicado();
-  const resultado = await publicar(control, anterior);
+  const resultado = await publicar(control, anterior, [...previos, { momento, ventana, total }]);
   console.log(`\ncontrol: ${estado.toUpperCase()} — ${citas48h} citas libres en 48 h`);
   console.log(`   ${resultado}`);
 }
