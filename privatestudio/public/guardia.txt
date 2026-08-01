@@ -1,111 +1,248 @@
 /**
- * LIMPIEZA DEL SOLAPAMIENTO ES/EN — ejecución única
+ * GUARDIÁN DE CAMPAÑA — Circuit Festival 2026 · Private Studio (608-571-5182)
  *
- * El script de estructura anterior creó bien el grupo «EN — Barber», pero la
- * lista de keywords inglesas a pausar en el grupo español la escribí a mano
- * desde una lectura parcial de la tabla y se quedó corta. Resultado: «haircut
- * barcelona», «english speaking barber» y «mens haircut barcelona» siguen
- * activas en los dos grupos a la vez, compitiendo entre ellas.
+ * Qué es: un Google Ads Script. Se ejecuta DENTRO de Google Ads, con los permisos
+ * de la cuenta. No necesita developer token, ni OAuth, ni que nadie tenga sesión
+ * abierta — por eso es el único mecanismo fiable cuando Alex no está delante.
  *
- * En vez de otra lista a mano, aquí la detección es automática: se pausa en el
- * grupo español toda keyword que contenga una palabra inglesa o alemana. El
- * grupo español se queda solo con castellano.
+ * Instalación (una vez, con la campaña ya creada):
+ *   Google Ads → Herramientas → Acciones masivas → Scripts → +
+ *   Pegar este archivo · Autorizar · Vista previa · Guardar
+ *   Programar: "Cada hora"
  *
- * Al final vuelca el inventario completo de ambos grupos con su estado, para
- * poder verificar sin depender de la paginación de la interfaz.
+ * Qué hace cada hora:
+ *   1. Agenda: si CONTROL_URL dice {"estado":"pausa"} (sin huecos en 48 h), pausa.
+ *      Si no responde, NO toca nada. El importe diario no se toca: se fija a mano.
+ *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
+ *      pausa y avisa. Es la red de seguridad contra un error de configuración.
+ *   3. Aviso por email al llegar al 80% del tope.
+ *   4. Informe diario por correo: una vez al día, en la ejecución de las 8 h.
+ *      Va dentro del guardián a propósito — un script aparte exigiría una
+ *      autorización nueva de Google con passkey, y esto debe funcionar sin
+ *      depender de que Alex esté delante.
+ *
+ * El horario NO lo gestiona este script: lo hace el ad schedule nativo de la
+ * campaña (L–V 11–20, sáb 11–19, domingo nada). Duplicarlo aquí solo añadiría
+ * riesgo de dejar la campaña pausada por un fallo de lectura.
+ *
+ * Diseño: por defecto NO hace nada destructivo. Ante cualquier duda (fallo de red,
+ * respuesta ilegible) deja la campaña como está y avisa. Preferimos gastar de más
+ * un día que apagar la campaña por un error de lectura en pleno pico.
  */
 
-var CAMPANA = 'PS | Search | Barcelona';
-var GRUPO_EN = 'EN — Barber';
-var GRUPO_ES = 'ES — Barbería';
+// ─── Configuración ──────────────────────────────────────────────────────────
 
-// Palabras que delatan que la keyword no es castellano. Se comparan como
-// palabra completa sobre el texto sin acentos, así «barberia» y «barbería» no
-// se confunden con «barber».
-var PALABRAS_NO_ES = ['barber', 'barbershop', 'barbers', 'haircut', 'haircuts',
-  'shop', 'shops', 'hair', 'cut', 'beard', 'trim', 'speaking', 'english',
-  'near', 'me', 'mens', 'men', 'friseur', 'nahe', 'meiner', 'in', 'shave',
-  'grooming', 'best', 'book', 'booking', 'appointment'];
+var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
+
+// Tope de gasto acordado con el cliente para toda la ventana, en euros.
+// Decisión de Alex el 31 jul: 200 € del 1 al 15 de agosto.
+var TOPE_PERIODO = 200;
+
+var INICIO = '2026-08-01';
+var FIN    = '2026-08-15';
+
+// Control publicado por el cron de Booksy. Formato:
+//   {"estado":"activa"|"pausa", "presupuesto_diario": 10|20|30, "motivo": "..."}
+// Si no responde o es ilegible, el guardián no toca ni estado ni presupuesto.
+var CONTROL_URL = 'https://www.barberbarcelona.es/ads-control.json';
+
+var EMAIL_AVISOS = 'alexsole@gmail.com';
+
+var UMBRAL_AVISO = 0.8;   // avisar al consumir este % del tope
+
+// Hora (0-23) a la que se envía el informe diario. La ejecución horaria que
+// caiga en esta hora lo dispara; las demás no.
+var HORA_INFORME = 8;
+
+var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
+var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
+
+// ─── Ejecución ──────────────────────────────────────────────────────────────
 
 function main() {
-  var it = AdsApp.campaigns().withCondition('Name = "' + CAMPANA + '"').get();
-  if (!it.hasNext()) { Logger.log('ERROR: campaña no encontrada'); return; }
-  var campana = it.next();
-
-  var grupoES = buscarGrupo(campana, GRUPO_ES);
-  var grupoEN = buscarGrupo(campana, GRUPO_EN);
-  if (!grupoES) { Logger.log('ERROR: no existe "' + GRUPO_ES + '"'); return; }
-
-  // 1 · Pausar en el grupo español todo lo que no sea castellano
-  var pausadas = [];
-  var itES = grupoES.keywords().get();
-  while (itES.hasNext()) {
-    var kw = itES.next();
-    if (!kw.isEnabled()) continue;
-    if (esNoCastellano(kw.getText())) { kw.pause(); pausadas.push(kw.getText()); }
+  var campana = buscarCampana(CAMPANA);
+  if (!campana) {
+    avisar('Guardián: campaña no encontrada',
+           'No existe ninguna campaña llamada "' + CAMPANA + '". El guardián no ha hecho nada.');
+    return;
   }
 
-  // 2 · Inventario completo, que la interfaz pagina de diez en diez
-  Logger.log('PAUSADAS AHORA EN ES (' + pausadas.length + '): ' + pausadas.join(' | '));
-  Logger.log('');
-  Logger.log(inventario(grupoES, GRUPO_ES));
-  Logger.log('');
-  Logger.log(inventario(grupoEN, GRUPO_EN));
-  Logger.log('');
-  Logger.log(anuncios(grupoEN, GRUPO_EN));
-  Logger.log(anuncios(grupoES, GRUPO_ES));
-  Logger.log('');
-  Logger.log(negativas(campana));
-}
+  var registro = [];
 
-/** Verdadero si alguna palabra del texto está en la lista no castellana. */
-function esNoCastellano(texto) {
-  var limpio = String(texto)
-    .replace(/["\[\]+]/g, ' ')
-    .toLowerCase()
-    .replace(/[áàä]/g, 'a').replace(/[éèë]/g, 'e').replace(/[íìï]/g, 'i')
-    .replace(/[óòö]/g, 'o').replace(/[úùü]/g, 'u').replace(/ñ/g, 'n');
-  var palabras = limpio.split(/[^a-z0-9']+/).filter(function (p) { return p; });
-  for (var i = 0; i < palabras.length; i++) {
-    for (var j = 0; j < PALABRAS_NO_ES.length; j++) {
-      if (palabras[i] === PALABRAS_NO_ES[j]) return true;
+  // 0 · Informe diario (antes que nada: debe salir aunque luego se pause)
+  informeDiarioSiToca(campana);
+
+  // 1 · Agenda: si no hay huecos en 48 h, pausar
+  var control = leerControl();
+  registro.push('control=' + control.estado);
+
+  if (control.estado === 'pausa') {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: agenda llena',
+             'La campaña "' + CAMPANA + '" se ha pausado. Motivo: ' + control.motivo);
     }
+    Logger.log(registro.join(' | ') + ' → pausada por agenda llena');
+    return;
   }
-  return false;
-}
 
-function inventario(grupo, nombre) {
-  if (!grupo) return nombre + ': NO EXISTE';
-  var activas = [], paradas = [];
-  var it = grupo.keywords().get();
-  while (it.hasNext()) {
-    var k = it.next();
-    (k.isEnabled() ? activas : paradas).push(k.getText());
+  // 2 · Tope de gasto del periodo
+  var gastado = gastoPeriodo(campana);
+  registro.push('gastado=' + gastado.toFixed(2));
+
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO) {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: tope de periodo alcanzado',
+             'Gasto acumulado del periodo: €' + gastado.toFixed(2) +
+             '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '. La campaña queda pausada.');
+    }
+    Logger.log(registro.join(' | ') + ' → pausada por tope');
+    return;
   }
-  return nombre + '\n  ACTIVAS (' + activas.length + '): ' + activas.join(' | ') +
-         '\n  PAUSADAS (' + paradas.length + '): ' + paradas.join(' | ');
-}
 
-function anuncios(grupo, nombre) {
-  if (!grupo) return nombre + ' anuncios: grupo inexistente';
-  var n = 0, urls = [];
-  var it = grupo.ads().get();
-  while (it.hasNext()) {
-    var a = it.next();
-    n++;
-    urls.push((a.isEnabled() ? 'activo' : 'parado') + ' → ' + a.urls().getFinalUrl());
+  if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO * UMBRAL_AVISO && !avisoYaEnviado()) {
+    avisar('Aviso: ' + Math.round(UMBRAL_AVISO * 100) + '% del presupuesto consumido',
+           'Gasto acumulado: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) +
+           '. La campaña sigue activa.');
+    marcarAvisoEnviado();
   }
-  return nombre + ' anuncios: ' + n + ' [' + urls.join(', ') + ']';
+
+  // 3 · Reactivar si vuelve a haber huecos y la campaña estaba pausada
+  if (control.estado === 'activa' && !campana.isEnabled()) {
+    campana.enable();
+    avisar('Campaña reactivada', 'Vuelve a haber huecos: ' + control.motivo);
+    Logger.log(registro.join(' | ') + ' → reactivada');
+    return;
+  }
+
+  Logger.log(registro.join(' | ') + ' → sin cambios');
 }
 
-function negativas(campana) {
-  var lista = [];
-  var it = campana.negativeKeywords().get();
-  while (it.hasNext()) lista.push(it.next().getText());
-  return 'NEGATIVAS DE CAMPAÑA (' + lista.length + '): ' + lista.join(' | ');
-}
+// ─── Auxiliares ─────────────────────────────────────────────────────────────
 
-function buscarGrupo(campana, nombre) {
-  var it = campana.adGroups().withCondition('Name = "' + nombre + '"').get();
+function buscarCampana(nombre) {
+  var it = AdsApp.campaigns().withCondition('Name = "' + nombre + '"').get();
   return it.hasNext() ? it.next() : null;
+}
+
+/** Gasto acumulado de la campaña dentro de la ventana del festival. */
+function gastoPeriodo(campana) {
+  var desde = INICIO.replace(/-/g, '');
+  var hasta = FIN.replace(/-/g, '');
+  var stats = campana.getStatsFor(desde, hasta);
+  return stats.getCost();
+}
+
+/**
+ * Lee el control publicado por el cron de Booksy.
+ * Devuelve {estado, presupuesto, motivo}. Ante cualquier fallo devuelve estado
+ * 'auto' y presupuesto 0: no se toca nada por un error de red.
+ */
+function leerControl() {
+  var vacio = { estado: 'auto', presupuesto: 0, motivo: 'control no disponible' };
+  if (!CONTROL_URL) return vacio;
+  try {
+    var resp = UrlFetchApp.fetch(CONTROL_URL, {
+      muteHttpExceptions: true,
+      followRedirects: true
+    });
+    if (resp.getResponseCode() !== 200) return vacio;
+    var datos = JSON.parse(resp.getContentText());
+    var estado = String(datos.estado || '').toLowerCase();
+    return {
+      estado: (estado === 'pausa' || estado === 'activa') ? estado : 'auto',
+      presupuesto: Number(datos.presupuesto_diario) || 0,
+      motivo: datos.motivo || ''
+    };
+  } catch (e) {
+    Logger.log('Control ilegible (' + e + '). No se toca nada.');
+    return vacio;
+  }
+}
+
+/**
+ * Envía el informe una sola vez al día. Usa una etiqueta con la fecha como
+ * marca para no repetirlo si el script se ejecuta dos veces en la misma hora.
+ */
+function informeDiarioSiToca(campana) {
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var ahora = new Date();
+  if (parseInt(Utilities.formatDate(ahora, zona, 'H'), 10) !== HORA_INFORME) return;
+
+  var hoy = Utilities.formatDate(ahora, zona, 'yyyy-MM-dd');
+  var marca = 'informe-' + hoy;
+  if (AdsApp.labels().withCondition('Name = "' + marca + '"').get().hasNext()) return;
+  AdsApp.createLabel(marca, 'Marca interna: informe diario ya enviado');
+
+  var ayer = campana.getStatsFor('YESTERDAY');
+  var periodo = campana.getStatsFor(INICIO.replace(/-/g, ''), FIN.replace(/-/g, ''));
+  var control = leerControl();
+
+  var l = [];
+  l.push('AYER');
+  l.push('  Inversión     €' + ayer.getCost().toFixed(2));
+  l.push('  Clics         ' + ayer.getClicks());
+  l.push('  Impresiones   ' + ayer.getImpressions());
+  l.push('  Conversiones  ' + ayer.getConversions());
+  l.push('');
+  l.push('ACUMULADO ' + INICIO + ' → ' + FIN);
+  l.push('  Inversión     €' + periodo.getCost().toFixed(2) + '  de €' + TOPE_PERIODO.toFixed(2));
+  l.push('  Restante      €' + Math.max(0, TOPE_PERIODO - periodo.getCost()).toFixed(2));
+  l.push('  Clics         ' + periodo.getClicks());
+  l.push('  Conversiones  ' + periodo.getConversions());
+  l.push('');
+  l.push('ESTADO AHORA');
+  l.push('  Campaña       ' + (campana.isEnabled() ? 'activa' : 'PAUSADA'));
+  l.push('  Presupuesto   €' + campana.getBudget().getAmount().toFixed(2) + '/día');
+  l.push('  Agenda        ' + control.motivo);
+  l.push('');
+  l.push('BÚSQUEDAS QUE MÁS GASTARON AYER');
+  l.push(terminosDeAyer());
+  l.push('');
+  l.push('La pausa por agenda llena es automática, cada hora.');
+  l.push('');
+  l.push('Panel:  ' + URL_PANEL);
+  l.push('Agenda: ' + URL_AGENDA);
+
+  MailApp.sendEmail(EMAIL_AVISOS,
+    '[Private Studio · Circuit] Informe ' + Utilities.formatDate(ahora, zona, 'd MMM'),
+    l.join('\n'));
+}
+
+/** Los diez términos que más gasto generaron ayer, para cazar negativas. */
+function terminosDeAyer() {
+  var filas = [];
+  try {
+    var informe = AdsApp.report(
+      'SELECT search_term_view.search_term, metrics.clicks, metrics.cost_micros ' +
+      'FROM search_term_view WHERE segments.date DURING YESTERDAY ' +
+      'AND campaign.name = "' + CAMPANA + '" ' +
+      'ORDER BY metrics.cost_micros DESC LIMIT 10');
+    var it = informe.rows();
+    while (it.hasNext()) {
+      var f = it.next();
+      filas.push('  ' + f['search_term_view.search_term'] + '  —  ' +
+                 f['metrics.clicks'] + ' clics, €' + (f['metrics.cost_micros'] / 1000000).toFixed(2));
+    }
+  } catch (e) { return '  (no disponibles: ' + e + ')'; }
+  return filas.length ? filas.join('\n') : '  (ninguna todavía)';
+}
+
+function avisar(asunto, cuerpo) {
+  if (!EMAIL_AVISOS) return;
+  MailApp.sendEmail(EMAIL_AVISOS,
+    '[Private Studio · Circuit] ' + asunto,
+    cuerpo + '\n\nCuenta 608-571-5182 · campaña "' + CAMPANA + '"' +
+    '\nGenerado por el guardián automático el ' + new Date());
+}
+
+/** Evita repetir el aviso de 80% en cada ejecución horaria. */
+function avisoYaEnviado() {
+  var etiqueta = AdsApp.labels().withCondition('Name = "aviso-80-enviado"').get();
+  return etiqueta.hasNext();
+}
+
+function marcarAvisoEnviado() {
+  AdsApp.createLabel('aviso-80-enviado', 'Marca interna del guardián: aviso de 80% ya enviado');
 }
