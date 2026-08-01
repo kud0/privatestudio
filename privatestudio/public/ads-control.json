@@ -16,7 +16,99 @@
     "2026-08-01": 0,
     "2026-08-03": 9
   },
+  "dias_ventana": [
+    {
+      "fecha": "2026-08-01",
+      "citas": 0,
+      "cerrado": false,
+      "decide": true
+    },
+    {
+      "fecha": "2026-08-02",
+      "citas": 0,
+      "cerrado": true,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-03",
+      "citas": 9,
+      "cerrado": false,
+      "decide": true
+    },
+    {
+      "fecha": "2026-08-04",
+      "citas": 20,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-05",
+      "citas": 10,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-06",
+      "citas": 17,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-07",
+      "citas": 18,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-08",
+      "citas": 17,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-09",
+      "citas": 0,
+      "cerrado": true,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-10",
+      "citas": 19,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-11",
+      "citas": 22,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-12",
+      "citas": 8,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-13",
+      "citas": 19,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-14",
+      "citas": 19,
+      "cerrado": false,
+      "decide": false
+    },
+    {
+      "fecha": "2026-08-15",
+      "citas": 0,
+      "cerrado": false,
+      "decide": false
+    }
+  ],
   "citas_ventana": 178,
-  "actualizado": "2026-08-01T16:23:28.969Z",
+  "actualizado": "2026-08-01T16:32:54.018Z",
   "motivo": "9 citas libres hoy y lunes"
 }
