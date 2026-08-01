@@ -121,10 +121,23 @@ async function historico() {
 
 const git = (...args) => ejecutar('git', args, { cwd: RAIZ });
 
-/** El estado que hay realmente publicado = el último commiteado, no el fichero local. */
+/**
+ * Los instantes se guardan en ISO (UTC) porque es lo correcto para comparar,
+ * pero los mensajes se leen a mano: ahí va la hora del reloj de la barbería.
+ * Sin esto el log parece ir dos horas atrasado y no hay forma de saber si el
+ * cron se ha disparado.
+ */
+const horaLocal = iso => new Date(iso).toLocaleString('sv-SE', { timeZone: 'Europe/Madrid' }).slice(0, 16);
+
+/**
+ * El estado que hay realmente publicado = el último commiteado, no el fichero
+ * local. El `./` es obligatorio: la raíz del repositorio está un nivel por
+ * encima de este proyecto, así que sin él git busca `public/` en la raíz del
+ * repo, no encuentra nada y todo cambio parece nuevo.
+ */
 async function estadoPublicado() {
   try {
-    const { stdout } = await git('show', 'HEAD:public/ads-control.json');
+    const { stdout } = await git('show', 'HEAD:./public/ads-control.json');
     return JSON.parse(stdout).estado;
   } catch { return null; }   // aún no existe en el repo
 }
@@ -219,7 +232,7 @@ async function main() {
           s.total < anterior ? `${anterior - s.total} reservadas`
           : s.total > anterior ? `+${s.total - anterior} liberadas`
           : 'sin cambios';
-        console.log(`  ${s.momento.slice(0, 16).replace('T', ' ')}   ${String(s.total).padStart(4)}   ${d}`);
+        console.log(`  ${horaLocal(s.momento)}   ${String(s.total).padStart(4)}   ${d}`);
         anterior = s.total;
       }
       if (serie.length > 1) {
@@ -239,7 +252,7 @@ async function main() {
   await mkdir(dirname(HISTORICO), { recursive: true });
   await writeFile(HISTORICO, JSON.stringify({ momento, ventana, total, porDia }) + '\n', { flag: 'a' });
 
-  console.log(`[${momento.slice(0, 16).replace('T', ' ')}] huecos en la ventana: ${total}`);
+  console.log(`[${horaLocal(momento)}] huecos en la ventana: ${total}`);
 
   // Solo se compara contra snapshots de la MISMA ventana: si cambia el rango de
   // fechas, el delta no significa nada (más días = más huecos, no menos reservas).

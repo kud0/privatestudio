@@ -36,3 +36,6 @@ public/images/*.mp4
 public/images/*.MP4
 !public/images/renato-dinamico-web.mp4
 public/informe.txt
+
+# Scripts publicados temporalmente solo para instalarlos en Google Ads
+public/guardia.txt
