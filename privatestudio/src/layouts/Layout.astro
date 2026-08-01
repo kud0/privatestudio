@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '../styles/custom.css';
 import GoogleTagManager from '../components/GoogleTagManager.astro';
+import MedicionReservas from '../components/MedicionReservas.astro';
 
 export interface Props {
 	title: string;
@@ -46,6 +47,7 @@ const ogImage = canonicalDomain + '/images/ps-logo3.png';
 		<meta name="twitter:image" content={ogImage} />
 
 		<GoogleTagManager />
+		<MedicionReservas />
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="manifest" href="/manifest.json" />

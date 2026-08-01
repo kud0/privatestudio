@@ -1,0 +1,65 @@
+---
+/**
+ * Medición de intención de reserva para Google Ads.
+ *
+ * Booksy es un sitio de terceros: no se puede instalar nada dentro, así que la
+ * reserva confirmada es inalcanzable. Lo más cercano que sí está bajo nuestro
+ * control es el momento en que alguien sale de la web hacia el sistema de
+ * reservas, o pulsa el teléfono. Eso es lo que se mide aquí.
+ *
+ * Se detecta por el destino del enlace, no por una clase CSS: los botones de
+ * reservar están repartidos en seis componentes distintos y algunos se generan
+ * en bucle. Si mañana la barbería migra de Booksy a otro sistema, basta con
+ * añadir el dominio a DESTINOS_RESERVA — el resto sigue funcionando.
+ *
+ * IMPORTANTE: mide *intención*, no reservas cerradas. Un clic en «Reservar» no
+ * garantiza que la cita llegue a hacerse. Sirve para comparar keywords y
+ * anuncios entre sí, no para contar clientes.
+ */
+
+// Cuenta 608-571-5182 · acción de conversión «Clic en Reservar (web)»
+const GOOGLE_ADS_ID = 'AW-16802951890';
+const CONVERSION_RESERVA = 'AW-16802951890/JIb2CN2vr9ocENLlosw-';
+
+// Dominios que significan «se va a reservar». Añadir aquí el nuevo sistema
+// cuando se migre, sin tocar ningún componente.
+const DESTINOS_RESERVA = ['booksy.com'];
+---
+
+<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}></script>
+<script is:inline define:vars={{ GOOGLE_ADS_ID, CONVERSION_RESERVA, DESTINOS_RESERVA }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', GOOGLE_ADS_ID);
+
+  (function () {
+    var yaContado = false;   // la conversión cuenta una vez por visita
+
+    function esReserva(enlace) {
+      var destino = enlace.getAttribute('href') || '';
+      if (destino.indexOf('tel:') === 0) return 'telefono';
+      for (var i = 0; i < DESTINOS_RESERVA.length; i++) {
+        if (destino.indexOf(DESTINOS_RESERVA[i]) !== -1) return 'reserva';
+      }
+      return null;
+    }
+
+    // Delegación en el documento: coge también los botones que se pintan
+    // después de cargar la página.
+    document.addEventListener('click', function (evento) {
+      var enlace = evento.target.closest && evento.target.closest('a[href]');
+      if (!enlace) return;
+
+      var tipo = esReserva(enlace);
+      if (!tipo || yaContado) return;
+      yaContado = true;
+
+      gtag('event', 'conversion', {
+        send_to: CONVERSION_RESERVA,
+        value: 1.0,
+        currency: 'EUR'
+      });
+    }, true);
+  })();
+</script>
