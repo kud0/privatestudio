@@ -403,3 +403,136 @@ real, y el gasto se recibe por el correo diario. Añadido el **ritmo natural de 
    Booksy sería trabajo tirado.
 4. **Sábado 19:00 o 20:00** sin confirmar por Reni.
 5. **Si migran a otracita**, el cron de Booksy deja de funcionar y hay que reescribirlo.
+
+---
+
+## 1 agosto 2026 · Tarde — estructura, gasto visible y dos bugs cazados
+
+### 16:34 · Los cinco puntos pendientes, resueltos por código
+
+La interfaz de Google Ads aceptaba el texto de las keywords nuevas pero no
+aplicaba el Save. Se dejó de pelear con ella y se escribió
+`scripts/circuit-2026/ads-script-estructura.js`, que se ejecutó desde el slot
+del guardián (el único autorizado, para no pedir un passkey nuevo).
+
+**39 operaciones correctas, 0 errores.** Quedó:
+
+- Ad group **`EN — Barber`** con 8 keywords de frase y anuncio propio que
+  aterriza en `/?lang=en`.
+- Grupo original renombrado a **`ES — Barbería`**.
+- Negativas de campaña añadidas a las que ya había.
+
+**Por qué separar idiomas:** con español e inglés en el mismo grupo, el anuncio
+nunca encaja del todo con lo buscado y Google baja el nivel de calidad. Ya se
+notaba: `barberia cerca de mi` estaba marcada como "se muestra pocas veces".
+
+### 16:49 · Fallo propio: la lista de keywords a pausar estaba incompleta
+
+**Qué pasó.** El script de estructura pausaba, en el grupo español, las
+keywords inglesas de una lista escrita a mano. Esa lista salió de una lectura
+parcial de la tabla — la interfaz pagina de diez en diez — y se quedó corta.
+Resultado: `haircut barcelona`, `english speaking barber` y
+`mens haircut barcelona` quedaron **activas en los dos grupos a la vez**,
+compitiendo entre ellas por la misma búsqueda.
+
+**Cómo se cazó.** Recorriendo las tres páginas de la tabla y cruzando los dos
+grupos, en vez de fiarse de la primera pantalla.
+
+**Arreglo.** `ads-script-limpieza-en.js`, que ya no usa lista a mano: marca como
+no castellana toda keyword que contenga una palabra inglesa o alemana, con los
+acentos normalizados para que `barbería` no se confunda con `barber`.
+**8 keywords pausadas.** El grupo español se queda solo con castellano.
+
+**Inventario que dejó el script** (la interfaz no deja verlo de una vez):
+
+| Grupo | Activas | Pausadas |
+|---|---|---|
+| `ES — Barbería` | 7 | 13 |
+| `EN — Barber` | 8 | 0 |
+
+Ambos grupos con un anuncio activo. `EN — Barber` apunta a `/?lang=en`.
+
+### 17:09 · El panel enseñaba una barra de gasto que no significaba nada
+
+**Lo dijo Alex:** *"aquí no veo el dinero gastado, sale la barra pero no sé
+cuánto"*. Tenía razón: la barra estaba fija al 2% y el texto remitía al correo.
+Un adorno, no un dato.
+
+**El problema de fondo.** El gasto solo lo sabe Google Ads. El generador del
+panel corre en el Mac y no tiene forma de preguntárselo.
+
+**Puente elegido.** El guardián vuelca cada hora las métricas en una hoja de
+cálculo publicada como CSV; el panel la lee al abrirse. Sin credenciales en
+ninguna página, sin backend nuevo y con histórico gratis.
+
+Se descartaron dos alternativas: meter un token de GitHub dentro del editor de
+scripts (queda a la vista de cualquiera con acceso a la cuenta de Reni) y montar
+OAuth contra la API de Google Ads (correcto, pero horas de trabajo para el mismo
+resultado).
+
+**Coste:** una autorización nueva de Google, porque escribir en Sheets es un
+permiso que el guardián no tenía. Se pidió el passkey una vez.
+
+**Aviso honesto:** durante unos minutos el guardián falló entero — Google
+rechaza el script completo cuando detecta un permiso no concedido, así que el
+try/catch defensivo no sirvió de nada. La campaña estaba pausada, así que no
+hubo riesgo de gasto, pero conviene saberlo: **añadir un servicio nuevo al
+guardián lo tumba hasta que se autorice**.
+
+**Datos reales que ya muestra el panel:**
+
+| | |
+|---|---|
+| Gastado | 13,52 € de 200 € |
+| Clics | 39 |
+| Veces mostrado | 718 |
+| Coste por clic | 0,35 € |
+
+### 17:19 · Dos bugs en el cron, encontrados al verificarlo
+
+1. **`estadoPublicado()` fallaba siempre.** La raíz del repositorio está un
+   nivel por encima del proyecto, así que `git show HEAD:public/…` no
+   encontraba nada y toda publicación se anunciaba como "(nuevo)". El log
+   mentía sobre lo que estaba pasando. Arreglado con `HEAD:./public/…`.
+2. **El log iba dos horas atrasado.** Escribía la hora UTC, así que la
+   ejecución de las 17:00 aparecía como las 15:00 y era imposible saber si el
+   cron se había disparado. Los instantes se siguen guardando en UTC —es lo
+   correcto para comparar— pero lo que se lee sale en hora de Barcelona.
+
+Ninguno de los dos afectaba a la lógica de pausa, que funcionaba. Afectaban a
+poder confiar en lo que el sistema dice de sí mismo, que es casi peor.
+
+### Verificado en la cuenta, no supuesto
+
+- Ubicación ya estaba en **"Presence: People in or regularly in"**, no en
+  "presence or interest". No hacía falta tocarlo.
+- Radio real leído de la propia tabla: **2,5 km alrededor de Muntaner 172**.
+  Los 39 clics y 717 impresiones salieron todos de dentro; "Other locations": 0.
+- Guardián: `Hourly`, `Enabled`, última ejecución correcta.
+- `public/guardia.txt` retirado del sitio y añadido a `.gitignore`. Era el
+  vehículo para instalar scripts y estaba accesible públicamente.
+
+### Hallazgo para decidir con Reni: casi la mitad del gasto es de marca
+
+De los términos reales de los últimos 30 días:
+
+| Búsqueda | Clics | CTR |
+|---|---|---|
+| `private studio` | 19 | 45,2% |
+| `private studio barcelona` | 16 | 51,6% |
+| `private studio la mejor barberia de barcelona` | 7 | 35,0% |
+
+**42 clics de gente que ya busca el nombre del negocio.** Esa gente encuentra
+el estudio igual por el resultado orgánico y por la ficha de Google. Es el
+gasto más discutible de la cuenta.
+
+No se ha tocado, y a propósito: si un competidor puja por esas búsquedas, ese
+clic se pierde. Es una decisión de negocio, no técnica.
+
+El resto de lo que se ve en los datos:
+
+- `barberia cerca de mi`: 390 impresiones y solo 8 clics (2,05%). Mucho volumen
+  y poco interés — es la que arrastra el nivel de calidad hacia abajo.
+- Hay búsquedas **en alemán** (`friseur in der nähe`, `barbershop in der nähe`).
+  Señal real pero pequeña: 5 impresiones. No se ha creado grupo alemán, sería
+  especular con el dinero de Reni.
