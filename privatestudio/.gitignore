@@ -29,3 +29,10 @@ pnpm-debug.log*
 scripts/circuit-2026/agenda-historico.jsonl
 scripts/circuit-2026/snapshot.log
 public/guardia.txt
+
+# Vídeos originales: pesan demasiado para git (usar el .mp4 optimizado del hero)
+public/*.mp4
+public/*.MP4
+public/images/*.mp4
+public/images/*.MP4
+!public/images/renato-dinamico-web.mp4

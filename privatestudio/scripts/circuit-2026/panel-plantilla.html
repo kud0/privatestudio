@@ -61,6 +61,7 @@
   .extra div{background:var(--card);padding:9px 11px}
   .extra .k{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
   .extra .v{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .extra .v small{font-size:10.5px;font-weight:500;color:var(--ink3)}
 
   .prot{background:var(--ok-bg);border:1px solid var(--ok);border-radius:10px;padding:11px 13px}
   .prot li{font-size:12px;line-height:1.45;padding-left:15px;position:relative}
@@ -92,20 +93,20 @@
       {{DIAS}}
   </div>
 
-  <div class="dinero">
-    <div class="fila">
-      <div><span class="gasto">€0</span><span class="tope"> de 200 €</span></div>
-      <div class="tope">20 €/día máx.</div>
-    </div>
-    <div class="barra"><i></i></div>
-    <div class="marcas"><span>1 ago</span><span>aviso a 160 €</span><span>15 ago</span></div>
-  </div>
-
   <div class="extra">
     <div><div class="k">Reservadas hoy</div><div class="v">{{RESERVADAS}}</div></div>
     <div><div class="k">Libres 1–15 ago</div><div class="v">{{VENTANA}}</div></div>
+    <div><div class="k">Ritmo</div><div class="v">{{RITMO}}<small>/día</small></div></div>
     <div><div class="k">Radio</div><div class="v">2,5 km</div></div>
-    <div><div class="k">Horario</div><div class="v">11–20 h</div></div>
+  </div>
+
+  <div class="dinero">
+    <div class="fila">
+      <div><span class="gasto">20 €</span><span class="tope"> al día máximo</span></div>
+      <div class="tope">tope total 200 €</div>
+    </div>
+    <div class="barra"><i></i></div>
+    <div class="marcas"><span>1 ago</span><span>el gasto real llega por correo cada mañana</span><span>15 ago</span></div>
   </div>
 
   <div class="prot">

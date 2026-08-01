@@ -158,6 +158,15 @@ async function generarPanel(control, historial) {
   const deHoy = historial.filter(s => s.momento.slice(0, 10) === hoyISO && s.ventana);
   const reservadasHoy = deHoy.length > 1 ? Math.max(0, deHoy[0].total - deHoy.at(-1).total) : 0;
 
+  // Ritmo natural de reserva: citas que se llenan solas por día, calculado sobre
+  // toda la serie de la misma ventana. Es el dato que dice si la campaña aporta algo.
+  const serie = historial.filter(s => s.ventana === historial.at(-1)?.ventana);
+  let ritmo = '—';
+  if (serie.length > 1) {
+    const h = (Date.parse(serie.at(-1).momento) - Date.parse(serie[0].momento)) / 3600000;
+    if (h > 0.5) ritmo = Math.round((serie[0].total - serie.at(-1).total) / h * 24);
+  }
+
   const sello = new Date(control.actualizado);
   const hora = String(sello.getHours()).padStart(2, '0') + ':' + String(sello.getMinutes()).padStart(2, '0');
 
@@ -166,6 +175,7 @@ async function generarPanel(control, historial) {
     .replace('{{ESTADO}}', control.estado === 'activa' ? '● En marcha' : '● Pausada: agenda llena')
     .replace('{{CLASE_ESTADO}}', control.estado === 'activa' ? 'ok' : 'warn')
     .replace('{{VENTANA}}', control.citas_ventana)
+    .replace('{{RITMO}}', ritmo)
     .replace('{{RESERVADAS}}', reservadasHoy)
     .replace('{{ACTUALIZADO}}', `${sello.getDate()} ${MESES[sello.getMonth()]} · ${hora}`);
 }
