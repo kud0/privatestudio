@@ -140,7 +140,7 @@
     </ul>
   </div>
 
-  <footer>Huecos actualizados el 1 ago · 17:09 · el gasto se lee de Google Ads al abrir esta página</footer>
+  <footer>Huecos actualizados el 1 ago · 17:11 · el gasto se lee de Google Ads al abrir esta página</footer>
 
 </div>
 
@@ -171,8 +171,7 @@
 
   function pintar(d) {
     var gastado = parseFloat(d.gastado_periodo);
-    var tope = parseFloat(d.tope_periodo);
-    if (isNaN(gastado) || isNaN(tope)) return fallo('datos incompletos');
+    var tope = parseFloat(d.tope_periodo) || 200;
 
     $('gasto').textContent = euros(gastado);
     $('de-tope').textContent = ' de ' + euros(tope);
@@ -208,10 +207,25 @@
     $('sello').textContent = 'no se ha podido leer el gasto (' + motivo + ')';
   }
 
-  fetch(CSV + '&t=' + Date.now(), { cache: 'no-store' })
-    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-    .then(function (t) { pintar(parsear(t)); })
-    .catch(function (e) { fallo(e.message); });
+  /* Google cachea el CSV publicado por su cuenta y a veces devuelve la versión
+     anterior, que puede estar vacía. Se reintenta antes de dar el dato por
+     perdido; con tres intentos siempre ha bastado. */
+  function leer(intento) {
+    fetch(CSV + '&t=' + Date.now() + '.' + intento, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+      .then(function (texto) {
+        var d = parsear(texto);
+        if (!isNaN(parseFloat(d.gastado_periodo))) return pintar(d);
+        if (intento < 3) return setTimeout(function () { leer(intento + 1); }, 1200 * intento);
+        fallo('la hoja todavía no tiene el dato');
+      })
+      .catch(function (e) {
+        if (intento < 3) return setTimeout(function () { leer(intento + 1); }, 1200 * intento);
+        fallo(e.message);
+      });
+  }
+
+  leer(1);
 })();
 </script>
 </body>
