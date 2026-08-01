@@ -61,6 +61,7 @@
   .extra div{background:var(--card);padding:9px 11px}
   .extra .k{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
   .extra .v{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .extra .v small{font-size:10.5px;font-weight:500;color:var(--ink3)}
 
   .prot{background:var(--ok-bg);border:1px solid var(--ok);border-radius:10px;padding:11px 13px}
   .prot li{font-size:12px;line-height:1.45;padding-left:15px;position:relative}
@@ -84,37 +85,37 @@
       <div class="titulo">Campaña Circuit</div>
       <div class="sub">Private Studio · 1–15 agosto</div>
     </div>
-    <span class="estado ok">● En marcha</span>
+    <span class="estado warn">● Pausada: agenda llena</span>
   </header>
 
   <h2 class="seccion">Huecos libres en los próximos días abiertos</h2>
   <div class="dias">
-      <div class="dia">
+      <div class="dia lleno">
         <div class="k">Hoy 1 ago</div>
-        <div class="v">1</div>
-        <div class="n">hueco libre</div>
+        <div class="v">0</div>
+        <div class="n">sin huecos</div>
       </div>
       <div class="dia">
         <div class="k">Lunes 3 ago</div>
-        <div class="v">12</div>
+        <div class="v">8</div>
         <div class="n">huecos libres</div>
       </div>
   </div>
 
-  <div class="dinero">
-    <div class="fila">
-      <div><span class="gasto">€0</span><span class="tope"> de 200 €</span></div>
-      <div class="tope">20 €/día máx.</div>
-    </div>
-    <div class="barra"><i></i></div>
-    <div class="marcas"><span>1 ago</span><span>aviso a 160 €</span><span>15 ago</span></div>
+  <div class="extra">
+    <div><div class="k">Reservadas hoy</div><div class="v">12</div></div>
+    <div><div class="k">Libres 1–15 ago</div><div class="v">179</div></div>
+    <div><div class="k">Ritmo</div><div class="v">35<small>/día</small></div></div>
+    <div><div class="k">Radio</div><div class="v">2,5 km</div></div>
   </div>
 
-  <div class="extra">
-    <div><div class="k">Reservadas hoy</div><div class="v">7</div></div>
-    <div><div class="k">Libres 1–15 ago</div><div class="v">184</div></div>
-    <div><div class="k">Radio</div><div class="v">2,5 km</div></div>
-    <div><div class="k">Horario</div><div class="v">11–20 h</div></div>
+  <div class="dinero">
+    <div class="fila">
+      <div><span class="gasto">20 €</span><span class="tope"> al día máximo</span></div>
+      <div class="tope">tope total 200 €</div>
+    </div>
+    <div class="barra"><i></i></div>
+    <div class="marcas"><span>1 ago</span><span>el gasto real llega por correo cada mañana</span><span>15 ago</span></div>
   </div>
 
   <div class="prot">
@@ -125,7 +126,7 @@
     </ul>
   </div>
 
-  <footer>Actualizado el 1 ago · 13:00 · se refresca solo 4 veces al día</footer>
+  <footer>Actualizado el 1 ago · 16:10 · se refresca solo 4 veces al día</footer>
 
 </div>
 </body>
