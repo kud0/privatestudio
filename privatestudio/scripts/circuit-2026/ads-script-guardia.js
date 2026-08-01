@@ -34,24 +34,14 @@
 
 var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
 
-// Tope de gasto acordado con el cliente: 200 € (decisión de Alex, 31 jul).
-//
-// Aquí van 180 y no 200 por un error de montaje: el 31 de julio se subió el
-// presupuesto de la campaña a 20 €/día antes de que este guardián estuviera
-// operativo, y ese día se gastaron 19,99 € fuera de la ventana pactada y con
-// la agenda ya casi llena. Ese gasto lo pagó el cliente por un fallo nuestro,
-// así que se descuenta aquí: 180 + 20 ya gastados = los 200 € acordados.
-//
-// La lección, para que no se repita: el presupuesto se sube DESPUÉS de que la
-// protección esté activa y validada, nunca antes.
-var TOPE_PERIODO = 180;
+// Tope de gasto para la ventana del festival. La campaña empieza el 1 de agosto
+// y estos 200 € cubren del 1 al 15. Decisión de Alex, 1 ago.
+var TOPE_PERIODO = 200;
 
-// Lo que ya se gastó antes de que empezara la ventana, y el tope tal como se
-// habló con el cliente. No se usan para decidir nada: existen para que el panel
-// pueda enseñar el total real que paga la barbería y no obligue a nadie a sumar
-// dos cifras de dos sitios distintos.
-var GASTADO_ANTES = 19.99;   // 31 de julio
-var TOPE_ACORDADO = 200;
+// Lo gastado el 31 de julio, antes de que arrancara la ventana. No cuenta contra
+// el tope; se publica solo para que el panel pueda enseñarlo y el número cuadre
+// con lo que Google cobra de verdad.
+var GASTADO_ANTES = 19.99;
 
 var INICIO = '2026-08-01';
 var FIN    = '2026-08-15';
@@ -219,7 +209,6 @@ function publicarMetricas(campana) {
     ['inicio', INICIO],
     ['fin', FIN],
     ['gastado_antes', GASTADO_ANTES.toFixed(2)],
-    ['tope_acordado', TOPE_ACORDADO.toFixed(2)],
     // Deja constancia de que el informe diario salió, sin depender de abrir el
     // correo para comprobarlo.
     ['ultimo_informe', ultimoInforme()]

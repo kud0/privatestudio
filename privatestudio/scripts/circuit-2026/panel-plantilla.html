@@ -38,15 +38,32 @@
   h2.seccion{font-size:10.5px;font-weight:700;letter-spacing:.12em;
     text-transform:uppercase;color:var(--ink3)}
 
-  .dias{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .dia{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:12px 13px;text-align:center}
-  .dia.lleno{border-color:var(--warn);background:var(--warn-bg)}
-  .dia .k{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
-  .dia .v{font-size:34px;font-weight:800;letter-spacing:-.04em;line-height:1.05;
-    font-variant-numeric:tabular-nums;margin:2px 0 1px}
-  .dia.lleno .v{color:var(--warn)}
-  .dia .n{font-size:11px;color:var(--ink2)}
+  /* Calendario de la ventana: una fila por día, la barra da la proporción de
+     un vistazo y el número el dato exacto. */
+  .calendario{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:7px 11px;display:flex;flex-direction:column}
+  .fila{display:grid;grid-template-columns:62px 1fr 42px;align-items:center;
+    gap:9px;padding:5px 0;border-bottom:1px solid var(--line)}
+  .fila:last-child{border-bottom:0}
+  .fila .f{font-size:11.5px;color:var(--ink2);white-space:nowrap}
+  .fila .b{height:7px;background:var(--line);border-radius:100px;overflow:hidden}
+  .fila .b i{display:block;height:100%;background:var(--ink3);border-radius:100px}
+  .fila .c{font-size:12.5px;font-weight:700;text-align:right;
+    font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .fila.hoy .f{color:var(--ink);font-weight:700}
+  .fila.decide{background:linear-gradient(90deg,var(--gold) 0 3px,transparent 3px);
+    padding-left:8px;margin-left:-8px}
+  .fila.decide .b i{background:var(--gold)}
+  .fila.decide .c{color:var(--gold)}
+  .fila.lleno .c{color:var(--warn)}
+  .fila.cerrado .f,.fila.cerrado .c{color:var(--ink3)}
+  .fila.cerrado .c{font-weight:500;font-size:11px}
+  .fila.pasado{opacity:.4}
+  .fila.pasado .c{font-weight:500}
+
+  .leyenda{font-size:11px;color:var(--ink3);line-height:1.5}
+  .leyenda b{color:var(--ink2)}
 
   .dinero{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 13px}
   .dinero .fila{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
@@ -84,8 +101,8 @@
   footer{font-size:10.5px;color:var(--ink3);text-align:center;line-height:1.5}
 
   @media(min-width:620px){
-    .dias{grid-template-columns:1fr 1fr}
     .extra{grid-template-columns:repeat(4,1fr)}
+    .fila{grid-template-columns:78px 1fr 52px}
   }
 </style>
 </head>
@@ -100,9 +117,13 @@
     <span class="estado {{CLASE_ESTADO}}" id="estado">{{ESTADO}}</span>
   </header>
 
-  <h2 class="seccion">Huecos libres en los próximos días abiertos</h2>
-  <div class="dias">
-      {{DIAS}}
+  <h2 class="seccion">Huecos libres · 1 al 15 de agosto</h2>
+  <div class="calendario">
+      {{CALENDARIO}}
+  </div>
+  <div class="leyenda">
+    El anuncio se enciende o se apaga según los dos próximos días abiertos
+    (<b>{{DECISIVOS}}</b>), marcados con la línea dorada. Los domingos no cuentan.
   </div>
 
   <h2 class="seccion">Dinero gastado</h2>

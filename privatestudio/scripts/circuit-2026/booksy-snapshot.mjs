@@ -161,16 +161,44 @@ async function generarPanel(control, historial) {
   let html;
   try { html = await readFile(PLANTILLA, 'utf8'); } catch { return null; }
 
-  const tarjetas = control.proximos_abiertos.map((d, i) => {
+  const hoyFecha = control.actualizado.slice(0, 10);
+
+  // Calendario de toda la ventana, un día por fila. La barra da la proporción de
+  // un vistazo: qué días están vacíos y cuáles a rebosar, sin leer los números.
+  const maximo = Math.max(1, ...control.dias_ventana.map(d => d.citas));
+
+  const calendario = control.dias_ventana.map(d => {
     const f = new Date(d.fecha + 'T12:00:00');
-    const etiqueta = i === 0 ? 'Hoy' : DIAS[f.getDay()][0].toUpperCase() + DIAS[f.getDay()].slice(1);
-    const lleno = d.citas === 0;
-    return `<div class="dia${lleno ? ' lleno' : ''}">
-        <div class="k">${etiqueta} ${f.getDate()} ${MESES[f.getMonth()]}</div>
-        <div class="v">${d.citas}</div>
-        <div class="n">${lleno ? 'sin huecos' : d.citas === 1 ? 'hueco libre' : 'huecos libres'}</div>
+    const nombre = DIAS[f.getDay()].slice(0, 3);
+    const esHoy = d.fecha === hoyFecha;
+    const pasado = d.fecha < hoyFecha;
+
+    const clases = ['fila'];
+    if (d.cerrado) clases.push('cerrado');
+    if (esHoy) clases.push('hoy');
+    if (pasado) clases.push('pasado');
+    if (d.decide) clases.push('decide');
+    if (!d.cerrado && !pasado && d.citas === 0) clases.push('lleno');
+
+    const etiqueta = esHoy ? 'Hoy' : nombre[0].toUpperCase() + nombre.slice(1);
+    const ancho = d.cerrado ? 0 : Math.round((d.citas / maximo) * 100);
+
+    const texto = d.cerrado ? 'cerrado'
+      : pasado ? '—'
+      : d.citas === 0 ? 'lleno'
+      : String(d.citas);
+
+    return `<div class="${clases.join(' ')}">
+        <div class="f">${etiqueta} ${f.getDate()}</div>
+        <div class="b"><i style="width:${ancho}%"></i></div>
+        <div class="c">${texto}</div>
       </div>`;
   }).join('\n      ');
+
+  // Las semanas se separan visualmente por el lunes, no por un corte arbitrario.
+  const semanas = control.dias_ventana.reduce((n, d) => {
+    return n + (new Date(d.fecha + 'T12:00:00').getDay() === 1 ? 1 : 0);
+  }, 1);
 
   // Reservas del día: comparación con el primer snapshot de hoy, misma ventana.
   const hoyISO = control.actualizado.slice(0, 10);
@@ -189,8 +217,18 @@ async function generarPanel(control, historial) {
   const sello = new Date(control.actualizado);
   const hora = String(sello.getHours()).padStart(2, '0') + ':' + String(sello.getMinutes()).padStart(2, '0');
 
+  const decisivos = control.proximos_abiertos
+    .map(d => {
+      const f = new Date(d.fecha + 'T12:00:00');
+      const nombre = d.fecha === hoyFecha ? 'hoy' : DIAS[f.getDay()];
+      return `${nombre} ${d.citas}`;
+    })
+    .join(' · ');
+
   return html
-    .replace('{{DIAS}}', tarjetas)
+    .replace('{{CALENDARIO}}', calendario)
+    .replace('{{SEMANAS}}', semanas)
+    .replace('{{DECISIVOS}}', decisivos)
     .replace('{{ESTADO}}', control.estado === 'activa' ? '● En marcha' : '● Pausada: agenda llena')
     .replace('{{CLASE_ESTADO}}', control.estado === 'activa' ? 'ok' : 'warn')
     .replace('{{VENTANA}}', control.citas_ventana)
@@ -292,12 +330,29 @@ async function main() {
     .map((f, i) => (i === 0 ? 'hoy' : DIAS[new Date(f + 'T12:00:00').getDay()]))
     .join(' y ');
 
+  // Todos los días de la ventana, incluidos los que no tienen ni un hueco: sin
+  // ellos el panel enseñaría un calendario con agujeros y no se entendería si un
+  // día falta porque está lleno o porque no se ha consultado.
+  const diasVentana = [];
+  for (let d = new Date(VENTANA.inicio + 'T12:00:00');
+       iso(d) <= VENTANA.fin;
+       d = new Date(d.getTime() + 86400000)) {
+    const fecha = iso(d);
+    diasVentana.push({
+      fecha,
+      citas: porDia[fecha] ?? 0,
+      cerrado: d.getDay() === 0,
+      decide: diasAbiertos.indexOf(fecha) !== -1
+    });
+  }
+
   const control = {
     estado,
     presupuesto_diario: PRESUPUESTO_DIARIO,
     citas_48h: citasDisponibles,
     proximos_abiertos: abiertos,
     detalle_48h: Object.fromEntries(abiertos.map(d => [d.fecha, d.citas])),
+    dias_ventana: diasVentana,
     citas_ventana: total,
     actualizado: momento,
     motivo: estado === 'activa'
