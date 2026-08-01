@@ -668,3 +668,30 @@ que la campaña ya se ha parado sola.
 
 Con eso, comprobar que el informe diario funciona no exige abrir el correo:
 la fecha del último envío se ve en el panel.
+
+### 18:35 · Decisiones de Alex y panel con la ventana completa
+
+**Tope de vuelta a 200 € en la ventana.** Decisión suya, revirtiendo mi ajuste a
+180. Los 19,99 € del 31 de julio quedan fuera del cómputo y se enseñan aparte en
+el panel, sin mezclarlos con lo acordado: *«Aparte de esto, el 31 de julio se
+gastaron 19,99 €. Sumado, Google ha cobrado 33,51 € hasta ahora.»*
+
+**Panel: de dos tarjetas a los quince días.** Alex pidió ver toda la ventana y
+no solo los dos días que deciden — *«me gusta más tener un control más total»*.
+
+El calendario muestra ahora los 15 días con sus huecos, una barra proporcional
+para verlo de un vistazo y los domingos marcados como cerrados. Los dos días que
+gobiernan el encendido llevan una línea dorada, así se entiende **por qué** la
+campaña está encendida o apagada sin tener que preguntarlo.
+
+Estado de la agenda al montarlo:
+
+```
+Hoy 1  lleno       Mar 4  20    Sáb 8  17    Mié 12   8
+Dom 2  cerrado     Mié 5  10    Dom 9  cerrado   Jue 13  19
+Lun 3  9  ←decide  Jue 6  17    Lun 10 19    Vie 14  19
+                   Vie 7  18    Mar 11 22    Sáb 15  lleno
+```
+
+La ventana móvil avanza sola: el domingo el sistema mirará lunes y martes, el
+lunes mirará lunes y martes, y así. Nadie tiene que tocar nada.
