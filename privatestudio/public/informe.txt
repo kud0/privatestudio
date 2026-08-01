@@ -19,6 +19,7 @@ var EMAIL   = 'alexsole@gmail.com';
 
 // Enlace directo a la agenda, para resolver la comprobación desde el móvil.
 var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
+var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
 
 function main() {
   var it = AdsApp.campaigns().withCondition('Name = "' + CAMPANA + '"').get();
@@ -40,7 +41,7 @@ function main() {
   lineas.push('  Conversiones   ' + ayer.getConversions());
   lineas.push('  Coste/conv.    ' + costePorConversion(ayer));
   lineas.push('');
-  lineas.push('ACUMULADO 1–9 AGOSTO');
+  lineas.push('ACUMULADO 1–15 AGOSTO');
   lineas.push('  Inversión      €' + periodo.getCost().toFixed(2));
   lineas.push('  Clics          ' + periodo.getClicks());
   lineas.push('  Conversiones   ' + periodo.getConversions());
@@ -54,12 +55,11 @@ function main() {
   lineas.push(terminosDeAyer(campana));
   lineas.push('');
   lineas.push('─────────────────────────────────────');
-  lineas.push('DECISIÓN DE HOY: ¿cuántos huecos quedan hoy y mañana?');
-  lineas.push('  Sin huecos hoy ni mañana  → pausar');
-  lineas.push('  Hoy lleno, mañana libre   → bajar presupuesto, no pausar');
-  lineas.push('  Huecos en ambos           → mantener o subir');
+  lineas.push('La pausa por agenda llena es automática: la gestiona el guardián');
+  lineas.push('cada hora leyendo la disponibilidad real de Booksy.');
   lineas.push('');
-  lineas.push('Agenda: ' + URL_AGENDA);
+  lineas.push('Panel en vivo: ' + URL_PANEL);
+  lineas.push('Agenda:        ' + URL_AGENDA);
 
   MailApp.sendEmail(EMAIL,
     '[Private Studio · Circuit] Informe ' + Utilities.formatDate(
