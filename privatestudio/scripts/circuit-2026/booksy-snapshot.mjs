@@ -49,8 +49,14 @@ const DURACION_MIN = 35;
 
 const VENTANA = { inicio: '2026-08-01', fin: '2026-08-15' };
 
-// Si en HOY + MAÑANA quedan menos citas que esto, se pausa la campaña: no tiene
-// sentido pagar por clics de gente que no puede reservar en las próximas 48 h.
+// Si en los próximos dos días ABIERTOS quedan menos citas que esto, se pausa la
+// campaña: no tiene sentido pagar por clics de gente que no puede reservar.
+//
+// Dos días abiertos, no dos días naturales. La primera versión miraba hoy y
+// mañana sin más, y el domingo (cerrado, cero huecos) se comía medio criterio:
+// un sábado por la tarde con la agenda llena y el lunes con nueve huecos libres
+// daba «0 citas en 48 h» y apagaba la campaña justo cuando había sitio que
+// vender. Pasó de verdad el 1 de agosto de 2026.
 const MINIMO_PARA_SEGUIR = 1;
 
 // Presupuesto diario fijo. Se probó a variarlo según huecos y se descartó: Google
@@ -210,7 +216,7 @@ async function publicar(control, anterior, historial) {
 
   await git('add', ...ficheros);
   await git('commit', '-m',
-    `control: campana ${control.estado} (${control.citas_48h} citas libres en 48h)`);
+    `control: campana ${control.estado} (${control.citas_48h} citas libres en los proximos 2 dias abiertos)`);
   await git('push', 'origin', 'main');
   return `publicado: ${anterior ?? '(nuevo)'} → ${control.estado}`;
 }
@@ -267,14 +273,10 @@ async function main() {
     console.log(`   primer snapshot de la ventana ${ventana}: la línea base empieza aquí.`);
   }
 
-  // ── 2 · Control dinámico según disponibilidad de hoy y mañana
+  // ── 2 · Control dinámico según los próximos dos días ABIERTOS
+  // El domingo se salta: está cerrado, así que contarlo como día disponible
+  // apagaba la campaña los sábados por la tarde aunque el lunes hubiera sitio.
   const hoy = new Date();
-  const manana = new Date(hoy.getTime() + 86400000);
-  const corto = resumir(await consultar(iso(hoy), iso(manana)));
-  const citas48h = corto.total;
-
-  // Próximos 2 días ABIERTOS: el domingo no cuenta, así que si mañana es domingo
-  // se mira el lunes. Es lo que de verdad importa para decidir si seguir gastando.
   const diasAbiertos = [];
   for (let i = 0; diasAbiertos.length < 2 && i < 5; i++) {
     const d = new Date(hoy.getTime() + i * 86400000);
@@ -283,23 +285,29 @@ async function main() {
   const proximos = resumir(await consultar(diasAbiertos[0], diasAbiertos.at(-1)));
   const abiertos = diasAbiertos.map(f => ({ fecha: f, citas: proximos.porDia[f] ?? 0 }));
 
-  const estado = citas48h >= MINIMO_PARA_SEGUIR ? 'activa' : 'pausa';
+  const citasDisponibles = abiertos.reduce((suma, d) => suma + d.citas, 0);
+  const estado = citasDisponibles >= MINIMO_PARA_SEGUIR ? 'activa' : 'pausa';
+
+  const cuando = diasAbiertos
+    .map((f, i) => (i === 0 ? 'hoy' : DIAS[new Date(f + 'T12:00:00').getDay()]))
+    .join(' y ');
+
   const control = {
     estado,
     presupuesto_diario: PRESUPUESTO_DIARIO,
-    citas_48h: citas48h,
+    citas_48h: citasDisponibles,
     proximos_abiertos: abiertos,
-    detalle_48h: corto.porDia,
+    detalle_48h: Object.fromEntries(abiertos.map(d => [d.fecha, d.citas])),
     citas_ventana: total,
     actualizado: momento,
     motivo: estado === 'activa'
-      ? `${citas48h} citas libres entre hoy y mañana`
-      : 'agenda llena en las próximas 48 h: no se paga por clics que no pueden reservar'
+      ? `${citasDisponibles} citas libres ${cuando}`
+      : `sin huecos ${cuando}: no se paga por clics que no pueden reservar`
   };
 
   const anterior = await estadoPublicado();
   const resultado = await publicar(control, anterior, [...previos, { momento, ventana, total }]);
-  console.log(`\ncontrol: ${estado.toUpperCase()} — ${citas48h} citas libres en 48 h`);
+  console.log(`\ncontrol: ${estado.toUpperCase()} — ${citasDisponibles} citas libres ${cuando}`);
   console.log(`   ${resultado}`);
 }
 
