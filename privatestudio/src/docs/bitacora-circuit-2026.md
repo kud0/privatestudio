@@ -340,3 +340,66 @@ con "parecía otra peluquería". Pendiente de revisar los assets.
 **La P.Max "Tu Barbería y Peluquería" sigue activa a €0,50/día**, fuera del tope de 200 €
 (el guardián solo vigila `PS | Search | Barcelona`). Total de la cuenta: **€20,50/día**.
 Son ~7 € en toda la ventana, pero es la campaña de peor rendimiento (€37,09/contacto).
+
+---
+
+## 1 agosto 2026 · Cierre del montaje
+
+### 16:16 · Sistema de pausa automática VALIDADO en producción
+
+La agenda se llenó (0 huecos en 48 h), el control publicó `pausa`, y el guardián
+**paró la campaña solo**. Verificado: estado `Paused` en Google Ads.
+Es la prueba de que el circuito completo funciona de punta a punta:
+
+```
+Booksy → cron (4×/día) → ads-control.json → guardián (cada hora) → pausa
+```
+
+### 16:22 · Informe diario fusionado dentro del guardián
+
+- **Problema:** un segundo script exige **otra autorización con passkey** de Alex.
+  Eso rompía el requisito de que el sistema no dependa de él.
+- **Solución:** el informe vive dentro del guardián, que ya está autorizado. Se envía
+  en la ejecución de las **8:00**, con una etiqueta-fecha como marca para no repetirlo.
+- **Contenido:** inversión de ayer y acumulada, restante sobre los 200 €, clics,
+  conversiones, estado de campaña y presupuesto, las 10 búsquedas que más gastaron,
+  y enlaces al panel y a la agenda.
+- **Verificado:** guardado sin pedir autorización nueva; Preview `Done — No changes`.
+- El script suelto "Informe diario Circuit" (12023662) quedó **desactivado**.
+
+### Panel corregido
+
+El gasto salía fijo en "€0 de 200 €": era un valor de plantilla que nunca se conectó,
+y no podía conectarse porque el cron lee Booksy, no Google Ads. Sustituido por el tope
+real, y el gasto se recibe por el correo diario. Añadido el **ritmo natural de reserva**.
+
+### Estado final del montaje
+
+| Pieza | Estado |
+|---|---|
+| Campaña `PS \| Search \| Barcelona` | Configurada · pausada por agenda llena (correcto) |
+| Presupuesto | 20 €/día · tope 200 € (1–15 ago) |
+| Radio | 2,5 km desde Muntaner 172 |
+| Horario | L–V 11–20 · sáb 11–19 · dom no |
+| Guardián (12022525) | Instalado, horario, **validado pausando** |
+| Informe diario | Dentro del guardián, 8:00 |
+| Panel en vivo | Auto-actualizado 4×/día |
+| Cron de agenda | 9, 13, 17 y 21 h |
+| P.Max "Tu Barbería" | Pausada |
+| Contenedor GTM | Propio (`GTM-WSZS5CV5`) |
+| Ficha de Google | Ya vinculada a Ads |
+
+### 🔴 Lo que queda pendiente, sin adornos
+
+1. **Keywords EN nuevas no se guardaron.** `haircut barcelona`, `mens haircut barcelona`,
+   `beard trim barcelona`, `english speaking barber`, `barber eixample`. La interfaz
+   aceptó el texto pero no aplicó el Save; verificado que siguen sin aparecer (20 kw en la
+   campaña, ninguna de las cinco). **No es un fallo funcional**: la campaña ya cubre
+   `barber`, `barbershop` y `barber near me`.
+2. **Separación ES/EN en dos ad groups.** Sigue habiendo un único grupo mezclado, que es
+   lo que penaliza a `barberia cerca de mi` con "Rarely shown".
+3. **Medición de reservas.** La ficha de Google ya está vinculada (Local Actions). Falta
+   el clic saliente, que se hará sobre **otracita** cuando migren — hacerlo hoy sobre
+   Booksy sería trabajo tirado.
+4. **Sábado 19:00 o 20:00** sin confirmar por Reni.
+5. **Si migran a otracita**, el cron de Booksy deja de funcionar y hay que reescribirlo.
