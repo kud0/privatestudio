@@ -248,12 +248,11 @@
     // fecha se enseña aparte para que el número cuadre con lo que Google cobra
     // de verdad, sin que nadie tenga que sumar dos cifras de dos sitios.
     var antes = parseFloat(d.gastado_antes);
-    var acordado = parseFloat(d.tope_acordado);
     if (!isNaN(antes) && antes > 0) {
       $('total').innerHTML =
-        'Antes de la ventana, el 31 de julio, se gastaron <b>' + euros(antes) + '</b>. ' +
-        'Total pagado hasta ahora: <b>' + euros(antes + gastado) + '</b>' +
-        (isNaN(acordado) ? '' : ' de los <b>' + euros(acordado) + '</b> acordados') + '.';
+        'Aparte de esto, el 31 de julio —antes de que arrancara la campaña— se ' +
+        'gastaron <b>' + euros(antes) + '</b>. Sumado, Google ha cobrado <b>' +
+        euros(antes + gastado) + '</b> hasta ahora.';
     }
 
     // Sheets reescribe el valor como fecha y se come la T del ISO, así que la
