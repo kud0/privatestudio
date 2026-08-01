@@ -315,3 +315,28 @@ con "parecía otra peluquería". Pendiente de revisar los assets.
   sin publicidad en una semana normal de agosto.
 - **Google:** solicitud de Basic Access (5 días laborables), a pedir la semana que viene con
   la cuenta ya vinculada al manager.
+
+### 1 ago 09:48 · Guardián instalado y operativo
+
+- Script **"Guardian Circuit 2026"** (scriptId 12022525) creado, autorizado por Alex con
+  passkey, y programado **Hourly**.
+- Primera ejecución: *"Finished with no changes"* — correcto: hay huecos, la campaña está
+  activa y el gasto está lejos del tope.
+- Vigila: tope de 200 €, pausa por agenda llena, aviso por correo al 80% (160 €).
+- Retirado `public/guardia.txt`, el fichero temporal usado para inyectar el código.
+
+### 1 ago · Radio reducido de 5 km a 2,5 km
+
+- **Motivo:** Alex detectó que 5 km cubría casi toda Barcelona. Verificado con coordenadas:
+  un círculo de 5 km son **79 km²** frente a los 101 km² de la ciudad, e incluía Collserola
+  (4,4 km) y llegaba casi a L'Hospitalet.
+- **Ahora 2,5 km ≈ 19,6 km²:** Eixample, Gràcia, Sant Antoni, Plaça Catalunya y el Gòtic.
+  Fuera quedan monte, mar, Sants y Poblenou.
+- **No bajar de 2 km:** a 1,5 km se pierde Plaça Catalunya, donde se concentra el turista.
+- **Verificado** tras recargar: única ubicación `2.5 km around Carrer de Muntaner, 172`.
+
+### ⚠️ Pendiente de decisión de Alex
+
+**La P.Max "Tu Barbería y Peluquería" sigue activa a €0,50/día**, fuera del tope de 200 €
+(el guardián solo vigila `PS | Search | Barcelona`). Total de la cuenta: **€20,50/día**.
+Son ~7 € en toda la ventana, pero es la campaña de peor rendimiento (€37,09/contacto).
