@@ -34,9 +34,17 @@
 
 var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
 
-// Tope de gasto acordado con el cliente para toda la ventana, en euros.
-// Decisión de Alex el 31 jul: 200 € del 1 al 15 de agosto.
-var TOPE_PERIODO = 200;
+// Tope de gasto acordado con el cliente: 200 € (decisión de Alex, 31 jul).
+//
+// Aquí van 180 y no 200 por un error de montaje: el 31 de julio se subió el
+// presupuesto de la campaña a 20 €/día antes de que este guardián estuviera
+// operativo, y ese día se gastaron 19,99 € fuera de la ventana pactada y con
+// la agenda ya casi llena. Ese gasto lo pagó el cliente por un fallo nuestro,
+// así que se descuenta aquí: 180 + 20 ya gastados = los 200 € acordados.
+//
+// La lección, para que no se repita: el presupuesto se sube DESPUÉS de que la
+// protección esté activa y validada, nunca antes.
+var TOPE_PERIODO = 180;
 
 var INICIO = '2026-08-01';
 var FIN    = '2026-08-15';
@@ -172,12 +180,29 @@ function publicarMetricas(campana) {
     ['clics_hoy', String(hoy.getClicks())],
     ['impresiones_hoy', String(hoy.getImpressions())],
     ['inicio', INICIO],
-    ['fin', FIN]
+    ['fin', FIN],
+    // Deja constancia de que el informe diario salió, sin depender de abrir el
+    // correo para comprobarlo.
+    ['ultimo_informe', ultimoInforme(zona)]
   ];
 
   var hoja = SpreadsheetApp.openById(HOJA_ID).getSheets()[0];
   hoja.clear();
   hoja.getRange(1, 1, filas.length, 2).setValues(filas);
+}
+
+/**
+ * Fecha del último informe enviado. Se deduce de las etiquetas «informe-AAAA-MM-DD»
+ * que deja `informeDiarioSiToca`, que son la misma marca que evita repetirlo.
+ */
+function ultimoInforme(zona) {
+  var ultima = '';
+  var it = AdsApp.labels().withCondition('Name CONTAINS "informe-"').get();
+  while (it.hasNext()) {
+    var f = it.next().getName().replace('informe-', '');
+    if (f > ultima) ultima = f;
+  }
+  return ultima || 'ninguno todavía';
 }
 
 // ─── Auxiliares ─────────────────────────────────────────────────────────────
