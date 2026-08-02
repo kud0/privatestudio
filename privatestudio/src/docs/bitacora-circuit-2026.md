@@ -695,3 +695,83 @@ Lun 3  9  ←decide  Jue 6  17    Lun 10 19    Vie 14  19
 
 La ventana móvil avanza sola: el domingo el sistema mirará lunes y martes, el
 lunes mirará lunes y martes, y así. Nadie tiene que tocar nada.
+
+---
+
+## 2 agosto 2026 · Auditoría completa tras varios fallos seguidos
+
+Alex, con razón: *«estás cometiendo muchos fallos, esto es inaceptable, revisa
+que no haya más»*. Se paró de parchear y se revisó el sistema entero contra la
+realidad de la cuenta y de Booksy, no contra lo que se suponía.
+
+### Fallo 1 · Cada noche la campaña se apagaba sola y avisaba en falso
+
+El aviso de «agenda obsoleta» se puso a 8 horas. Entre el cron de las 21:00 y el
+de las 9:00 pasan 12. Log real de esta mañana:
+
+```
+control=caducado → pausada por control caducado: el control lleva 12 h sin actualizarse
+```
+
+Cada madrugada la campaña se pausaba y salía un correo de alarma que no
+correspondía a ningún problema.
+
+**Arreglo:** umbral a 14 h y cron cada dos horas (9, 11, 13, 15, 17, 19, 21).
+Comprobado contra el calendario real: la antigüedad máxima queda en 11,8 h a las
+8:51, con 2,2 h de margen. Durante el día harían falta siete ejecuciones
+seguidas fallidas para disparar la alarma — eso sí sería un fallo de verdad.
+
+### Fallo 2 · El 15 de agosto está cerrado y el sistema lo leía como «lleno»
+
+Booksy devuelve **exactamente lo mismo** para un día lleno, uno cerrado y un
+festivo: cero barberos, cero fechas. Comprobado consultando por separado el 1 de
+agosto (abierto y lleno), el 2 (domingo) y el 15 (festivo).
+
+Consecuencia: el 15 de agosto —Asunción, festivo— aparecía como «lleno» y la
+campaña **se habría anunciado un sábado con la barbería cerrada**. Unos 20 € a
+la basura.
+
+**Arreglo:** lista explícita de festivos, porque la API no permite deducirlos.
+Los días cerrados ya no cuentan como días disponibles y el panel los marca como
+cerrados en vez de llenos. Simulados los quince días uno a uno.
+
+### Fallo 3 · El más caro: la campaña no tenía fecha de fin
+
+`End date: Not set`. Lo dice la propia interfaz de Google: *«Your ads will
+continue to run unless you specify an end date»*.
+
+El 16 de agosto la campaña habría seguido a 20 €/día **y el guardián no la
+habría parado**: su contador solo suma del 1 al 15, así que a partir del 16 se
+queda congelado por debajo del tope para siempre. Unos **600 € al mes** del
+bolsillo de Reni sin que saltara una sola alarma.
+
+**Arreglo, con dos cerraduras:**
+1. Fecha de fin en Google Ads: **15 de agosto de 2026**. Verificado guardado.
+2. Regla en el guardián: si la fecha de hoy pasa del fin de ventana, pausa y
+   avisa. Por si alguien quita la fecha de Google.
+
+### Verificado y correcto (no se tocó nada)
+
+| Qué | Resultado |
+|---|---|
+| Horario de anuncios | L–V 11:00–20:00 · sáb 11:00–19:00 · dom nada |
+| Cierre real del sábado | **19:00** — último hueco 18:15 + 35 min de servicio |
+| Zona horaria de la cuenta | CET (GMT+02:00), correcta |
+| Radio | 2,5 km desde Muntaner 172 |
+| Ubicación | «Presence», no «presence or interest» |
+| Informe diario | `ultimo_informe: 2026-08-02` — salió hoy a las 8:51 |
+
+El `open_hours` de Booksy declara el sábado hasta las 20:00, pero la
+disponibilidad real termina a las 19:00. Manda la disponibilidad real: la ficha
+de Booksy está mal rellenada, nuestro horario está bien.
+
+### Detectado y no tocado, a propósito
+
+La conversión **«Reserva cita booksy»** de la agencia anterior sigue marcada como
+principal estando inactiva y a cero — es lo que hace que Google marque el
+objetivo «Book appointment» como *Misconfigured*.
+
+No se elimina: la única opción que ofrece la interfaz es borrarla, es
+irreversible, y el perjuicio real es cosmético — la campaña puja por
+**Maximizar clics**, así que las conversiones no intervienen en la entrega.
+Se deja documentado.
