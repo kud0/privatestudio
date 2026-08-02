@@ -54,9 +54,10 @@ const serviceCategories = [
       { id: 'corte-premium', nameKey: 'serv.corte.premium', descKey: 'serv.corte.premium.desc', price: '25,00 €', duration: '45min' },
       { id: 'corte-basic', nameKey: 'serv.corte.basic', descKey: 'serv.corte.basic.desc', price: '20,00 €', duration: '35min' },
       { id: 'corte-cejas', nameKey: 'serv.corte.cejas', descKey: 'serv.corte.cejas.desc', price: '28,00 €', duration: '45min' },
-      { id: 'corte-largo', nameKey: 'serv.corte.largo', descKey: 'serv.corte.largo.desc', price: '25,00 €', duration: '45min' },
+      { id: 'corte-largo', nameKey: 'serv.corte.largo', descKey: 'serv.corte.largo.desc', price: '30,00 €', duration: '50min' },
       { id: 'barba-express', nameKey: 'serv.barba.express', descKey: 'serv.barba.express.desc', price: '30,00 €', duration: '50min' },
-      { id: 'barba-ritual', nameKey: 'serv.barba.ritual', descKey: 'serv.barba.ritual.desc', price: '36,00 €', duration: '1h' }
+      { id: 'barba-ritual', nameKey: 'serv.barba.ritual', descKey: 'serv.barba.ritual.desc', price: '36,00 €', duration: '1h' },
+      { id: 'asesoria-completa', nameKey: 'serv.asesoria.completa', descKey: 'serv.asesoria.completa.desc', price: '36,00 €', duration: '1h' }
     ]
   },
   {
@@ -64,8 +65,9 @@ const serviceCategories = [
     nameKey: 'cat.barba',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M7 3C7 3 4 4.5 4 8C4 11.5 7 13 7 13M17 3C17 3 20 4.5 20 8C20 11.5 17 13 17 13M12 21C9.5 21 6 19.5 6 15V13H18V15C18 19.5 14.5 21 12 21Z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      { id: 'barba-ritual-only', nameKey: 'serv.barba.ritual.only', descKey: 'serv.barba.ritual.only.desc', price: '16,00 €', duration: '25min' },
-      { id: 'barba-tinte', nameKey: 'serv.barba.tinte', descKey: 'serv.barba.tinte.desc', price: '15,00 €', duration: '30min' }
+      { id: 'barba-ritual-only', nameKey: 'serv.barba.ritual.only', descKey: 'serv.barba.ritual.only.desc', price: '18,00 €', duration: '25min' },
+      { id: 'barba-tinte', nameKey: 'serv.barba.tinte', descKey: 'serv.barba.tinte.desc', price: '15,00 €', duration: '30min' },
+      { id: 'barba-maquina', nameKey: 'serv.barba.maquina', descKey: 'serv.barba.maquina.desc', price: '15,00 €', duration: '15min' }
     ]
   },
   {
@@ -74,7 +76,7 @@ const serviceCategories = [
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M12 2L15 5M12 2L9 5M12 2V22M12 22L15 19M12 22L9 19M5 12H19M5 12L8 9M5 12L8 15M19 12L16 9M19 12L16 15" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
       { id: 'tinte-cover', nameKey: 'serv.tinte.cover', descKey: 'serv.tinte.cover.desc', price: '30,00 €', duration: '30min' },
-      { id: 'tinte-rubio', nameKey: 'serv.tinte.rubio', descKey: 'serv.tinte.rubio.desc', price: '80,00 €+', duration: '1h' },
+      { id: 'tinte-rubio', nameKey: 'serv.tinte.rubio', descKey: 'serv.tinte.rubio.desc', price: '90,00 €+', duration: '1h 30min' },
       { id: 'tinte-pelo', nameKey: 'serv.tinte.pelo', descKey: 'serv.tinte.pelo.desc', price: '80,00 €+', duration: '30min' },
       { id: 'tinte-matiz', nameKey: 'serv.tinte.matiz', descKey: 'serv.tinte.matiz.desc', price: '10,00 €', duration: '15min' },
       { id: 'tinte-mechas', nameKey: 'serv.tinte.mechas', descKey: 'serv.tinte.mechas.desc', price: '80,00 €+', duration: '1h' },
@@ -86,8 +88,8 @@ const serviceCategories = [
     nameKey: 'cat.ondulacion',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="w-6 h-6"><path d="M3 8c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 14c2-2 4-2 6 0s4 2 6 0 4-2 6 0" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     services: [
-      { id: 'ondulacion-combo', nameKey: 'serv.ondulacion.combo', descKey: 'serv.ondulacion.combo.desc', price: '70,00 €', duration: '1h' },
-      { id: 'ondulacion-oferta', nameKey: 'serv.ondulacion.oferta', descKey: 'serv.ondulacion.oferta.desc', price: '10,00 €', duration: '30min' },
+      { id: 'ondulacion-superior', nameKey: 'serv.ondulacion.superior', descKey: 'serv.ondulacion.superior.desc', price: '80,00 €', duration: '1h 15min' },
+      { id: 'ondulacion-completo', nameKey: 'serv.ondulacion.completo', descKey: 'serv.ondulacion.completo.desc', price: '100,00 €', duration: '1h 30min' },
     ]
   },
   {
@@ -98,7 +100,7 @@ const serviceCategories = [
       { id: 'cera-cejas', nameKey: 'serv.cera.cejas', descKey: 'serv.cera.cejas.desc', price: '10,00 €', duration: '10min' },
       { id: 'cera-nariz', nameKey: 'serv.cera.nariz', descKey: 'serv.cera.nariz.desc', price: '10,00 €', duration: '10min' },
       { id: 'cera-navaja', nameKey: 'serv.cera.navaja', descKey: 'serv.cera.navaja.desc', price: '4,00 €', duration: '30min' },
-      { id: 'cera-combo', nameKey: 'serv.cera.combo', descKey: 'serv.cera.combo.desc', price: '16,00 €', duration: '10min' }
+      { id: 'cera-combo', nameKey: 'serv.cera.combo', descKey: 'serv.cera.combo.desc', price: '15,00 €', duration: '10min' }
     ]
   }
 ];
