@@ -33,3 +33,13 @@ control: ACTIVA — 1 citas libres en 48 h
 
 control: PAUSA — 0 citas libres en 48 h
    publicado: (nuevo) → pausa
+[2026-08-01 21:00] huecos en la ventana: 184
+   6 huecos liberados (cancelaciones)
+
+control: ACTIVA — 8 citas libres hoy y lunes
+   publicado: activa → activa
+[2026-08-02 09:00] huecos en la ventana: 179
+   5 citas reservadas en 12.0 h (10.0/día sin publicidad)
+
+control: ACTIVA — 26 citas libres hoy y martes
+   publicado: activa → activa
