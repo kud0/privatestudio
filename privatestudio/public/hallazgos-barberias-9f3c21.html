@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Barberías · lo que sabemos</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  h1,h2,h3,h4,p,ul,ol,dl,dd,figure,table{margin:0}
+  ul,ol{padding:0;list-style:none}
+
+  :root{
+    --papel:#faf8f4; --tarjeta:#fff; --tinta:#141210; --tinta2:#5c554b;
+    --tinta3:#948b7e; --linea:#e6e0d5; --raya:#f2eee6;
+    --oro:#8a6d2f; --oro-suave:#f5eeda;
+    --si:#2f5d45; --si-bg:#eaf2ed;
+    --ojo:#8a4820; --ojo-bg:#fbf0e8;
+    --duda:#4a5875; --duda-bg:#edf0f6;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--papel:#12110d;--tarjeta:#1b1915;--tinta:#f2efe8;--tinta2:#a89f91;
+    --tinta3:#776e62;--linea:#2e2a22;--raya:#211e18;--oro:#cfae६b;--oro:#cfae6b;
+    --oro-suave:#2a2317;--si:#7fae93;--si-bg:#15231a;--ojo:#d99a6d;--ojo-bg:#2a1a10;
+    --duda:#9aa8c6;--duda-bg:#1a1e28}
+  }
+  html{color-scheme:light dark}
+
+  body{margin:0;background:var(--papel);color:var(--tinta);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    font-size:15px;line-height:1.62;-webkit-text-size-adjust:100%}
+
+  .hoja{max-width:760px;margin:0 auto;padding:26px 18px 60px}
+
+  header{border-bottom:2px solid var(--tinta);padding-bottom:14px;margin-bottom:8px}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.15}
+  .bajada{font-size:13.5px;color:var(--tinta2);margin-top:6px}
+  .sello{font-size:11px;color:var(--tinta3);margin-top:9px;font-variant-numeric:tabular-nums}
+
+  h2{font-size:19px;font-weight:700;letter-spacing:-.02em;margin:38px 0 4px;
+    padding-top:16px;border-top:1px solid var(--linea);text-wrap:balance}
+  h2 .num{color:var(--tinta3);font-weight:600;margin-right:8px;font-variant-numeric:tabular-nums}
+  h3{font-size:15.5px;font-weight:700;margin:22px 0 6px;text-wrap:balance}
+  p{margin:9px 0}
+  p+p{margin-top:11px}
+  strong{font-weight:700}
+  em{font-style:italic;color:var(--tinta2)}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;
+    background:var(--raya);padding:1px 5px;border-radius:4px}
+
+  .marca{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.09em;
+    text-transform:uppercase;padding:2px 7px;border-radius:100px;vertical-align:.14em;margin-right:6px}
+  .m-si{color:var(--si);background:var(--si-bg)}
+  .m-ojo{color:var(--ojo);background:var(--ojo-bg)}
+  .m-duda{color:var(--duda);background:var(--duda-bg)}
+
+  .lista li{position:relative;padding-left:19px;margin:7px 0}
+  .lista li::before{content:"";position:absolute;left:2px;top:10px;width:5px;height:5px;
+    border-radius:50%;background:var(--tinta3)}
+
+  .num-lista{counter-reset:n}
+  .num-lista li{position:relative;padding-left:30px;margin:11px 0;counter-increment:n}
+  .num-lista li::before{content:counter(n);position:absolute;left:0;top:0;
+    font-size:12px;font-weight:800;color:var(--oro);
+    width:20px;height:20px;border:1.5px solid var(--oro);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;line-height:1}
+
+  .tablilla{overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:340px}
+  th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--tinta3);padding:0 10px 6px 0;
+    border-bottom:1.5px solid var(--linea);white-space:nowrap}
+  td{padding:8px 10px 8px 0;border-bottom:1px solid var(--linea);vertical-align:top}
+  td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  .destacada td{background:var(--oro-suave)}
+
+  .dato{background:var(--tarjeta);border:1px solid var(--linea);border-left:3px solid var(--oro);
+    border-radius:0 10px 10px 0;padding:14px 16px;margin:16px 0}
+  .dato .cifra{font-size:32px;font-weight:800;letter-spacing:-.035em;line-height:1.05;
+    font-variant-numeric:tabular-nums;color:var(--oro)}
+  .dato .pie{font-size:13px;color:var(--tinta2);margin-top:4px}
+
+  .aviso{background:var(--ojo-bg);border:1px solid var(--ojo);border-radius:10px;
+    padding:13px 16px;margin:16px 0;font-size:13.5px;line-height:1.55}
+  .aviso b{color:var(--ojo)}
+
+  .trampa{background:var(--tarjeta);border:1px solid var(--linea);border-radius:10px;
+    padding:14px 16px;margin:13px 0}
+  .trampa h4{font-size:14.5px;font-weight:700;margin-bottom:5px;color:var(--ojo)}
+  .trampa p{font-size:13.5px;margin:5px 0}
+
+  .barras{margin:14px 0}
+  .barras .f{display:grid;grid-template-columns:96px 1fr 54px;align-items:center;
+    gap:9px;padding:4px 0;font-size:13px}
+  .barras .b{height:9px;background:var(--raya);border-radius:100px;overflow:hidden}
+  .barras .b i{display:block;height:100%;background:var(--oro);border-radius:100px}
+  .barras .b i.flojo{background:var(--tinta3)}
+  .barras .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:12.5px}
+
+  footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--linea);
+    font-size:12px;color:var(--tinta3);line-height:1.6}
+
+  @media(min-width:640px){
+    body{font-size:15.5px}
+    h1{font-size:31px}
+    .hoja{padding:38px 24px 70px}
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<header>
+  <h1>Barberías: lo que sabemos</h1>
+  <div class="bajada">Cuaderno de campo para vender y ejecutar publicidad a barberías.
+    Sale del piloto de Private Studio Barcelona y se escribe pensando en la siguiente.</div>
+  <div class="sello">Actualizado el 2 de agosto de 2026 · Private Studio · cuenta 608-571-5182</div>
+</header>
+
+<p><strong>Regla de la casa:</strong> cada afirmación lleva de dónde sale. Un cuaderno
+con datos inventados es peor que no tener cuaderno, porque se decide creyendo que
+hay suelo.</p>
+
+<div class="tablilla">
+<table>
+  <tr><td><span class="marca m-si">Medido</span></td><td>Sale de datos reales de la cuenta o de la agenda</td></tr>
+  <tr><td><span class="marca m-ojo">Observado</span></td><td>Visto una vez, sin muestra para generalizar</td></tr>
+  <tr><td><span class="marca m-duda">Hipótesis</span></td><td>Razonamiento sin comprobar. No decidir dinero sobre esto</td></tr>
+</table>
+</div>
+
+<h2><span class="num">1</span>Lo que hace distinto a este negocio</h2>
+
+<h3>La agenda es el techo, no el presupuesto</h3>
+<p>Una barbería no vende unidades: vende <strong>sillas por horas</strong>. Dos barberos
+a jornada completa son unas 30–40 citas al día y ni una más. Con la agenda llena,
+cada euro compra un clic que no puede convertirse en nada.</p>
+<p>Eso invierte la pregunta habitual. En un ecommerce se pregunta <em>cuánto puedo
+gastar</em>; aquí se pregunta primero <strong>cuántos huecos quedan por vender</strong>.</p>
+
+<h3>Muchas se llenan solas, y hay que decirlo</h3>
+<p><span class="marca m-si">Medido</span> 45 h observadas, del 31 de julio al 2 de agosto:</p>
+
+<div class="dato">
+  <div class="cifra">26,9 <span style="font-size:16px;font-weight:600">citas/día</span></div>
+  <div class="pie">de ritmo natural, sin un solo anuncio encendido.
+    Para llenar la agenda hacían falta 16,3. <strong>Se llenaba sola con un 65 % de margen.</strong></div>
+</div>
+
+<p>Con esos números <strong>la publicidad no añade citas: las adelanta</strong>. No significa
+que no sirva; significa que su valor está en traer un cliente <em>distinto</em> —de fuera,
+de más gasto, nuevo— y eso hay que medirlo aparte y decirlo antes de cobrarlo.</p>
+
+<div class="aviso">
+  <b>Antes de vender una campaña, medir el ritmo natural una semana.</b>
+  Si el negocio se llena solo, lo honesto es decirlo y cambiar el objetivo,
+  no cobrar por llenar lo que ya se llenaba.
+</div>
+
+<h3>La agenda respira: no solo se llena, también se vacía</h3>
+<p><span class="marca m-si">Medido</span> Por cada 10 citas reservadas,
+<strong>2,6 huecos se liberaron</strong> por cancelaciones o cambios.</p>
+<p>Un día lleno a las 10:00 puede tener sitio a las 13:00. Por eso el vigilante mira
+cada hora y sabe <strong>reactivar</strong>, no solo apagar. Un sistema que solo apaga
+deja de vender el resto del día.</p>
+
+<h2><span class="num">2</span>Quién reserva y con cuánta antelación</h2>
+
+<h3>La gente reserva con poquísima antelación</h3>
+<p><span class="marca m-si">Medido</span> 50 citas observadas:</p>
+
+<div class="barras">
+  <div class="f"><span>Mismo día</span><span class="b"><i style="width:75%"></i></span><span class="v">12 %</span></div>
+  <div class="f"><span>≤ 2 días</span><span class="b"><i style="width:100%"></i></span><span class="v">32 %</span></div>
+  <div class="f"><span>≤ 4 días</span><span class="b"><i style="width:100%"></i></span><span class="v">52 %</span></div>
+  <div class="f"><span>≤ 7 días</span><span class="b"><i style="width:100%"></i></span><span class="v">82 %</span></div>
+</div>
+
+<p>La mitad de las reservas entran con <strong>cuatro días o menos</strong> de margen.
+Define qué huecos vale la pena empujar: llenar un jueves a doce días vista es casi
+ruido; los próximos tres o cuatro días es donde está la demanda.</p>
+
+<div class="aviso">
+  <b>Aviso honesto.</b> Son 50 citas de dos días de observación: sirve para
+  orientarse, no para decidir. Y hay un sesgo conocido — la ventana observada era
+  de 15 días, así que las reservas hechas con más antelación no se ven.
+</div>
+
+<h3>La mitad de la demanda llega en inglés</h3>
+<p><span class="marca m-si">Medido</span> Búsquedas reales de 30 días, quitando las
+del propio nombre del negocio:</p>
+
+<div class="tablilla">
+<table>
+  <tr><th>Idioma</th><th class="n">Clics</th><th class="n">Peso</th><th class="n">Coste/clic</th></tr>
+  <tr class="destacada"><td>Inglés <span style="color:var(--tinta3);font-size:12px">(<code>barber near me</code>, <code>barber shop</code>)</span></td><td class="n">24</td><td class="n">51 %</td><td class="n">0,17 €</td></tr>
+  <tr><td>Español <span style="color:var(--tinta3);font-size:12px">(<code>peluquería cerca de mi</code>, <code>barberia cerca de mi</code>)</span></td><td class="n">23</td><td class="n">49 %</td><td class="n">0,25 €</td></tr>
+</table>
+</div>
+
+<p>En una ciudad turística, <strong>la mitad de quien busca barbería lo hace en inglés</strong>
+— y el clic en inglés cuesta <strong>un tercio menos</strong>, porque hay menos competencia
+peleándolo. Es de los datos más aprovechables del cuaderno.</p>
+
+<h3>Lo que todavía no podemos separar: fijo contra extranjero</h3>
+<p><span class="marca m-duda">Hipótesis</span> Es razonable esperar que el cliente
+fijo del barrio reserve con muy poca antelación y en su franja de siempre, y que el
+de fuera se comporte distinto —o planifica el viaje con semanas, o improvisa el
+mismo día—. La distribución medida insinúa dos grupos (un pico el mismo día y otro
+a 7–13 días), pero con 50 citas <strong>eso puede ser puro ruido</strong>.</p>
+
+<p><strong>Hoy no se puede medir</strong>, y conviene no fingir que sí: la agenda de un
+sistema ajeno dice cuándo hay hueco, no quién lo ocupa ni de dónde viene.</p>
+
+<p><strong>Cómo se medirá:</strong></p>
+<ul class="lista">
+  <li><strong>Con la campaña separada por idioma</strong> ya se puede comparar el clic de
+    reserva del grupo inglés contra el español: da el peso de cada perfil en la demanda
+    que llega por publicidad. Los dos grupos existen desde el 1 de agosto.</li>
+  <li><strong>Con otracita será directo</strong>, porque la reserva es propia: idioma,
+    país, cliente nuevo o recurrente, y antelación real de cada cita. Ahí sí se puede
+    responder la pregunta entera, y es de las cosas que un sistema ajeno nunca dará.</li>
+</ul>
+
+<h3>Días y franjas que cuestan más de llenar</h3>
+<p><span class="marca m-ojo">Observado</span> El <strong>martes</strong> es el día con más
+hueco libre (20 de media); miércoles y lunes los que menos. La <strong>mañana (11–14)</strong>
+se llena antes y la <strong>tarde (17–20)</strong> es la que más hueco deja.</p>
+<p>Si se confirma con más semanas es dinero directo: subir la puja donde queda sitio
+y bajarla donde ya hay cola. En el piloto no se ha tocado — con dos días de datos
+sería inventar.</p>
+
+<h2><span class="num">3</span>Lo que cuesta</h2>
+
+<div class="tablilla">
+<table>
+  <tr><th>Concepto</th><th class="n">Valor</th></tr>
+  <tr><td>Coste por clic medio</td><td class="n">0,21 – 0,35 €</td></tr>
+  <tr><td>CTR buscando el nombre del negocio</td><td class="n">35 – 52 %</td></tr>
+  <tr><td>CTR de genéricas de proximidad</td><td class="n">2 – 3 %</td></tr>
+</table>
+</div>
+
+<p>Es un sector <strong>barato</strong>: con 20 €/día se compran unos 60 clics. Eso cambia la
+conversación con el cliente — no hace falta un presupuesto grande, hace falta que el
+poco que hay no se desperdicie.</p>
+
+<h3>El tráfico de marca engaña si se mira en clics</h3>
+<p><span class="marca m-si">Medido</span> Las búsquedas del propio nombre fueron
+<strong>44 clics de 91</strong> (48 %)… pero <strong>2,93 € de un gasto de 33 €</strong> (9 %),
+porque su clic cuesta seis céntimos frente a los veinticinco de una genérica.</p>
+<p>Quien busca el nombre te encuentra igual por el resultado orgánico y por la ficha
+de Google: es el gasto más discutible de una cuenta pequeña. Pero antes de cortarlo
+hay que mirar <strong>el dinero, no los clics</strong>.</p>
+
+<h2><span class="num">4</span>Cómo se configura</h2>
+
+<div class="tablilla">
+<table>
+  <tr><th>Ajuste</th><th>Valor</th><th>Por qué</th></tr>
+  <tr><td><strong>Radio</strong></td><td>2,5 km</td><td>Nadie cruza la ciudad para cortarse el pelo. Con 5 km se llegaba al mar y a Collserola</td></tr>
+  <tr><td><strong>Ubicación</strong></td><td>Presencia</td><td>«Presencia o interés» trae a quien busca desde otra ciudad</td></tr>
+  <tr><td><strong>Horario</strong></td><td>El de la tienda</td><td>No pagar clics que nadie puede atender</td></tr>
+  <tr><td><strong>Puja</strong></td><td>Maximizar clics con tope</td><td>Sin histórico de conversiones, maximizar conversiones no tiene con qué aprender</td></tr>
+  <tr><td><strong>Idiomas</strong></td><td>Un grupo por idioma</td><td>Ver abajo</td></tr>
+</table>
+</div>
+
+<h3>Un grupo de anuncios por idioma</h3>
+<p>Mezclar idiomas hace que el anuncio nunca encaje del todo con lo buscado, y Google
+lo penaliza: en el piloto, <code>barberia cerca de mi</code> estaba marcada como
+<em>«se muestra pocas veces»</em> mientras convivía con keywords inglesas en el mismo
+grupo. Separar en ES / EN, con anuncio propio y aterrizaje en la web en ese idioma,
+es de las cosas que más rinden por lo poco que cuestan.</p>
+<p><span class="marca m-ojo">Observado</span> También aparecieron búsquedas en alemán
+(<code>friseur in der nähe</code>). Volumen mínimo, no se actuó. En un destino con
+turismo alemán merece una prueba.</p>
+
+<h2><span class="num">5</span>Medir en un negocio de cita previa</h2>
+
+<p><strong>El problema:</strong> la reserva ocurre dentro del sistema de reservas. Si es de
+un tercero, no se puede instalar nada dentro y la conversión de verdad —la cita
+confirmada— es inalcanzable.</p>
+
+<p><strong>Lo máximo con un sistema ajeno:</strong> el clic saliente hacia la reserva y el
+clic en el teléfono. Mide <em>intención</em>, no citas. Sirve para comparar keywords
+entre sí; no para contarle clientes al cliente. Decirlo así, sin adornos.</p>
+
+<div class="aviso">
+  <b>Con otracita esto deja de ser un problema.</b> Siendo plataforma propia, la
+  reserva confirmada es medible de verdad y la agenda se lee sin ingeniería inversa.
+  Es la diferencia entre vender «clics con intención» y vender <b>citas</b>.
+</div>
+
+<h3>Restos de agencias anteriores</h3>
+<p>En una cuenta heredada, revisar antes de nada:</p>
+<ul class="lista">
+  <li><strong>Conversiones muertas marcadas como principales.</strong> El piloto tenía un
+    Floodlight inactivo y a cero que hacía que Google marcara el objetivo como
+    <em>Misconfigured</em>.</li>
+  <li><strong>Contenedores de Tag Manager de terceros</strong>, instalados en la web y
+    vacíos: parecen medición y no miden nada.</li>
+  <li><strong>Negativas heredadas sin criterio.</strong> El piloto tenía 131, casi todas
+    nombres de pueblos del área metropolitana: la huella de un radio mal puesto,
+    tapada a mano una por una durante meses.</li>
+</ul>
+
+<h2><span class="num">6</span>Trampas que costaron dinero</h2>
+<p>Todas ocurrieron de verdad en el piloto. Se anotan para no repetirlas.</p>
+
+<div class="trampa">
+  <h4>«48 horas» no es «dos días de trabajo»</h4>
+  <p>Contar días naturales hace que el domingo cerrado cuente como día sin huecos.
+  Un sábado por la tarde, con nueve citas libres el lunes, la campaña se apagó sola.</p>
+  <p><strong>Regla:</strong> cualquier criterio temporal en un negocio con días de cierre
+  se cuenta en <strong>días abiertos</strong>.</p>
+</div>
+
+<div class="trampa">
+  <h4>Un sistema de reservas no distingue «cerrado» de «lleno»</h4>
+  <p>Comprobado en Booksy: un día lleno, un domingo y un festivo devuelven exactamente
+  lo mismo, nada. Sin declarar los festivos a mano, el 15 de agosto se leía como
+  «lleno» y la campaña se habría anunciado con la persiana bajada.</p>
+</div>
+
+<div class="trampa">
+  <h4>Una campaña sin fecha de fin no se para nunca</h4>
+  <p>Lo avisa el propio Google: <em>«tus anuncios seguirán funcionando salvo que
+  especifiques una fecha de fin»</em>. Y si el vigilante cuenta el gasto solo dentro de
+  la ventana, al pasarse esa fecha su contador se congela por debajo del tope y deja
+  de proteger. Eran <strong>600 €/mes</strong> del cliente sin que saltara una alarma.</p>
+  <p><strong>Regla:</strong> fecha de fin siempre, y una segunda comprobación en el código.</p>
+</div>
+
+<div class="trampa">
+  <h4>El presupuesto se sube DESPUÉS de que la protección esté activa</h4>
+  <p>Subirlo un día antes costó 19,99 € del cliente, en un día que no tocaba y con la
+  agenda casi llena. El dato estaba registrado y no se miró.</p>
+</div>
+
+<div class="trampa">
+  <h4>Una alarma mal calibrada es peor que ninguna</h4>
+  <p>El aviso de «agenda obsoleta» se puso a 8 horas cuando el silencio nocturno normal
+  era de 12: cada madrugada la campaña se apagaba y salía un correo de alarma falso.
+  Una alarma que salta sin motivo se ignora — y el día que sea de verdad, también.</p>
+</div>
+
+<h2><span class="num">7</span>Qué falta por saber</h2>
+<p>Ordenado por lo que vale:</p>
+<ol class="num-lista">
+  <li><strong>¿La publicidad trae clientes nuevos o adelanta a los de siempre?</strong>
+    La que decide si este servicio vale lo que cuesta. Necesita cruzar la reserva con
+    el cliente: trivial con otracita, imposible con un sistema ajeno.</li>
+  <li><strong>¿Cuánto vale un cliente de barbería a lo largo del tiempo?</strong>
+    Sin esto no se puede decir cuánto es razonable pagar por captarlo. Un corte son
+    20 €, pero quien vuelve cada mes durante dos años son 480 €.</li>
+  <li><strong>¿Cambia la antelación entre el cliente fijo y el de fuera?</strong>
+    Con la campaña ya separada por idioma se puede empezar a comparar.</li>
+  <li><strong>¿Los eventos mueven de verdad la demanda?</strong> El piloto arrancó con el
+    Circuit Festival como hipótesis; con la agenda llenándose sola no se pudo aislar
+    el efecto.</li>
+  <li><strong>¿Vale la pena anunciarse fuera de horario?</strong> Se observaron 5 reservas
+    entre las 21:00 y las 9:00 sin publicidad. Falta probarlo en un negocio que no se
+    llene solo.</li>
+</ol>
+
+<h2><span class="num">8</span>Herramientas que ya existen</h2>
+<p>En <code>scripts/circuit-2026/</code>, escritas para reutilizarse:</p>
+<ul class="lista">
+  <li><code>booksy-snapshot.mjs</code> — fotografía la agenda cada dos horas, decide si
+    la campaña sigue encendida y publica el resultado. Lo propio de cada negocio
+    (identificador, festivos, ventana) va arriba del todo, separado de la lógica.</li>
+  <li><code>analisis-negocio.mjs</code> — convierte el histórico en las respuestas de
+    este cuaderno. Funciona con el histórico de cualquier barbería.</li>
+  <li><code>ads-script-guardia.js</code> — el vigilante dentro de Google Ads: tope de
+    gasto, pausa por agenda, pausa fuera de ventana, informe diario y métricas.</li>
+</ul>
+
+<div class="aviso">
+  <b>Capturar desde el primer día, aunque no se use aún.</b> Un sistema de reservas
+  dice qué hay libre <em>ahora</em>; no guarda historia. Cada foto que no se tome es
+  un dato que no existirá nunca. El histórico de la agenda es lo que permite
+  responder, dos semanas después, si valía la pena.
+</div>
+
+<footer>
+  Piloto: Private Studio Barcelona · Muntaner 172 · cuenta de Google Ads 608-571-5182.<br>
+  Documento vivo: se actualiza cada vez que los datos digan algo nuevo.
+  Versionado en <code>src/docs/barberias-hallazgos.html</code>.
+</footer>
+
+</div>
+</body>
+</html>
