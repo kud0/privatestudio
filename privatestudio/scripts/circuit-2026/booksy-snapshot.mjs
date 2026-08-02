@@ -129,18 +129,34 @@ async function consultar(desde, hasta) {
   return resp.json();
 }
 
-/** Suma por barbero: dos barberos a la misma hora son dos citas, no una. */
+/**
+ * Suma por barbero: dos barberos a la misma hora son dos citas, no una.
+ *
+ * Devuelve también el reparto por franja horaria. Ese dato no lo usa el control
+ * de la campaña, pero es el único momento en que existe: Booksy solo dice qué
+ * hay libre AHORA, no guarda historia. Lo que no se anote aquí se pierde para
+ * siempre, y saber a qué horas se llena antes una barbería es justo lo que hace
+ * falta para llevar la siguiente.
+ */
 function resumir(datos) {
   const porDia = {};
+  const porFranja = {};
   for (const barbero of datos.staff_time_slots ?? []) {
     for (const dia of barbero.time_slots ?? []) {
       const horas = (dia.slots ?? []).map(s => s.t);
       if (!horas.length) continue;
       porDia[dia.date] = (porDia[dia.date] ?? 0) + citasReales(horas);
+
+      porFranja[dia.date] = porFranja[dia.date] ?? { manana: 0, mediodia: 0, tarde: 0 };
+      for (const h of horas) {
+        const hora = Number(h.slice(0, 2));
+        const franja = hora < 14 ? 'manana' : hora < 17 ? 'mediodia' : 'tarde';
+        porFranja[dia.date][franja]++;
+      }
     }
   }
   const total = Object.values(porDia).reduce((a, b) => a + b, 0);
-  return { porDia, total };
+  return { porDia, porFranja, total };
 }
 
 const iso = d => d.toISOString().slice(0, 10);
@@ -316,12 +332,13 @@ async function main() {
   }
 
   // ── 1 · Línea base de la ventana completa
-  const { porDia, total } = resumir(await consultar(VENTANA.inicio, VENTANA.fin));
+  const { porDia, porFranja, total } = resumir(await consultar(VENTANA.inicio, VENTANA.fin));
   const momento = new Date().toISOString();
 
   const ventana = `${VENTANA.inicio}/${VENTANA.fin}`;
   await mkdir(dirname(HISTORICO), { recursive: true });
-  await writeFile(HISTORICO, JSON.stringify({ momento, ventana, total, porDia }) + '\n', { flag: 'a' });
+  await writeFile(HISTORICO,
+    JSON.stringify({ momento, ventana, total, porDia, porFranja }) + '\n', { flag: 'a' });
 
   console.log(`[${horaLocal(momento)}] huecos en la ventana: ${total}`);
 
