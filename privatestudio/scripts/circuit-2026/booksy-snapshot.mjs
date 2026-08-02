@@ -49,6 +49,33 @@ const DURACION_MIN = 35;
 
 const VENTANA = { inicio: '2026-08-01', fin: '2026-08-15' };
 
+/**
+ * Días que la barbería tiene cerrados aunque no sean domingo.
+ *
+ * Hay que declararlos a mano porque Booksy devuelve exactamente lo mismo —nada—
+ * para un día lleno, uno cerrado y un festivo. Comprobado consultando el 1 de
+ * agosto (abierto y lleno), el 2 (domingo) y el 15 (festivo): los tres dan cero
+ * barberos y cero fechas. No hay forma de distinguirlos por la API.
+ *
+ * Sin esta lista, el 15 de agosto se leería como «lleno» y la campaña seguiría
+ * anunciándose un sábado con la persiana bajada.
+ */
+const FESTIVOS = [
+  '2026-08-15'   // Asunción — festivo nacional
+];
+
+/**
+ * Anunciarse los días que la tienda está cerrada. En falso por coherencia con
+ * la decisión ya tomada de no anunciar los domingos: si no se atiende, no se
+ * paga por aparecer. Ponerlo en cierto haría falta también quitar la exclusión
+ * del domingo en el horario de la campaña de Google Ads.
+ */
+const ANUNCIAR_CON_TIENDA_CERRADA = false;
+
+/** Verdadero si ese día la barbería no abre: domingo o festivo declarado. */
+const estaCerrado = fechaIso =>
+  new Date(fechaIso + 'T12:00:00').getDay() === 0 || FESTIVOS.indexOf(fechaIso) !== -1;
+
 // Si en los próximos dos días ABIERTOS quedan menos citas que esto, se pausa la
 // campaña: no tiene sentido pagar por clics de gente que no puede reservar.
 //
@@ -316,18 +343,24 @@ async function main() {
   // apagaba la campaña los sábados por la tarde aunque el lunes hubiera sitio.
   const hoy = new Date();
   const diasAbiertos = [];
-  for (let i = 0; diasAbiertos.length < 2 && i < 5; i++) {
-    const d = new Date(hoy.getTime() + i * 86400000);
-    if (d.getDay() !== 0) diasAbiertos.push(iso(d));
+  for (let i = 0; diasAbiertos.length < 2 && i < 10; i++) {
+    const f = iso(new Date(hoy.getTime() + i * 86400000));
+    if (!estaCerrado(f)) diasAbiertos.push(f);
   }
   const proximos = resumir(await consultar(diasAbiertos[0], diasAbiertos.at(-1)));
   const abiertos = diasAbiertos.map(f => ({ fecha: f, citas: proximos.porDia[f] ?? 0 }));
 
   const citasDisponibles = abiertos.reduce((suma, d) => suma + d.citas, 0);
-  const estado = citasDisponibles >= MINIMO_PARA_SEGUIR ? 'activa' : 'pausa';
+  const hoyCerrado = estaCerrado(iso(hoy));
 
+  const estado = (hoyCerrado && !ANUNCIAR_CON_TIENDA_CERRADA) ? 'pausa'
+    : citasDisponibles >= MINIMO_PARA_SEGUIR ? 'activa'
+    : 'pausa';
+
+  // «hoy» solo si de verdad es hoy: cuando la barbería está cerrada el primer
+  // día abierto ya no es el de hoy, y llamarlo así confunde el informe.
   const cuando = diasAbiertos
-    .map((f, i) => (i === 0 ? 'hoy' : DIAS[new Date(f + 'T12:00:00').getDay()]))
+    .map(f => (f === iso(hoy) ? 'hoy' : DIAS[new Date(f + 'T12:00:00').getDay()]))
     .join(' y ');
 
   // Todos los días de la ventana, incluidos los que no tienen ni un hueco: sin
@@ -341,7 +374,7 @@ async function main() {
     diasVentana.push({
       fecha,
       citas: porDia[fecha] ?? 0,
-      cerrado: d.getDay() === 0,
+      cerrado: estaCerrado(fecha),
       decide: diasAbiertos.indexOf(fecha) !== -1
     });
   }
@@ -355,9 +388,12 @@ async function main() {
     dias_ventana: diasVentana,
     citas_ventana: total,
     actualizado: momento,
-    motivo: estado === 'activa'
-      ? `${citasDisponibles} citas libres ${cuando}`
-      : `sin huecos ${cuando}: no se paga por clics que no pueden reservar`
+    hoy_cerrado: hoyCerrado,
+    motivo: hoyCerrado && !ANUNCIAR_CON_TIENDA_CERRADA
+      ? 'la barbería no abre hoy: no se paga por anunciarse con la persiana bajada'
+      : estado === 'activa'
+        ? `${citasDisponibles} citas libres ${cuando}`
+        : `sin huecos ${cuando}: no se paga por clics que no pueden reservar`
   };
 
   const anterior = await estadoPublicado();
