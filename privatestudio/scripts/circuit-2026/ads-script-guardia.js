@@ -114,6 +114,28 @@ function proteger(campana) {
   // 0 · Informe diario (antes que nada: debe salir aunque luego se pause)
   informeDiarioSiToca(campana);
 
+  // 0.5 · Fuera de la ventana contratada no se gasta, y punto.
+  //
+  // La campaña tiene fecha de fin puesta en Google Ads, pero esto es la segunda
+  // cerradura. Sin ella, si alguien quitara esa fecha, el 16 de agosto la
+  // campaña seguiría a 20 €/día y el guardián NO la pararía: su contador solo
+  // suma del 1 al 15, así que a partir del 16 se queda congelado por debajo del
+  // tope para siempre. Serían 600 € al mes del bolsillo del cliente sin que
+  // saltara ninguna alarma.
+  var hoyIso = Utilities.formatDate(new Date(),
+                 AdsApp.currentAccount().getTimeZone(), 'yyyy-MM-dd');
+  if (hoyIso > FIN) {
+    if (campana.isEnabled()) {
+      campana.pause();
+      avisar('Campaña pausada: fin de la ventana contratada',
+             'Hoy es ' + hoyIso + ' y la ventana acordada terminó el ' + FIN + '.\n\n' +
+             'La campaña queda pausada. Para volver a usarla hay que decidir un ' +
+             'presupuesto nuevo y quitar la fecha de fin en Google Ads.');
+    }
+    Logger.log('fuera de ventana (' + hoyIso + ' > ' + FIN + ') → pausada');
+    return;
+  }
+
   // 1 · Agenda: si no hay huecos en los próximos días abiertos, pausar
   var control = leerControl();
   registro.push('control=' + control.estado);
