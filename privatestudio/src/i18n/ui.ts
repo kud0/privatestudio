@@ -19,6 +19,9 @@ export const ui = {
     'hero.h1.2': '¿CANSADO DE PEDIR<br>"LO MISMO"<br>SIN SABER SI<br><span class="text-beige-400">TE FAVORECE?</span>',
     'hero.h1.3': '¿Y SI TUVIERAS<br>UN CORTE QUE<br>REALMENTE<br><span class="text-beige-400">TE REPRESENTE?</span>',
     'hero.body': 'Un sistema de asesoría masculina basado en tipo de rostro, estilo de vida y percepción de poder.',
+    // Linea literal con las keywords. El hook rotatorio de arriba no dice ni
+    // "barberia" ni "Barcelona" ni "visagismo": esta es la que las lleva.
+    'hero.h1.seo': 'Barbería premium en el Eixample, Barcelona — visagismo y asesoría de imagen masculina',
     'hero.claim1': 'Un corte correcto puede cambiar tu presencia.',
     'hero.claim2': 'La mayoría elige un peinado.',
     'hero.claim3': 'Nosotros elegimos el que te favorece.',
@@ -213,6 +216,7 @@ export const ui = {
     'hero.h1.2': 'TIRED OF ASKING<br>FOR "THE SAME"<br>WITHOUT KNOWING<br><span class="text-beige-400">IF IT SUITS YOU?</span>',
     'hero.h1.3': 'WHAT IF YOU HAD<br>A CUT THAT TRULY<br><span class="text-beige-400">REPRESENTS YOU?</span>',
     'hero.body': 'A male image consulting system based on face shape, lifestyle, and personal presence.',
+    'hero.h1.seo': 'Premium barbershop in Eixample, Barcelona — visagism and men\'s image consulting',
     'hero.claim1': 'The right cut can change how you\'re perceived.',
     'hero.claim2': 'Most people just pick a hairstyle.',
     'hero.claim3': 'We choose the one that actually suits you.',

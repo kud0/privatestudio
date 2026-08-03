@@ -48,19 +48,23 @@
         </p>
 
         <div class="relative mb-2 animate-fade-in" style="min-height: clamp(8rem, 36vw, 11rem); animation-delay: 0.06s;">
-          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          <div class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 1;" data-i18n="hero.h1.1">
             ¿Y SI EL PROBLEMA<br>NO ES TU PELO…<br>SINO TU<br><span class="text-beige-400">TIPO DE ROSTRO?</span>
-          </h1>
-          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          </div>
+          <div class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 0;" data-i18n="hero.h1.2">
             ¿CANSADO DE PEDIR<br>"LO MISMO"<br>SIN SABER SI<br><span class="text-beige-400">TE FAVORECE?</span>
-          </h1>
-          <h1 class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          </div>
+          <div class="hero-headline-m font-black uppercase leading-[0.88] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(1.9rem, 8vw, 2.5rem); opacity: 0;" data-i18n="hero.h1.3">
             ¿Y SI TUVIERAS<br>UN CORTE QUE<br>REALMENTE<br><span class="text-beige-400">TE REPRESENTE?</span>
-          </h1>
+          </div>
         </div>
+
+        <h1 class="text-gray-400 font-medium text-[11px] leading-snug mb-3 animate-fade-in" style="animation-delay: 0.1s;" data-i18n="hero.h1.seo">
+          Barbería premium en el Eixample, Barcelona — visagismo y asesoría de imagen masculina
+        </h1>
 
         <div class="animate-fade-in" style="animation-delay: 0.14s;">
           <p class="text-white font-semibold text-[12px] leading-snug" data-i18n="hero.claim1">Un corte correcto puede cambiar tu presencia.</p>
@@ -129,21 +133,27 @@
 
         <!-- H1 rotatorio -->
         <div id="hero-headlines" class="mb-10 animate-fade-in" style="min-height: clamp(9rem, 16vw, 15rem); animation-delay: 0.06s; position: relative;">
-          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          <div class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 1;" data-i18n="hero.h1.1">
             ¿Y SI EL PROBLEMA<br>NO ES TU PELO…<br>SINO TU<br><span class="text-beige-400">TIPO DE ROSTRO?</span>
-          </h1>
-          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          </div>
+          <div class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 0;" data-i18n="hero.h1.2">
             ¿CANSADO DE PEDIR<br>"LO MISMO"<br>SIN SABER SI<br><span class="text-beige-400">TE FAVORECE?</span>
-          </h1>
-          <h1 class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
+          </div>
+          <div class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 0;" data-i18n="hero.h1.3">
             ¿Y SI TUVIERAS<br>UN CORTE QUE<br>REALMENTE<br><span class="text-beige-400">TE REPRESENTE?</span>
-          </h1>
+          </div>
         </div>
 
-        <!-- Body: desplazado a la derecha, crea asimetría con el H1 -->
+        {/* H1 real. El hook rotatorio de arriba es marca y no contiene ni
+            "barberia" ni "Barcelona" ni "visagismo"; esta linea si. */}
+        <h1 class="text-gray-400 font-medium mb-6 animate-fade-in" style="font-size: clamp(0.8rem, 0.95vw, 0.9rem); max-width: 420px; padding-left: clamp(1.5rem, 4vw, 3rem); animation-delay: 0.1s;" data-i18n="hero.h1.seo">
+          Barbería premium en el Eixample, Barcelona — visagismo y asesoría de imagen masculina
+        </h1>
+
+        <!-- Body: desplazado a la derecha, crea asimetría con el hook -->
         <div class="mb-3 animate-fade-in" style="padding-left: clamp(1.5rem, 4vw, 3rem); animation-delay: 0.14s;">
           <p class="text-gray-400 font-light leading-relaxed" style="font-size: clamp(0.95rem, 1.2vw, 1.05rem); max-width: 340px;" data-i18n="hero.body">
             Un sistema de asesoría masculina basado en tipo de rostro,
