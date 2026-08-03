@@ -43,3 +43,53 @@ control: ACTIVA — 8 citas libres hoy y lunes
 
 control: ACTIVA — 26 citas libres hoy y martes
    publicado: activa → activa
+[2026-08-02 11:00] huecos en la ventana: 179
+   sin cambios en 1.4 h
+
+control: PAUSA — 26 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-02 13:00] huecos en la ventana: 176
+   3 citas reservadas en 1.8 h (41.0/día sin publicidad)
+
+control: PAUSA — 24 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-02 15:00] huecos en la ventana: 176
+   sin cambios en 2.0 h
+
+control: PAUSA — 24 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-02 17:00] huecos en la ventana: 174
+   2 citas reservadas en 2.0 h (24.0/día sin publicidad)
+
+control: PAUSA — 22 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-02 19:00] huecos en la ventana: 171
+   3 citas reservadas en 2.0 h (36.0/día sin publicidad)
+
+control: PAUSA — 19 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-02 21:00] huecos en la ventana: 170
+   1 citas reservadas en 2.0 h (12.0/día sin publicidad)
+
+control: PAUSA — 18 citas libres lunes y martes
+   publicado: pausa → pausa
+[2026-08-03 09:00] huecos en la ventana: 167
+   3 citas reservadas en 12.0 h (6.0/día sin publicidad)
+
+control: ACTIVA — 16 citas libres hoy y martes
+   publicado: pausa → activa
+[2026-08-03 11:00] huecos en la ventana: 167
+   sin cambios en 2.0 h
+
+control: ACTIVA — 16 citas libres hoy y martes
+   publicado: activa → activa
+[2026-08-03 13:00] huecos en la ventana: 161
+   6 citas reservadas en 2.0 h (72.0/día sin publicidad)
+
+control: ACTIVA — 13 citas libres hoy y martes
+   publicado: activa → activa
+[2026-08-03 15:00] huecos en la ventana: 159
+   2 citas reservadas en 2.0 h (24.0/día sin publicidad)
+
+control: ACTIVA — 10 citas libres hoy y martes
+   publicado: activa → activa
