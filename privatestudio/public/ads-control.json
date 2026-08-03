@@ -49,7 +49,7 @@
     },
     {
       "fecha": "2026-08-06",
-      "citas": 15,
+      "citas": 14,
       "cerrado": false,
       "decide": false
     },
@@ -108,8 +108,8 @@
       "decide": false
     }
   ],
-  "citas_ventana": 158,
-  "actualizado": "2026-08-03T13:28:21.728Z",
+  "citas_ventana": 157,
+  "actualizado": "2026-08-03T15:00:00.839Z",
   "hoy_cerrado": false,
   "motivo": "9 citas libres hoy y martes"
 }
