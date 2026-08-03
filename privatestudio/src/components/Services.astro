@@ -1,4 +1,13 @@
 ---
+import { useTranslations } from '../i18n/utils';
+import { defaultLang } from '../i18n/ui';
+
+// Escribe el texto en el HTML servido. Sin esto, los nombres y descripciones de
+// los servicios solo existian dentro del <script> del diccionario: los crawlers
+// de IA (GPTBot, ClaudeBot, PerplexityBot) no ejecutan JS y veian el catalogo
+// vacio. LanguageProvider sigue sobrescribiendo estos nodos al cambiar a ingles.
+const t = useTranslations(defaultLang);
+
 const booksyUrl = "https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona";
 
 // Reuse existing data structure
@@ -126,14 +135,14 @@ const serviceCategories = [
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
                     <div class="relative z-10 mb-6">
                         <span class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-widest border border-current rounded-full opacity-60">PRIVATE CLUB</span>
-                        <h4 class="text-2xl font-black uppercase tracking-tight mb-2 leading-none" data-i18n={group.nameKey}></h4>
-                        <p class="text-xs font-bold uppercase tracking-widest opacity-60" data-i18n={group.descKey}></p>
+                        <h4 class="text-2xl font-black uppercase tracking-tight mb-2 leading-none" data-i18n={group.nameKey} set:html={t(group.nameKey)}></h4>
+                        <p class="text-xs font-bold uppercase tracking-widest opacity-60" data-i18n={group.descKey} set:html={t(group.descKey)}></p>
                     </div>
                     <div class="relative z-10 mb-8 flex-grow">
                         <ul class="space-y-3">
                             {group.featureKeys.map(key => (
                                 <li class="flex items-start text-xs font-bold tracking-wide opacity-80 gap-2">
-                                  <span>•</span> <span data-i18n={key}></span>
+                                  <span>•</span> <span data-i18n={key} set:html={t(key)}></span>
                                 </li>
                             ))}
                         </ul>
@@ -166,7 +175,7 @@ const serviceCategories = [
                   class={`service-nav-item group flex items-center text-left whitespace-nowrap transition-all duration-500 ${index === 0 ? 'active' : 'opacity-40 hover:opacity-100'}`}
                   data-target={cat.id}
                 >
-                  <span class="text-lg md:text-xl lg:text-2xl font-black uppercase tracking-tighter group-[.active]:text-beige-700 transition-colors" data-i18n={cat.nameKey}></span>
+                  <span class="text-lg md:text-xl lg:text-2xl font-black uppercase tracking-tighter group-[.active]:text-beige-700 transition-colors" data-i18n={cat.nameKey} set:html={t(cat.nameKey)}></span>
                 </button>
               ))}
             </nav>
@@ -188,13 +197,13 @@ const serviceCategories = [
                     data-duration={service.duration}
                   >
                     <!-- HIDDEN DATA -->
-                    <div class="hidden drawer-source-title" data-i18n={service.nameKey}></div>
-                    <div class="hidden drawer-source-desc" data-i18n={service.descKey}></div>
+                    <div class="hidden drawer-source-title" data-i18n={service.nameKey} set:html={t(service.nameKey)}></div>
+                    <div class="hidden drawer-source-desc" data-i18n={service.descKey} set:html={t(service.descKey)}></div>
 
                     <div class="flex items-baseline justify-between gap-6 relative z-10">
                       <div class="flex items-baseline gap-6 flex-grow">
                         <span class="text-xs md:text-sm lg:text-base font-black text-beige-900/60 group-hover:text-beige-900 transition-colors">0{sIndex + 1}</span>
-                        <h4 class="text-base md:text-lg lg:text-xl font-black uppercase tracking-tighter text-black group-hover:translate-x-4 transition-transform duration-500" data-i18n={service.nameKey}></h4>
+                        <h4 class="text-base md:text-lg lg:text-xl font-black uppercase tracking-tighter text-black group-hover:translate-x-4 transition-transform duration-500" data-i18n={service.nameKey} set:html={t(service.nameKey)}></h4>
                       </div>
                       
                       <div class="text-right flex items-center gap-6 flex-shrink-0">

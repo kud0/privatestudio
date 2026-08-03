@@ -1,4 +1,14 @@
 ---
+import { useTranslations } from '../i18n/utils';
+import { defaultLang } from '../i18n/ui';
+
+// Las 12 preguntas y respuestas solo existian dentro del <script> del JSON-LD y
+// del diccionario. Los extractores de contenido descartan <script> antes de
+// generar pasajes citables, asi que para un motor de IA la seccion estaba vacia.
+// Ahora se escriben como prosa en el HTML. El swap a ingles sigue siendo
+// client-side via LanguageProvider.
+const t = useTranslations(defaultLang);
+
 const faqs = [
   { qKey: 'faq.q1', aKey: 'faq.a1' },
   { qKey: 'faq.q2', aKey: 'faq.a2' },
@@ -54,14 +64,14 @@ const faqSchemaEs = {
           >
             <span class="flex items-center gap-4">
               <span class="text-beige-500/40 text-xs font-bold">{String(index + 1).padStart(2, '0')}</span>
-              <span class="text-white font-bold text-base md:text-lg uppercase tracking-tight group-hover:text-beige-200 transition-colors" data-i18n={faq.qKey}></span>
+              <span class="text-white font-bold text-base md:text-lg uppercase tracking-tight group-hover:text-beige-200 transition-colors" data-i18n={faq.qKey} set:html={t(faq.qKey)}></span>
             </span>
             <svg class="faq-icon w-5 h-5 text-beige-400 flex-shrink-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M6 12h12" />
             </svg>
           </button>
           <div class="faq-answer hidden overflow-hidden">
-            <p class="pb-6 pl-10 text-gray-400 leading-relaxed text-sm md:text-base" data-i18n={faq.aKey}></p>
+            <p class="pb-6 pl-10 text-gray-400 leading-relaxed text-sm md:text-base" data-i18n={faq.aKey} set:html={t(faq.aKey)}></p>
           </div>
         </div>
       ))}
