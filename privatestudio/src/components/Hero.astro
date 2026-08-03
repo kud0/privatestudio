@@ -11,10 +11,11 @@
         id="reel-mobile"
         class="w-full h-full object-cover object-center"
         autoplay muted loop playsinline
+        poster="/images/poster-hero.webp"
         fetchpriority="high"
-      >
-        <source src="/images/renato-dinamico-web.mp4" type="video/mp4" />
-      </video>
+        data-hero-video="mobile"
+        data-src="/images/renato-dinamico-web.mp4"
+      ></video>
 
       <!-- Fade inferior hacia la sección de copy -->
       <div class="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
@@ -95,9 +96,10 @@
         class="w-full h-full object-cover"
         style="object-position: 28% center;"
         autoplay muted loop playsinline
-      >
-        <source src="/images/renato-dinamico-web.mp4" type="video/mp4" />
-      </video>
+        poster="/images/poster-hero.webp"
+        data-hero-video="desktop"
+        data-src="/images/renato-dinamico-web.mp4"
+      ></video>
       <!-- Blend izquierdo: gradiente negro → transparente que funde el split -->
       <div class="absolute inset-y-0 left-0 w-56 bg-gradient-to-r from-black to-transparent pointer-events-none"></div>
       <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
@@ -213,6 +215,25 @@
     currentM = (currentM + 1) % headlinesM.length;
     (headlinesM[currentM] as HTMLElement).style.opacity = '1';
   }, 7000);
+
+  // El hero duplica el markup para movil y desktop. Los dos <video> apuntaban
+  // al mismo fichero con src en el HTML, asi que el navegador lo descargaba dos
+  // veces (medido: 15,3 MB en la carga inicial en un viewport movil, para un
+  // fichero de 8 MB). Ahora solo se asigna el src del breakpoint activo.
+  const DESKTOP_MQ = window.matchMedia('(min-width: 1024px)');
+
+  function cargarHeroVideo() {
+    const activo = DESKTOP_MQ.matches ? 'desktop' : 'mobile';
+    const v = document.querySelector(
+      `video[data-hero-video="${activo}"]`
+    ) as HTMLVideoElement | null;
+    if (!v || v.src) return;
+    v.src = v.dataset.src!;
+  }
+
+  cargarHeroVideo();
+  // Si se cruza el breakpoint (rotacion, resize), carga el que toque.
+  DESKTOP_MQ.addEventListener('change', cargarHeroVideo);
 
   // Desktop mute
   const btn = document.getElementById('mute-btn');

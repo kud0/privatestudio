@@ -66,9 +66,18 @@
           <div class="absolute inset-0 border border-beige-500/30 transform translate-x-4 translate-y-4 transition-transform duration-500 hover:translate-x-2 hover:translate-y-2"></div>
           <div class="relative bg-zinc-900 overflow-hidden group aspect-[9/16] shadow-2xl">
             <div class="absolute inset-0 bg-beige-900/10 mix-blend-overlay z-10 group-hover:opacity-0 transition-opacity duration-700"></div>
+            <!--
+              Sin autoplay y con preload="none" a proposito: este video pesa
+              5,7 MB y esta por debajo del pliegue, pero se descargaba siempre
+              al cargar la pagina. El poster cubre el hueco visual y el
+              IntersectionObserver de abajo arranca la descarga y la
+              reproduccion solo cuando entra en pantalla.
+            -->
             <video
-              src="/images/reni_about_1.mp4"
-              autoplay
+              data-lazy-video
+              data-src="/images/reni_about_1.mp4"
+              poster="/images/poster-about.webp"
+              preload="none"
               muted
               loop
               playsinline
@@ -90,3 +99,48 @@
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Arranca los videos marcados con data-lazy-video solo cuando entran en
+  // pantalla. Sin esto el navegador se descarga el video de About (5,7 MB) en
+  // la carga inicial aunque este por debajo del pliegue.
+  (function () {
+    function initLazyVideos() {
+      var vids = document.querySelectorAll('video[data-lazy-video][data-src]');
+      if (!vids.length) return;
+
+      function activar(v) {
+        if (v.dataset.loaded) return;
+        v.dataset.loaded = '1';
+        // preload="none" sigue vigente tras asignar src: load() no descargaria
+        // nada hasta que se levanta la restriccion.
+        v.preload = 'auto';
+        v.src = v.dataset.src;
+        v.load();
+        var p = v.play();
+        if (p) p.catch(function () { /* autoplay bloqueado: se queda el poster */ });
+      }
+
+      if (!('IntersectionObserver' in window)) {
+        vids.forEach(activar);
+        return;
+      }
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          activar(e.target);
+          io.unobserve(e.target);
+        });
+      }, { rootMargin: '200px' });
+
+      vids.forEach(function (v) { io.observe(v); });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLazyVideos);
+    } else {
+      initLazyVideos();
+    }
+  })();
+</script>
