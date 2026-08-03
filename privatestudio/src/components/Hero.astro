@@ -132,7 +132,13 @@
       <div class="relative pointer-events-auto" style="max-width: 560px;">
 
         <!-- H1 rotatorio -->
-        <div id="hero-headlines" class="mb-10 animate-fade-in" style="min-height: clamp(9rem, 16vw, 15rem); animation-delay: 0.06s; position: relative;">
+        {/* Las 3 variantes van en position:absolute, asi que el contenedor no
+            crece con ellas: hay que reservar la altura de la MAS ALTA. El valor
+            anterior, clamp(9rem, 16vw, 15rem), asumia 4 lineas, pero la
+            variante 2 ("¿CANSADO DE PEDIR...") envuelve a 5 al tamano maximo
+            dentro de los 560px del contenedor, y el body de debajo se escribia
+            encima del titular. 5 lineas x 4rem x 0.92 de line-height = 18,4rem. */}
+        <div id="hero-headlines" class="mb-10 animate-fade-in" style="min-height: clamp(10.5rem, 16.5vw, 18.6rem); animation-delay: 0.06s; position: relative;">
           <div class="hero-headline font-black uppercase leading-[0.92] tracking-tight absolute inset-x-0 top-0 transition-opacity duration-700"
               style="font-size: clamp(2.2rem, 3.5vw, 4rem); opacity: 1;" data-i18n="hero.h1.1">
             ¿Y SI EL PROBLEMA<br>NO ES TU PELO…<br>SINO TU<br><span class="text-beige-400">TIPO DE ROSTRO?</span>

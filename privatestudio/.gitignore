@@ -39,3 +39,8 @@ public/informe.txt
 
 # Scripts publicados temporalmente solo para instalarlos en Google Ads
 public/guardia.txt
+
+# Auditoria SEO: los informes en markdown si se versionan; las capturas no.
+# Son ~18 MB de PNG y se regeneran con claude-seo. Se quedan en local.
+src/docs/seo-audit-*/screenshots/
+src/docs/seo-audit-*/homepage-render.json
