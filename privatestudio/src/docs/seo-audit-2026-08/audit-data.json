@@ -1,0 +1,620 @@
+{
+  "meta": {
+    "domain": "barberbarcelona.es",
+    "url": "https://www.barberbarcelona.es",
+    "audit_date": "2026-08-03",
+    "tool": "claude-seo 2.2.4",
+    "agents_run": 11,
+    "stack": "Astro 5 static / Vercel",
+    "pages_in_sitemap": 11,
+    "credentials_available": {
+      "google_search_console": false,
+      "crux_field_data": false,
+      "pagespeed_insights": false,
+      "ga4": false,
+      "dataforseo": false,
+      "moz": false,
+      "bing_webmaster": false
+    },
+    "data_limitations": "No hay datos de campo (CrUX/GSC). Todas las metricas de rendimiento son LAB. No hay volumenes de busqueda ni posiciones confirmadas: las SERP se leyeron con WebSearch y son senal direccional. Backlinks en Tier 0 (solo Common Crawl): sin DA/PA ni spam score."
+  },
+  "summary": {
+    "health_score": 59,
+    "business_type": "Local Service — brick-and-mortar (barberia). Senales secundarias de Publisher por el blog.",
+    "top_findings": [
+      "El perfil de Google Business se llama 'Private Studio - La Mejor Barberia de Barcelona', que incumple la norma de nombre de Google y expone a suspension del perfil.",
+      "73 de 125 elementos con data-i18n se sirven vacios: todo el catalogo de 23 servicios con precios y las 12 FAQ solo existen dentro de un <script>. Invisible para crawlers de IA, que no ejecutan JS.",
+      "hreflang roto en todo el sitio: cada pagina declara la home como su alternate es y en. Los 4 pares reales ES/EN del blog no estan enlazados entre si.",
+      "El tipo de schema declarado, BarberShop, no existe en schema.org. Las coordenadas GPS estan a 74 m del local.",
+      "Home en movil a 52/100: LCP 5,8 s por 13,7 MB de video sin poster ni preload."
+    ],
+    "quick_wins": [
+      "Renombrar el perfil de GBP a 'Private Studio' (1 min, lo hace Renato, riesgo de suspension).",
+      "Cambiar @type BarberShop por HairSalon y corregir las coordenadas (2 lineas en Layout.astro).",
+      "Anadir poster a los 3 <video> y preload=none al de About (corta el LCP sin quitar el video).",
+      "Consumir el campo lang del frontmatter en Layout.astro para el <html lang> y el hreflang (el dato ya existe).",
+      "Anadir noindex a review.astro.",
+      "Anadir la URL de Booksy al array sameAs."
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "weight": 22,
+      "score": 74,
+      "owner_agent": "seo-technical",
+      "what_works": [
+        "Sitio 100% estatico servido por Vercel con cache HIT, sin dependencia de render para el contenido principal.",
+        "Canonicales autorreferenciales correctos y coherentes, incluido /blog vs /blog/.",
+        "Estructura de URL limpia y legible.",
+        "El dominio antiguo privatestudio.vercel.app redirige 308 a produccion, sin duplicados.",
+        "robots.txt abierto, sin bloqueos accidentales."
+      ],
+      "findings": [
+        {
+          "title": "hreflang apunta a la home desde todas las paginas",
+          "severity": "Critical",
+          "description": "Layout.astro:31-32 hardcodea hreflang es y en a la URL de la home. Verificado identico en /, /blog/ y posts de ambos idiomas: un post en ingles declara la home como su alternate, no su par en espanol. Faltan self-reference y x-default. Los pares reales existen (que-es-visagismo-guia-completa / what-is-visagism-complete-guide) pero no estan enlazados.",
+          "recommendation": "Generar el hreflang por pagina consumiendo el campo lang del frontmatter, que ya existe en content/config.ts, y anadir x-default."
+        },
+        {
+          "title": "/review es indexable, sin canonical y sin noindex",
+          "severity": "Critical",
+          "description": "curl -sI devuelve 200. src/pages/review.astro:6-15 no extiende Layout.astro: sin meta robots, sin canonical, sin viewport. Es un meta-refresh de cliente hacia el formulario de resena de Google, no un redirect HTTP. robots.txt no lo bloquea. Alex reparte ese enlace por WhatsApp y QR, asi que acabara enlazado.",
+          "recommendation": "Anadir noindex,follow y viewport, o convertirlo en redirect 308 real via vercel.json y borrar la pagina."
+        },
+        {
+          "title": "html lang hardcodeado a es en contenido ingles",
+          "severity": "High",
+          "description": "Layout.astro:19 fija lang=es siempre. Verificado en los 3 posts en ingles con frontmatter lang: en: los 3 se sirven como lang=es.",
+          "recommendation": "Pasar el lang de la pagina al Layout y usarlo en el atributo html lang."
+        },
+        {
+          "title": "Sin cabeceras de seguridad y sin vercel.json",
+          "severity": "High",
+          "description": "No existe vercel.json en el repo. Solo llega strict-transport-security. Faltan X-Content-Type-Options, Referrer-Policy y X-Frame-Options.",
+          "recommendation": "Anadir vercel.json con las cabeceras. Dejar CSP para una segunda fase: GTM, gtag y el embed de Instagram necesitan probarse contra ella."
+        },
+        {
+          "title": "Redirect del apex en 307 temporal",
+          "severity": "Medium",
+          "description": "El apex redirige 307 en lugar de permanente, a diferencia del 308 que se usa en HTTP a HTTPS. Configurado en el panel de Vercel, no en el repo.",
+          "recommendation": "Cambiarlo a permanente desde el panel de Vercel."
+        },
+        {
+          "title": "IndexNow no implementado",
+          "severity": "Medium",
+          "description": "Cero coincidencias en el repo, rutas de key-file dan 404.",
+          "recommendation": "Opcional. Bajo impacto en un sitio de 11 URLs con poca frecuencia de publicacion."
+        },
+        {
+          "title": "HSTS sin includeSubDomains ni preload",
+          "severity": "Low",
+          "description": "La cabecera existe pero incompleta.",
+          "recommendation": "Completar la directiva al anadir vercel.json."
+        }
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "weight": 23,
+      "score": 60,
+      "owner_agent": "seo-content",
+      "what_works": [
+        "Los 4 pares ES/EN del blog son traducciones reales con paridad estructural verificada una a una, no contenido espejo ni girado.",
+        "Los 9 posts tienen estructura real y cero relleno.",
+        "Autor declarado en el frontmatter de los 9 posts.",
+        "NAP interno coherente en Footer, Navbar, FAQ y schema."
+      ],
+      "findings": [
+        {
+          "title": "Ninguna prueba visual del trabajo real",
+          "severity": "High",
+          "description": "7 de 9 posts no tienen ninguna foto, video ni embed. El campo image existe en content/config.ts pero 0 de 9 posts lo rellenan, y la plantilla blog/[...slug].astro ni lo referencia. Ademas Gallery.astro esta importado en index.astro:5 pero nunca renderizado, y sus 6 imagenes gallery-1..6.jpg dan 404 en produccion y no existen en el repo.",
+          "recommendation": "Es la mayor brecha de Experience del E-E-A-T. Renato aporta fotos reales, se renderiza Gallery y se rellena image en los posts."
+        },
+        {
+          "title": "No existe entidad de autor",
+          "severity": "High",
+          "description": "El unico Person para Renato Rojas es un nombre suelto sin url, image, sameAs ni jobTitle, en Layout.astro y blog/[...slug].astro. No hay pagina de bio.",
+          "recommendation": "Crear pagina de autor y enriquecer el Person. Es la palanca de Expertise mas barata para un negocio de un solo profesional."
+        },
+        {
+          "title": "Blog parado 4,5 meses",
+          "severity": "High",
+          "description": "Los 9 posts entraron en un unico commit el 2026-03-19 y no ha habido ninguno mas. El propio informe-seo-owner.md pide 2-3 al mes y seo-research.md tiene 16 temas listos sin usar.",
+          "recommendation": "Retomar cadencia con el plan priorizado de cluster.md, que reordena los temas hacia intencion comercial local."
+        },
+        {
+          "title": "5 de 9 posts por debajo de 500 palabras",
+          "severity": "Medium",
+          "description": "Recuento real sobre el markdown, cruzado con parse_html en vivo: 415 a 806 palabras. No estan vacios, pero quedan cortos frente al angulo de guia completa que prometen sus titulos.",
+          "recommendation": "Ampliar los dos de visagismo primero, que son el hub del cluster."
+        },
+        {
+          "title": "La home en ingles no existe para los rastreadores",
+          "severity": "Medium",
+          "description": "El cambio de idioma es cosmetico, via JS y localStorage. El HTML servido es siempre espanol y el canonical ignora cualquier query string, asi que Google nunca ve una version inglesa de la home.",
+          "recommendation": "Decision de producto: o se acepta que la home es solo ES, o se crea una ruta /en real. Ver cluster.md, que recomienda reservar el ingles para el angulo expat."
+        }
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "weight": 20,
+      "score": 48,
+      "owner_agent": "sintesis (verificado directamente contra produccion)",
+      "what_works": [
+        "Title y meta description presentes, unicos y descriptivos en todas las paginas.",
+        "Open Graph y Twitter Cards completos.",
+        "Todas las imagenes de la home tienen alt.",
+        "Jerarquia H2/H3 correcta fuera del hero."
+      ],
+      "findings": [
+        {
+          "title": "Siete H1 en la home",
+          "severity": "High",
+          "description": "Verificado contando en el HTML de produccion: 7 etiquetas h1. Hero.astro:50-61 emite 3 titulares para el bloque movil y Hero.astro:130-141 los repite para desktop, mas STMNT como h1 en Brands.astro.",
+          "recommendation": "Un solo h1 real. Las variantes rotatorias deben ser divs o spans; el bloque movil y el desktop no deben duplicar el h1."
+        },
+        {
+          "title": "Ningun H1 contiene keyword",
+          "severity": "High",
+          "description": "Los 3 titulares son hooks emocionales. No aparecen barberia, Barcelona ni visagismo en ningun h1. Confirmado visualmente: en toda la primera pantalla en movil no sale la palabra barberia.",
+          "recommendation": "Mantener el hook y anadir debajo una linea literal del tipo Barberia premium en el Eixample especializada en visagismo masculino."
+        },
+        {
+          "title": "Cero enlaces internos entre los 9 posts",
+          "severity": "High",
+          "description": "Verificado: los unicos href internos que salen de un post son /blog/, /, /#services y /#about, todos de nav y footer. Sin related posts. Los tags son spans no clicables.",
+          "recommendation": "Aplicar la matriz de enlazado de cluster.md, unos 24 enlaces, sin posts huerfanos."
+        },
+        {
+          "title": "Sin BreadcrumbList en ninguna URL",
+          "severity": "Medium",
+          "description": "Cero ocurrencias en todo src.",
+          "recommendation": "Anadir en indice de blog y en los 9 posts."
+        }
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "weight": 10,
+      "score": 42,
+      "owner_agent": "seo-schema",
+      "what_works": [
+        "3 bloques JSON-LD validos y bien formados en la home, coincidentes entre repo y produccion.",
+        "Los 9 posts llevan Article en produccion.",
+        "Ningun tipo deprecado en las 11 URLs."
+      ],
+      "findings": [
+        {
+          "title": "El tipo BarberShop no existe en schema.org",
+          "severity": "Critical",
+          "description": "Verificado contra el vocabulario oficial schemaorg-current-https.jsonld: bajo HealthAndBeautyBusiness solo existe HairSalon. schema.org/BarberShop devuelve 404. El tipo declarado en Layout.astro:61 es invalido.",
+          "recommendation": "Cambiar a HairSalon."
+        },
+        {
+          "title": "Coordenadas GPS a 74 m del local",
+          "severity": "Critical",
+          "description": "Layout.astro:76-79 declara 41.3925, 2.1530. El pin real del GBP es 41.3918882, 2.152643 y el geocoding de OSM da 41.3918967, 2.1526211. Las dos fuentes independientes coinciden entre si con 2,1 m de diferencia. En una manzana del Eixample, 74 m es el portal equivocado.",
+          "recommendation": "Corregir a las coordenadas del pin real del GBP."
+        },
+        {
+          "title": "SearchAction falso en el WebSite",
+          "severity": "Critical",
+          "description": "Layout.astro:118-122 declara una busqueda en /?q={search_term_string} que no existe. Verificado: el HTML de / y de /?q=test es byte-identico, mismo MD5, sitio estatico sin logica de busqueda.",
+          "recommendation": "Eliminar potentialAction. No es mejorable, es schema que declara algo falso."
+        },
+        {
+          "title": "El catalogo de servicios no esta en el schema",
+          "severity": "High",
+          "description": "Faltan hasOfferCatalog y areaServed pese a que los datos reales existen en el repo: 23 servicios con precio y duracion en Services.astro:48-106.",
+          "recommendation": "Anadir hasOfferCatalog con las ofertas reales. JSON-LD listo en findings/schema.md."
+        },
+        {
+          "title": "Article sin image ni dateModified",
+          "severity": "High",
+          "description": "Los 9 posts llevan Article pero sin image, lo que bloquea la elegibilidad a rich results, ni dateModified.",
+          "recommendation": "Migrar a BlogPosting, rellenar image y anadir dateModified."
+        },
+        {
+          "title": "Booksy ausente del sameAs",
+          "severity": "Medium",
+          "description": "Layout.astro:96-99 lista Instagram y Facebook. Booksy, la unica plataforma cuyo enlace de vuelta se pudo verificar en vivo y donde estan las 206 resenas, no aparece.",
+          "recommendation": "Anadir la URL de Booksy al array."
+        },
+        {
+          "title": "DECISION — no implementar aggregateRating ni review",
+          "severity": "Info",
+          "description": "Documentado deliberadamente para que no se reintroduzca. La politica de Google dice que si la entidad resenada controla las resenas sobre si misma, sus paginas con LocalBusiness u Organization no son elegibles para la funcion de estrellas, y lo extiende a widgets de terceros embebidos. HairSalon hereda de LocalBusiness. Implementarlo daria cero estrellas y expondria a accion manual.",
+          "recommendation": "No implementar. Las estrellas reales salen del map pack via GBP."
+        }
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "weight": 10,
+      "score": 52,
+      "owner_agent": "seo-performance",
+      "what_works": [
+        "CLS = 0 en las 4 combinaciones medidas.",
+        "Las imagenes activas ya estan en WebP.",
+        "Desktop en 91/100 (home) y 95/100 (blog).",
+        "Servido estatico desde CDN de Vercel con cache HIT."
+      ],
+      "findings": [
+        {
+          "title": "LCP de 5,8 s en la home en movil",
+          "severity": "Critical",
+          "description": "LAB, Lighthouse 12.8.2. Score 0,15. El elemento LCP es el video del hero en Hero.astro:10-17, sin poster. Desglose: TTFB 931 ms (16%) y render delay 4.919 ms (84%).",
+          "recommendation": "Anadir poster con un frame estatico comprimido a los 3 video. Es el arreglo de mayor impacto por esfuerzo de todo el audit tecnico."
+        },
+        {
+          "title": "13,7 MB de video descargados en la home",
+          "severity": "Critical",
+          "description": "Tres elementos video, ninguno con preload ni poster: reel-mobile y reel-desktop apuntan a renato-dinamico-web.mp4 (8,0 MB) y el de About a reni_about_1.mp4 (5,7 MB). El navegador descarga ambos en movil aunque lg:hidden oculte el de desktop: el CSS no impide la descarga de un video.",
+          "recommendation": "preload=none en el de About mas IntersectionObserver, y cargar por JS solo el video del breakpoint activo."
+        },
+        {
+          "title": "TBT de 963 ms en la home en movil",
+          "severity": "High",
+          "description": "Proxy de INP; no hay INP real sin datos de campo. Dato clave en negativo: el propio audit third-party-summary de Lighthouse atribuye a GTM y gtag solo 3 ms de esos 963 ms. El cuello de botella es el decode del video, no el tag manager.",
+          "recommendation": "Se resuelve en gran parte con los dos arreglos anteriores. No perder tiempo optimizando GTM."
+        },
+        {
+          "title": "LCP de 3,1 s en post de blog en movil",
+          "severity": "High",
+          "description": "El elemento LCP es el h1 del post, texto. Render delay 80%, lo que apunta a CSS bloqueante en la plantilla, no a red: en desktop sin throttle el mismo h1 pinta en 1,2 s.",
+          "recommendation": "Revisar el CSS bloqueante de blog/[...slug].astro."
+        },
+        {
+          "title": "Doble carga del tag de Google Ads",
+          "severity": "Medium",
+          "description": "GTM (112 KB) y gtag.js suelto en MedicionReservas.astro:26 (183 KB, 34% de codigo sin usar).",
+          "recommendation": "Mover a un tag nativo dentro de GTM y quitar el gtag suelto."
+        },
+        {
+          "title": "Sin preconnect",
+          "severity": "Medium",
+          "description": "Cero link rel=preconnect en Layout.astro pese a cargar googletagmanager.com desde dos componentes.",
+          "recommendation": "Anadir preconnect a googletagmanager.com."
+        },
+        {
+          "title": "196 MB de video huerfano desplegado",
+          "severity": "Low",
+          "description": "Housekeeping, no afecta a CWV. renato-dinamico.mp4 (68,7 MB), renato-subtitulado.mp4 (67,4 MB), herovideo.mp4 (24,4 MB), hero_test.MP4 (15 MB), reni_about_1.mov (13,9 MB) y video.mp4 (4,4 MB) no los referencia nadie en src, pero se despliegan y son accesibles publicamente: herovideo.mp4 responde 23,3 MB en produccion.",
+          "recommendation": "Sacarlos de public/ o excluirlos via .vercelignore."
+        }
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "weight": 10,
+      "score": 68,
+      "owner_agent": "seo-geo",
+      "what_works": [
+        "robots.txt totalmente abierto. Verificado en vivo con UA de GPTBot, ClaudeBot, PerplexityBot y Google-Extended: los 4 devuelven 200, mismo etag y content-length que un UA normal, sin firewall ni challenge de Vercel.",
+        "Sitio estatico: el contenido principal no depende de hidratacion.",
+        "barberbarcelona.es sale primero en organico para la consulta objetivo casi literal, por delante de competidores directos."
+      ],
+      "findings": [
+        {
+          "title": "El catalogo de servicios es invisible para los crawlers de IA",
+          "severity": "Critical",
+          "description": "73 de 125 elementos con data-i18n llegan vacios en el HTML servido. Services.astro emite h4 data-i18n=serv.corte.premium vacio; el nombre solo vive dentro de un script como valor del objeto ui. Medido: 73 vacios sin ejecutar JS, 0 tras ejecutarlo con Playwright. Googlebot renderiza JS y acaba viendolo; GPTBot, ClaudeBot y PerplexityBot no. Para ChatGPT y Perplexity, Private Studio es una barberia sin servicios ni precios: solo quedan 25,00 EUR y 45min flotando junto a un titular vacio.",
+          "recommendation": "Escribir el texto en espanol inline en el markup y dejar data-i18n solo para el cambio a ingles. El patron correcto ya esta en el repo: Hero.astro, About.astro y Footer.astro lo hacen bien."
+        },
+        {
+          "title": "Las 12 FAQ no existen como prosa legible",
+          "severity": "Critical",
+          "description": "FAQ.astro tiene las 12 preguntas y respuestas completas en el objeto faqSchemaEs, correctamente inyectado como JSON-LD, pero el HTML visible usa spans vacios. El texto esta en los bytes de la pagina pero dentro de un script, y los pipelines de extraccion tipo Readability descartan script antes de generar pasajes citables.",
+          "recommendation": "Mismo arreglo que el anterior."
+        },
+        {
+          "title": "Sin presencia en listiculas editoriales de terceros",
+          "severity": "Medium",
+          "description": "No se encontro evidencia de aparicion en articulos tipo mejores barberias de Barcelona, que es justo el tipo de fuente que citan Perplexity y los AI Overviews para consultas de mejor X. No se confirma ausencia total, solo que no aparecio en la busqueda realizada.",
+          "recommendation": "Outreach a barcelona.place y barbershopmap.com. Es la misma accion que pide el analisis SXO."
+        },
+        {
+          "title": "llms.txt ausente",
+          "severity": "Info",
+          "description": "404 verificado. No se recomienda como prioridad: Google lo ignora explicitamente y no hay evidencia verificada de que ningun motor lo consuma.",
+          "recommendation": "No hacer nada."
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "weight": 5,
+      "score": 55,
+      "owner_agent": "sintesis (seo-performance + seo-visual + verificacion propia)",
+      "what_works": [
+        "Las 7 imagenes de la home tienen alt, ninguno vacio.",
+        "Las imagenes activas ya estan en WebP.",
+        "CLS = 0 pese a la falta de dimensiones."
+      ],
+      "findings": [
+        {
+          "title": "Las 6 imagenes de la galeria dan 404",
+          "severity": "High",
+          "description": "gallery-1.jpg a gallery-6.jpg no existen en el repo y devuelven 404 en produccion. El componente Gallery.astro esta importado en index.astro:5 pero nunca renderizado.",
+          "recommendation": "Aportar 6 fotos reales de trabajos y renderizar el componente. Es la accion de contenido de mayor valor del audit."
+        },
+        {
+          "title": "Ninguna imagen declara width ni height",
+          "severity": "Medium",
+          "description": "Las 7 imagenes de la home carecen de dimensiones explicitas. Hoy no genera CLS medible, pero es fragil ante cualquier cambio de layout.",
+          "recommendation": "Anadir width y height."
+        },
+        {
+          "title": "Sin OG image propia por post",
+          "severity": "Medium",
+          "description": "Todos los posts comparten la imagen OG global del logo.",
+          "recommendation": "Generar una OG por post al rellenar el campo image."
+        }
+      ]
+    },
+    {
+      "name": "Local SEO",
+      "weight": 0,
+      "score": 60,
+      "owner_agent": "seo-local",
+      "note": "No entra en la formula del health score, que no pondera local por separado. Para este negocio es la categoria de mayor impacto real.",
+      "what_works": [
+        "NAP interno 100% coherente en Footer, Navbar, FAQ y schema.",
+        "El flujo /review apunta directo al formulario de resena de Google, sin pasos intermedios.",
+        "Instagram verificado en vivo y coherente.",
+        "Booksy con 4,9 estrellas y 206 resenas, verificado en vivo.",
+        "Sin paginas obsoletas de tipo chat with business o business.site."
+      ],
+      "findings": [
+        {
+          "title": "El nombre del perfil de Google Business incumple la norma de Google",
+          "severity": "Critical",
+          "description": "Al resolver el enlace oficial que usa la propia web, Google redirige a /maps/place/Private+Studio+-+La+Mejor+Barberia+de+Barcelona/. La norma dice literalmente que incluir informacion innecesaria en el nombre no esta permitido y puede resultar en la suspension del perfil, y pone justo este patron como ejemplo de lo no aceptable. Ademas La Mejor Barberia de Barcelona es una afirmacion superlativa no sustentada. Segunda fuente independiente: wanderboat.ai indexa el mismo titulo.",
+          "recommendation": "Renombrar el perfil a exactamente Private Studio. Lo tiene que hacer Renato. Es gratis, tarda un minuto y es el mayor riesgo abierto del negocio."
+        },
+        {
+          "title": "Citacion rota en Fresha",
+          "severity": "High",
+          "description": "El listing indexado por Google se llama BARBERIA | PRIVATE STUDIO | MANICURA RUSA, un servicio que no existe en la web actual, y da 404 en vivo. Clic desde Google a pagina muerta, mas nombre inconsistente.",
+          "recommendation": "Reclamar y corregir, o dar de baja el listing."
+        },
+        {
+          "title": "Ausente en Paginas Amarillas",
+          "severity": "High",
+          "description": "El directorio espanol de mayor autoridad no lo lista, mientras que competidores de la misma calle si aparecen: Barbieri Abbate en Muntaner 113 y Barcelona Barber Shop en Muntaner 176.",
+          "recommendation": "Darse de alta. Es gratis y de alta autoridad. Es la citacion con mejor relacion impacto/esfuerzo."
+        },
+        {
+          "title": "Posible discrepancia de horario de sabado",
+          "severity": "Medium",
+          "description": "La web declara 11:00-19:00; dos snippets indexados de Fresha y wanderboat sugieren 10:00-16:00. Confianza media, no verificado en vivo por bloqueos.",
+          "recommendation": "Verificar y unificar al corregir Fresha y GBP."
+        },
+        {
+          "title": "Telefono fantasma en la documentacion interna",
+          "severity": "Low",
+          "description": "El numero +34 600 26 35 56 que aparece en seo-research.md no esta publicado en ningun sitio en vivo. No es un problema de NAP real, pero conviene limpiarlo para que nadie lo propague.",
+          "recommendation": "Borrarlo del documento."
+        },
+        {
+          "title": "DECISION — no crear paginas de barrio",
+          "severity": "Info",
+          "description": "Un solo local no lo justifica: seria contenido fino y canibalizaria la home.",
+          "recommendation": "No hacer nada. Documentado para que no se proponga otra vez."
+        },
+        {
+          "title": "DECISION — catalan no es prioridad",
+          "severity": "Info",
+          "description": "Juicio profesional sin herramienta de volumen: la intencion de busqueda comercial local en Barcelona para barberia es abrumadoramente en castellano incluso entre catalanoparlantes. Traducir toda la web tiene ROI bajo para un negocio de un barbero.",
+          "recommendation": "No traducir. Como maximo, una o dos frases en catalan en About."
+        }
+      ]
+    },
+    {
+      "name": "Search Experience (SXO)",
+      "weight": 0,
+      "score": 73,
+      "owner_agent": "seo-sxo",
+      "note": "No entra en la formula del health score. Es el analisis que mejor explica por que el trabajo hecho en febrero no se ha traducido en clientes.",
+      "what_works": [
+        "El tipo de pagina del blog coincide con lo que Google premia para consultas informacionales.",
+        "mens-grooming-guide-barcelona si vive en un espacio con intencion local real y es la plantilla a replicar."
+      ],
+      "findings": [
+        {
+          "title": "El blog ataca consultas globales sin intencion local",
+          "severity": "Critical",
+          "description": "En las 5 consultas informacionales probadas (que es el visagismo, como cuidar la barba, fade vs taper, tendencias corte 2026 en ES y EN) la SERP es 100% L'Oreal, Gillette, Philips, Druni, medios de estilo de vida y barberias de otras ciudades y paises. Cero resultados de Barcelona, cero competidores reales. La batalla no es ganable y, aunque se ganara, no convierte: quien busca como cuidar la barba desde Sevilla no va a reservar en Muntaner 172.",
+          "recommendation": "Congelar ese patron de post. Reescribir uno o dos, empezando por el de visagismo, para pivotar a como lo hacemos en Private Studio, Eixample, con CTA de reserva."
+        },
+        {
+          "title": "visagismo a secas es la keyword equivocada",
+          "severity": "High",
+          "description": "visagismo Barcelona trae sobre todo peluquerias femeninas, diseno de cejas y asesoria de imagen de mujer. Solo visagismo masculino Barcelona trae la audiencia correcta, y ahi el competidor Wess Barber ya tiene dos paginas de servicio dedicadas mientras Private Studio solo tiene una mencion en el hero y un post generico.",
+          "recommendation": "Crear /visagismo-masculino-barcelona como pagina de servicio, no como post de blog, con fotos antes y despues, precio y CTA a Booksy."
+        },
+        {
+          "title": "Las consultas de barrio las dominan listiculas y agregadores",
+          "severity": "High",
+          "description": "Para mejor barberia Eixample mandan barcelona.place, barbershopmap.com, Booksy, Fresha y Treatwell. Las homes individuales son minoria. Esto no se arregla on-page.",
+          "recommendation": "Outreach para entrar en esas listiculas. Es la misma accion que pide el analisis GEO."
+        }
+      ]
+    },
+    {
+      "name": "Backlinks",
+      "weight": 0,
+      "score": null,
+      "owner_agent": "seo-backlinks",
+      "note": "Sin score numerico deliberadamente: Tier 0 solo dio datos utiles para 0 o 1 de los 7 factores ponderados. Dar un numero seria enganoso.",
+      "what_works": [
+        "Sin herencia de dominio problematica: Wayback no tiene ni un snapshot previo, lo que descarta parking, spam o negocio anterior.",
+        "El enlace de vuelta desde Booksy esta verificado en vivo, con rel nofollow, que es lo normal en un marketplace y sigue valiendo como citacion NAP."
+      ],
+      "findings": [
+        {
+          "title": "Cero dominios referentes detectados en Common Crawl",
+          "severity": "Info",
+          "description": "in_crawl false, in_rankings false, pagerank null. El validador del propio plugin marca la interpretacion correcta: no leerlo como autoridad cero. Common Crawl es una muestra trimestral que infrarrepresenta sitios pequenos, jovenes y geolocalizados. Es una situacion de construir desde cero, coherente con un negocio abierto en 2024.",
+          "recommendation": "Sin arreglo tecnico. Empezar por las citaciones locales."
+        },
+        {
+          "title": "Sin huella medible de citaciones locales fuera de Booksy, Instagram y Facebook",
+          "severity": "High",
+          "description": "De 14 candidatos de directorio y prensa comprobados, ninguno confirmo listing. Advertencia honesta: tampoco se pudo confirmar la ausencia, porque Yelp, Treatwell, Fresha y Paginas Amarillas renderizan resultados por JS y una peticion HTTP cruda no los ejecuta.",
+          "recommendation": "Priorizar Paginas Amarillas y las listiculas editoriales locales. Verificado que no hay atajo tecnico."
+        },
+        {
+          "title": "Falso negativo corregido en Facebook",
+          "severity": "Info",
+          "description": "El crawler reporto link_removed para Facebook. Es un falso negativo: Facebook devuelve 400 a cualquier GET no autenticado, y un HEAD redirige 301 a una pagina viva. No accionar como hallazgo.",
+          "recommendation": "Ninguna. Confirmar los enlaces de bio de Instagram y Facebook requiere revision manual con sesion iniciada."
+        }
+      ]
+    },
+    {
+      "name": "Visual / Mobile",
+      "weight": 0,
+      "score": null,
+      "owner_agent": "seo-visual",
+      "note": "No entra en la formula. Se incluye porque afecta directamente a la conversion.",
+      "what_works": [
+        "El CTA de reserva de la home es visible sin scroll en movil, barra fija de 56x375 px, muy por encima del minimo de 48 px.",
+        "Meta viewport presente y tipografia base de 16 px en las 3 paginas.",
+        "H1 visible sin scroll en las 3 paginas.",
+        "El bug antiguo de layout_issue.png ya no se reproduce."
+      ],
+      "findings": [
+        {
+          "title": "El body del hero se solapa con el H1 en desktop",
+          "severity": "Critical",
+          "description": "Con la variante 2 del titular rotatorio, el parrafo se escribe encima de la ultima linea del H1. Hero.astro:129 reserva min-height clamp(9rem, 16vw, 15rem) asumiendo 4 lineas, pero esa variante ocupa 5. Intermitente, 1 de cada 3 rotaciones cada 21 s, pero reproducible y en el primer elemento que ve cualquier visitante.",
+          "recommendation": "Subir el min-height del contenedor para cubrir 5 lineas al tamano maximo de fuente."
+        },
+        {
+          "title": "Cuatro tap targets del header por debajo de 48 px",
+          "severity": "High",
+          "description": "Medido por algebra directa sobre clases Tailwind sin overrides: boton llamar 36x36, boton Reservar del header 36 de alto, hamburguesa 40x40 y mute del video 36x36. El espaciado entre ellos es correcto, el problema es el tamano individual.",
+          "recommendation": "Subir p-2 a p-3 en Navbar.astro y Hero.astro."
+        },
+        {
+          "title": "Sin CTA de reserva persistente en el blog en movil",
+          "severity": "Medium",
+          "description": "La barra fija solo se monta en la home porque Hero solo se importa en index.astro:16. En los posts el unico CTA sin scroll es el boton de 36 px del header. El trafico organico de blog aterriza directo en el post.",
+          "recommendation": "Extraer el bloque mobile-cta de Hero.astro:75-83 a un componente y montarlo tambien en el layout de blog."
+        },
+        {
+          "title": "Contraste insuficiente en cursivas del blog",
+          "severity": "Low",
+          "description": "em en color #6b7280 sobre fondo negro da 4,35:1, por debajo del minimo de 4,5:1 para texto normal. El resto del contenido pasa con holgura, 8,27:1.",
+          "recommendation": "Aclarar a #9ca3af."
+        }
+      ]
+    },
+    {
+      "name": "Sitemap",
+      "weight": 0,
+      "score": 60,
+      "owner_agent": "seo-sitemap",
+      "note": "Contribuye dentro de Technical SEO.",
+      "what_works": [
+        "Cobertura correcta hoy: 11 URLs que coinciden exactamente con las paginas reales.",
+        "/review correctamente excluido."
+      ],
+      "findings": [
+        {
+          "title": "Sitemap escrito a mano y sin integracion",
+          "severity": "Medium",
+          "description": "No hay @astrojs/sitemap. public/sitemap.xml se copia tal cual al build. Esta en sync hoy por mantenimiento manual; nada lo garantiza cuando entre el proximo post.",
+          "recommendation": "Migrar a @astrojs/sitemap. Requiere anadir site a astro.config.mjs, que hoy no esta. Diff completo en findings/sitemap.md."
+        },
+        {
+          "title": "Los lastmod son ficticios",
+          "severity": "Medium",
+          "description": "git log muestra que el fichero se toco por ultima vez el 2026-03-19, pero sus lastmod van del 2026-02-10 al 02-17, anteriores a su propia ultima edicion. Nunca fueron timestamps reales. Google infravalora el lastmod de todo el sitio cuando lo pilla siendo poco fiable.",
+          "recommendation": "Generarlos desde el campo date del frontmatter, que ya es un z.date() real en los 9 posts."
+        },
+        {
+          "title": "changefreq y priority son peso muerto",
+          "severity": "Low",
+          "description": "Google los ignora para rastreo y ranking. No hacen dano, solo mantenimiento inutil.",
+          "recommendation": "No arrastrarlos a la nueva configuracion."
+        }
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {
+        "name": "Fase 0: Riesgo abierto — lo hace Renato, no es codigo",
+        "timeframe": "Hoy",
+        "items": [
+          "Renombrar el perfil de Google Business de 'Private Studio - La Mejor Barberia de Barcelona' a exactamente 'Private Studio'. Riesgo de suspension del perfil, que para esta barberia es el canal principal de reservas.",
+          "Reclamar o dar de baja el listing roto de Fresha (404 en vivo, nombre con MANICURA RUSA).",
+          "Verificar el horario real del sabado y unificarlo entre web, GBP y Fresha.",
+          "Aportar 6 fotos reales de trabajos para la galeria y una foto por post de blog."
+        ]
+      },
+      {
+        "name": "Fase 1: Arreglos criticos de codigo",
+        "timeframe": "Semana 1",
+        "items": [
+          "Corregir @type BarberShop por HairSalon y las coordenadas GPS a 41.3918882, 2.152643 (Layout.astro).",
+          "Eliminar el potentialAction/SearchAction falso del WebSite.",
+          "Escribir el texto inline en Services.astro y FAQ.astro para que los 23 servicios, sus precios y las 12 FAQ existan en el HTML servido.",
+          "Generar hreflang por pagina desde el campo lang del frontmatter, con self-reference y x-default, y usar ese lang en el atributo html lang.",
+          "Anadir poster a los 3 video y preload=none al de About.",
+          "Anadir noindex a review.astro.",
+          "Dejar un unico h1 en la home y anadir la linea descriptiva con keywords bajo el hook.",
+          "Corregir el min-height del contenedor del hero que provoca el solape en desktop."
+        ]
+      },
+      {
+        "name": "Fase 2: Estructura y alta prioridad",
+        "timeframe": "Semanas 2-3",
+        "items": [
+          "Renderizar Gallery.astro con las fotos reales y rellenar image en los 9 posts.",
+          "Anadir hasOfferCatalog y areaServed al schema con los 23 servicios reales, y Booksy al sameAs.",
+          "Migrar Article a BlogPosting con image y dateModified. Anadir BreadcrumbList.",
+          "Aplicar la matriz de enlazado interno entre los 9 posts.",
+          "Subir los 4 tap targets por debajo de 48 px y montar el CTA fijo tambien en el blog.",
+          "Crear vercel.json con las cabeceras de seguridad.",
+          "Migrar a @astrojs/sitemap con lastmod real desde el frontmatter.",
+          "Crear la pagina de autor de Renato Rojas y enriquecer el Person del schema.",
+          "Alta en Paginas Amarillas."
+        ]
+      },
+      {
+        "name": "Fase 3: Contenido y autoridad",
+        "timeframe": "Mes 2",
+        "items": [
+          "Crear /visagismo-masculino-barcelona como pagina de servicio, no como post.",
+          "Reescribir el post de visagismo para pivotar a intencion local con CTA de reserva.",
+          "Retomar la publicacion con las 7 piezas priorizadas de cluster.md, todas de intencion comercial local.",
+          "Dejar de traducir contenido de negocio al ingles; reservar el ingles para el cluster expat.",
+          "Outreach a barcelona.place y barbershopmap.com para entrar en las listiculas que dominan las consultas de barrio y de las que beben Perplexity y los AI Overviews."
+        ]
+      },
+      {
+        "name": "Fase 4: Medicion",
+        "timeframe": "Continuo",
+        "items": [
+          "Verificar Google Search Console. Sigue pendiente desde febrero y sin el se audita a ciegas la mitad de las metricas.",
+          "Configurar una GOOGLE_API_KEY para tener CrUX y PageSpeed reales en vez de solo LAB.",
+          "Clave gratuita de Moz para subir el analisis de enlaces de Tier 0 a Tier 1.",
+          "Baseline de drift ya capturado el 2026-08-03: comparar tras cada fase con drift_compare.py."
+        ]
+      }
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/",
+    "urls_file": "urls.txt",
+    "homepage_render": "homepage-render.json"
+  }
+}
