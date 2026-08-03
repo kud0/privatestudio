@@ -40,6 +40,9 @@ const CONTROL = join(RAIZ, 'public', 'ads-control.json');
 const PANEL_NOMBRE = 'panel-76380b752010.html';
 const PANEL = join(RAIZ, 'public', PANEL_NOMBRE);
 const PLANTILLA = join(AQUI, 'panel-plantilla.html');
+// Copia de trabajo aparte, fuera del proyecto, para publicar en producción sin
+// interferir con la rama en la que se esté trabajando.
+const APARTADO = join(RAIZ, '..', '.publicacion-privatestudio');
 
 const NEGOCIO = 90283;
 // CORTE DE CABELLO / MENS HAIR CUT — 20,00 € · 35 min. Servicio de referencia:
@@ -170,6 +173,28 @@ async function historico() {
 
 const git = (...args) => ejecutar('git', args, { cwd: RAIZ });
 
+// Rama desde la que publica el hosting. Todo lo que no llegue aquí no existe
+// para el guardián de Google Ads.
+const RAMA_PRODUCCION = 'main';
+
+/**
+ * El repositorio es un sitio de trabajo: alguien puede estar en una rama de
+ * desarrollo cuando el cron se dispara. Si eso pasa, los commits del control se
+ * quedan en esa rama, el hosting no despliega nada y el guardián sigue leyendo
+ * un estado congelado sin que salte ninguna alarma.
+ *
+ * Ocurrió el 3 de agosto de 2026: el repositorio estaba en `seo/fase-1-criticos`
+ * y la campaña estuvo cinco horas decidiendo con la agenda de las nueve de la
+ * mañana. Por eso ahora se comprueba antes de publicar, y si no es la rama de
+ * producción se dice claramente en vez de fallar en silencio.
+ */
+async function ramaActual() {
+  try {
+    const { stdout } = await git('rev-parse', '--abbrev-ref', 'HEAD');
+    return stdout.trim();
+  } catch { return null; }
+}
+
 /**
  * Los instantes se guardan en ISO (UTC) porque es lo correcto para comparar,
  * pero los mensajes se leen a mano: ahí va la hora del reloj de la barbería.
@@ -295,11 +320,45 @@ async function publicar(control, anterior, historial) {
   const { stdout } = await git('status', '--porcelain', ...ficheros);
   if (!stdout.trim()) return 'idéntico a lo publicado, nada que hacer';
 
-  await git('add', ...ficheros);
-  await git('commit', '-m',
-    `control: campana ${control.estado} (${control.citas_48h} citas libres en los proximos 2 dias abiertos)`);
-  await git('push', 'origin', 'main');
-  return `publicado: ${anterior ?? '(nuevo)'} → ${control.estado}`;
+  const mensaje = `control: campana ${control.estado} (${control.citas_48h} citas libres en los proximos 2 dias abiertos)`;
+  const rama = await ramaActual();
+
+  if (rama === RAMA_PRODUCCION) {
+    await git('add', ...ficheros);
+    await git('commit', '-m', mensaje);
+    await git('push', 'origin', RAMA_PRODUCCION);
+    return `publicado: ${anterior ?? '(nuevo)'} → ${control.estado}`;
+  }
+
+  // Estamos en una rama de desarrollo. Se publica igual, por un lado, para que
+  // la campaña nunca dependa de en qué esté trabajando alguien.
+  await publicarDesdeApartado(ficheros, mensaje);
+  return `publicado en ${RAMA_PRODUCCION} desde apartado (el repo está en "${rama}"): ` +
+         `${anterior ?? '(nuevo)'} → ${control.estado}`;
+}
+
+/**
+ * Publica en la rama de producción sin tocar la rama en la que se esté
+ * trabajando, usando un worktree aparte. Así el control llega a la web aunque
+ * alguien tenga el repositorio en mitad de otra cosa.
+ */
+async function publicarDesdeApartado(ficheros, mensaje) {
+  const { copyFile } = await import('node:fs/promises');
+
+  try { await git('worktree', 'remove', '--force', APARTADO); } catch { /* no existía */ }
+  await git('fetch', 'origin', RAMA_PRODUCCION);
+  await git('worktree', 'add', '--force', '--detach', APARTADO, `origin/${RAMA_PRODUCCION}`);
+
+  const gitApartado = (...args) => ejecutar('git', args, { cwd: APARTADO });
+  try {
+    await gitApartado('checkout', '-B', RAMA_PRODUCCION, `origin/${RAMA_PRODUCCION}`);
+    for (const f of ficheros) await copyFile(join(RAIZ, f), join(APARTADO, 'privatestudio', f));
+    await gitApartado('add', ...ficheros.map(f => join('privatestudio', f)));
+    await gitApartado('commit', '-m', mensaje);
+    await gitApartado('push', 'origin', RAMA_PRODUCCION);
+  } finally {
+    try { await git('worktree', 'remove', '--force', APARTADO); } catch { /* da igual */ }
+  }
 }
 
 async function main() {
