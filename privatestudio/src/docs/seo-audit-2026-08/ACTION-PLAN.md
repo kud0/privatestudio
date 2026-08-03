@@ -181,7 +181,7 @@ Renderizar `Gallery.astro` con las fotos reales · `hasOfferCatalog` + `areaServ
 
 ### Fase 4 — Medición (continuo)
 
-- **Verificar Google Search Console.** Sigue pendiente desde febrero. Sin él se audita a ciegas la mitad de las métricas.
+- **Verificar Google Search Console.** Sigue pendiente desde febrero, cuando se anotó que hacía falta la contraseña del dominio. Verificado contra la documentación de Google: eso **solo aplica al método DNS**. Hay cuatro que no tocan el dominio — archivo HTML, etiqueta meta, Google Analytics y Google Tag Manager. El sitio ya sirve GTM (`GTM-WSZS5CV5`) y `Layout.astro:28` ya tiene el hueco de la meta preparado y comentado. **No es una tarea de Renato: se resuelve desde el código.**
 - `GOOGLE_API_KEY` para CrUX y PageSpeed reales en vez de solo LAB.
 - Clave gratuita de Moz para pasar el análisis de enlaces de Tier 0 a Tier 1.
 - **Baseline de drift ya capturada** el 2026-08-03. Comparar tras cada fase con `claude-seo run drift_compare.py`.
