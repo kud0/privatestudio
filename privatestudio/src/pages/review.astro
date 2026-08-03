@@ -1,15 +1,32 @@
 ---
-// Redirect page: barberbarcelona.es/review -> Google Maps WRITE REVIEW form
-// Opens directly to the review form, zero friction
-// Owner can share this link with clients via WhatsApp, QR code, business cards, etc.
+// Puente hacia el formulario de resena de Google.
+// Se comparte por WhatsApp, QR y tarjetas: barberbarcelona.es/review
+//
+// NO debe indexarse. No es contenido, es un redirector, y estaba servido con
+// 200 sin meta robots ni canonical: cualquier enlace entrante (y este se
+// reparte a mano) podia acabar metiendo en el indice una pagina que solo dice
+// "Redirigiendo a Google...".
+//
+// Un <meta http-equiv="refresh"> es un redirect blando. Lo correcto de verdad
+// es un 308 de servidor via vercel.json; queda para la fase 2, cuando se
+// anada ese fichero para las cabeceras de seguridad.
+const REVIEW_URL =
+  'https://search.google.com/local/writereview?placeid=ChIJSTi2fwCjpBIRs5IMGyNMj9s';
 ---
-<html>
+
+<!DOCTYPE html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="0;url=https://search.google.com/local/writereview?placeid=ChIJSTi2fwCjpBIRs5IMGyNMj9s" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
+    <meta http-equiv="refresh" content={`0;url=${REVIEW_URL}`} />
     <title>Opinar sobre Private Studio</title>
   </head>
   <body>
-    <p>Redirigiendo a Google... <a href="https://search.google.com/local/writereview?placeid=ChIJSTi2fwCjpBIRs5IMGyNMj9s">Click aquí si no te redirige</a></p>
+    <p>
+      Redirigiendo a Google…
+      <a href={REVIEW_URL} rel="nofollow">Haz clic aquí si no te redirige</a>
+    </p>
   </body>
 </html>
