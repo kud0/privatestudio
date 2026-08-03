@@ -5,6 +5,7 @@ date: 2026-02-16
 author: "Renato Rojas"
 tags: ["beard", "grooming", "products", "routine"]
 lang: en
+translationKey: "cuidado-barba"
 ---
 
 ## Why your beard needs a care routine

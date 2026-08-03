@@ -5,6 +5,7 @@ date: 2026-02-10
 author: "Renato Rojas"
 tags: ["trends", "haircut", "2026", "men's style"]
 lang: en
+translationKey: "tendencias-2026"
 ---
 
 ## The trends that will dominate 2026

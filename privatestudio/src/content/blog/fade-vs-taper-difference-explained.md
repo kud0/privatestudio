@@ -5,6 +5,7 @@ date: 2026-02-13
 author: "Renato Rojas"
 tags: ["fade", "taper", "haircut styles", "men's cuts"]
 lang: en
+translationKey: "fade-vs-taper"
 ---
 
 ## The most common confusion in the barbershop

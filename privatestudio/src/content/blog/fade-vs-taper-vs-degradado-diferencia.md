@@ -5,6 +5,7 @@ date: 2026-02-13
 author: "Renato Rojas"
 tags: ["fade", "taper", "degradado", "cortes de pelo"]
 lang: es
+translationKey: "fade-vs-taper"
 ---
 
 ## La confusión más común en la barbería

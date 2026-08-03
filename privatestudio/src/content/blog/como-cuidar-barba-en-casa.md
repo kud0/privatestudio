@@ -5,6 +5,7 @@ date: 2026-02-16
 author: "Renato Rojas"
 tags: ["barba", "cuidado", "productos", "rutina"]
 lang: es
+translationKey: "cuidado-barba"
 ---
 
 ## Por qué tu barba necesita una rutina de cuidado

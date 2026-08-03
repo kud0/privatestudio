@@ -4,19 +4,42 @@ import '../styles/custom.css';
 import GoogleTagManager from '../components/GoogleTagManager.astro';
 import MedicionReservas from '../components/MedicionReservas.astro';
 
+type Lang = 'es' | 'en';
+
 export interface Props {
 	title: string;
 	description?: string;
+	/** Idioma real del contenido servido. Alimenta <html lang> y og:locale. */
+	lang?: Lang;
+	/**
+	 * Rutas de las traducciones de ESTA pagina, por idioma.
+	 * Se omite cuando la pagina no tiene traduccion en una URL propia:
+	 * declarar un alternate que no existe es peor que no declarar ninguno.
+	 */
+	alternates?: Partial<Record<Lang, string>>;
 }
 
+const OG_LOCALE: Record<Lang, string> = { es: 'es_ES', en: 'en_US' };
+
 const canonicalDomain = 'https://www.barberbarcelona.es';
-const { title, description = 'Barbería premium en Barcelona especializada en visagismo y consultoría de imagen masculina. Cortes personalizados, ritual de barba y productos STMNT.' } = Astro.props;
+const {
+	title,
+	description = 'Barbería premium en Barcelona especializada en visagismo y consultoría de imagen masculina. Cortes personalizados, ritual de barba y productos STMNT.',
+	lang = 'es',
+	alternates,
+} = Astro.props;
 const canonicalUrl = canonicalDomain + Astro.url.pathname;
 const ogImage = canonicalDomain + '/images/ps-logo3.png';
+
+// Solo se emite el cluster hreflang si hay al menos dos versiones reales.
+// x-default apunta al espanol: el mercado local es el primario.
+const hreflangEntries = Object.entries(alternates ?? {}) as [Lang, string][];
+const emitHreflang = hreflangEntries.length > 1;
+const xDefault = alternates?.es;
 ---
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,9 +50,13 @@ const ogImage = canonicalDomain + '/images/ps-logo3.png';
 		<!-- Google Search Console verification -->
 		<!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
 
-		<!-- Hreflang -->
-		<link rel="alternate" hreflang="es" href={canonicalDomain + '/'} />
-		<link rel="alternate" hreflang="en" href={canonicalDomain + '/'} />
+		<!-- Hreflang: solo cuando existen traducciones en URLs propias -->
+		{emitHreflang && hreflangEntries.map(([code, path]) => (
+			<link rel="alternate" hreflang={code} href={canonicalDomain + path} />
+		))}
+		{emitHreflang && xDefault && (
+			<link rel="alternate" hreflang="x-default" href={canonicalDomain + xDefault} />
+		)}
 
 		<!-- Open Graph -->
 		<meta property="og:title" content={title} />
@@ -37,8 +64,7 @@ const ogImage = canonicalDomain + '/images/ps-logo3.png';
 		<meta property="og:image" content={ogImage} />
 		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:type" content="website" />
-		<meta property="og:locale" content="es_ES" />
-		<meta property="og:locale:alternate" content="en_US" />
+		<meta property="og:locale" content={OG_LOCALE[lang]} />
 
 		<!-- Twitter Cards -->
 		<meta name="twitter:card" content="summary_large_image" />

@@ -6,6 +6,7 @@ author: "Renato Rojas"
 tags: ["visagism", "haircut", "image consulting", "Barcelona"]
 instagram: https://www.instagram.com/p/DUp-YiKCLxH/
 lang: en
+translationKey: "visagismo"
 ---
 
 ## What is visagism?

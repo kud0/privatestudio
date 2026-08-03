@@ -5,6 +5,7 @@ date: 2026-02-10
 author: "Renato Rojas"
 tags: ["tendencias", "corte de pelo", "2026", "moda masculina"]
 lang: es
+translationKey: "tendencias-2026"
 ---
 
 ## Las tendencias que dominarán 2026

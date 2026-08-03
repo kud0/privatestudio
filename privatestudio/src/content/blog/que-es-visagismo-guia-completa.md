@@ -6,6 +6,7 @@ author: "Renato Rojas"
 tags: ["visagismo", "corte de pelo", "asesoría de imagen", "Barcelona"]
 instagram: https://www.instagram.com/p/DUp-YiKCLxH/
 lang: es
+translationKey: "visagismo"
 ---
 
 ## ¿Qué es el visagismo?
