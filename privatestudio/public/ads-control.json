@@ -1,20 +1,20 @@
 {
   "estado": "activa",
   "presupuesto_diario": 20,
-  "citas_48h": 16,
+  "citas_48h": 13,
   "proximos_abiertos": [
     {
       "fecha": "2026-08-03",
-      "citas": 0
+      "citas": 1
     },
     {
       "fecha": "2026-08-04",
-      "citas": 16
+      "citas": 12
     }
   ],
   "detalle_48h": {
-    "2026-08-03": 0,
-    "2026-08-04": 16
+    "2026-08-03": 1,
+    "2026-08-04": 12
   },
   "dias_ventana": [
     {
@@ -31,25 +31,25 @@
     },
     {
       "fecha": "2026-08-03",
-      "citas": 0,
+      "citas": 1,
       "cerrado": false,
       "decide": true
     },
     {
       "fecha": "2026-08-04",
-      "citas": 16,
+      "citas": 12,
       "cerrado": false,
       "decide": true
     },
     {
       "fecha": "2026-08-05",
-      "citas": 16,
+      "citas": 15,
       "cerrado": false,
       "decide": false
     },
     {
       "fecha": "2026-08-06",
-      "citas": 16,
+      "citas": 15,
       "cerrado": false,
       "decide": false
     },
@@ -91,7 +91,7 @@
     },
     {
       "fecha": "2026-08-13",
-      "citas": 19,
+      "citas": 18,
       "cerrado": false,
       "decide": false
     },
@@ -108,8 +108,8 @@
       "decide": false
     }
   ],
-  "citas_ventana": 167,
-  "actualizado": "2026-08-03T09:00:01.203Z",
+  "citas_ventana": 161,
+  "actualizado": "2026-08-03T11:00:01.508Z",
   "hoy_cerrado": false,
-  "motivo": "16 citas libres hoy y martes"
+  "motivo": "13 citas libres hoy y martes"
 }
