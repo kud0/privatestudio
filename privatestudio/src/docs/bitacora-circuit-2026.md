@@ -996,3 +996,53 @@ Sin eso, la campaña arranca con radio 1,5 y freno de gasto, pero **sin** las me
 - **filled:** 
 - Registro JSONL actualizado.
 
+### 2026-08-04 22:07 · 🔴 FALLO GRAVE: el guardián llevaba ~10 horas sin proteger nada
+
+**Qué preguntó Alex.** El panel llevaba toda la tarde sin actualizarse (dato fijo
+de las 11:51). Pidió, con razón, tomárselo en serio en vez de explicarlo sin más:
+*"lo tengo para tener un control y lo que tengo es un descontrol."*
+
+**Causa raíz encontrada.** El script programado cada hora bajo el nombre
+"Guardian Circuit 2026" (scriptId 12022525) **no era el guardián**: era
+`ads-script-consulta-30dias.js`, el script de solo lectura usado el 3 de agosto
+para revisar el gasto de 30 días. Se pegó en el mismo hueco autorizado para esa
+consulta puntual y nunca se repuso el código real — exactamente el riesgo que
+ya se había anotado el 3 de agosto ("volver a dejar el código del guardián si
+se usó el mismo slot") y que esta vez no se hizo.
+
+**Consecuencia real.** Desde las 11:55 de la mañana (hora del último edit del
+script) hasta las 22:07, el script se ejecutó cada hora y siempre "Finished
+successfully" — pero no hacía nada de lo que se supone: no comprobaba tope
+diario, no comprobaba tope de periodo, no pausaba por agenda llena, no
+publicaba métricas. La cuenta estuvo **sin ninguna protección automática
+durante ~10 horas** sin que ninguna alarma saltara, porque el script en sí no
+fallaba — solo hacía otra cosa.
+
+**Verificado antes de tocar nada:** gasto real de hoy en Google Ads = 20,14 €
+de 20 € (0,7% de más) — dentro de lo que el margen del 115% habría tolerado
+igualmente. **No hubo sobregasto real en la ventana sin protección**, por
+cómo repartió Google el gasto ese día, no porque el sistema lo evitara.
+
+**Arreglo:**
+1. Código real de `ads-script-guardia.js` publicado temporalmente en
+   `public/guardia.txt`, cargado en el editor del script vía CodeMirror,
+   guardado.
+2. Ejecutado una vez sin preview para confirmarlo en producción. Log real:
+   `control=activa | gastado=67.40 | hoy=20.14/20.00 → sin cambios`.
+3. CSV del panel verificado: `actualizado,2026-08-04 22:07` — coincide con la
+   ejecución. Panel al día.
+4. `public/guardia.txt` retirado del sitio otra vez.
+
+**Por qué no lo detectó nadie durante 10 horas.** La lista de Scripts de
+Google Ads solo enseña "Finished successfully" / número de líneas de log —
+no compara qué código hay cargado contra cuál debería estar. La única señal
+visible era el panel congelado, y se interpretó como "va con retraso" varias
+veces en vez de investigarse a fondo. **Lección: un dato que no cambia en
+horas hay que tratarlo como sospechoso desde el principio, no como normal
+hasta que se demuestre lo contrario.**
+
+**Pendiente para que esto no vuelva a pasar:** evitar reutilizar el slot
+autorizado del guardián para consultas puntuales. Si hace falta correr algo
+de una vez, hacerlo y **verificar en el mismo momento** que el código del
+guardián queda repuesto antes de cerrar la tarea — no dejarlo para luego.
+
