@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Private Studio · Auditoría SEO y trabajo realizado</title>
+
+<style>
+  :root {
+    --paper:      #F7F8F9;
+    --card:       #FFFFFF;
+    --ink:        #14181B;
+    --muted:      #5C666D;
+    --faint:      #646E75;
+    --rule:       #DEE4E8;
+    --rule-soft:  #EAEFF2;
+    --accent:     #1F566E;
+    --accent-dim: #E7EEF2;
+    --brass:      #8A6E33;
+    --brass-dim:  #F3EEE1;
+    --done:       #1B6047;
+    --done-dim:   #E4F0EB;
+    --todo:       #9A5514;
+    --todo-dim:   #F8ECE0;
+    --risk:       #98262A;
+    --risk-dim:   #F8E7E7;
+
+    --serif: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --measure: 68ch;
+    --s1: 0.35rem; --s2: 0.7rem; --s3: 1.1rem;
+    --s4: 1.8rem;  --s5: 2.8rem; --s6: 4.4rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E1214; --card: #161B1E; --ink: #E6ECEF; --muted: #9CA8AE;
+      --faint: #828E95; --rule: #263036; --rule-soft: #1D262B;
+      --accent: #6FB2CE; --accent-dim: #16303C;
+      --brass: #C6A55F; --brass-dim: #2C2718;
+      --done: #6BC49F; --done-dim: #133027;
+      --todo: #D99553; --todo-dim: #33230F;
+      --risk: #DE7E80; --risk-dim: #33191A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0E1214; --card: #161B1E; --ink: #E6ECEF; --muted: #9CA8AE;
+    --faint: #828E95; --rule: #263036; --rule-soft: #1D262B;
+    --accent: #6FB2CE; --accent-dim: #16303C;
+    --brass: #C6A55F; --brass-dim: #2C2718;
+    --done: #6BC49F; --done-dim: #133027;
+    --todo: #D99553; --todo-dim: #33230F;
+    --risk: #DE7E80; --risk-dim: #33191A;
+  }
+  :root[data-theme="light"] {
+    --paper: #F7F8F9; --card: #FFFFFF; --ink: #14181B; --muted: #5C666D;
+    --faint: #646E75; --rule: #DEE4E8; --rule-soft: #EAEFF2;
+    --accent: #1F566E; --accent-dim: #E7EEF2;
+    --brass: #8A6E33; --brass-dim: #F3EEE1;
+    --done: #1B6047; --done-dim: #E4F0EB;
+    --todo: #9A5514; --todo-dim: #F8ECE0;
+    --risk: #98262A; --risk-dim: #F8E7E7;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: var(--s5) var(--s3) var(--s6);
+  }
+
+  .wrap { max-width: 940px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--s6); }
+
+  /* ---------- masthead ---------- */
+  .masthead { display: flex; flex-direction: column; gap: var(--s3); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--brass); margin: 0;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(2.1rem, 5.2vw, 3.2rem);
+    line-height: 1.08; letter-spacing: -0.015em; text-wrap: balance; margin: 0;
+  }
+  .standfirst {
+    font-family: var(--serif); font-size: clamp(1.05rem, 2.1vw, 1.22rem);
+    line-height: 1.55; color: var(--muted); max-width: var(--measure); margin: 0;
+  }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: var(--s1) var(--s3);
+    font-family: var(--mono); font-size: 0.76rem; color: var(--faint);
+    border-top: 1px solid var(--rule); padding-top: var(--s2);
+  }
+  .meta b { color: var(--muted); font-weight: 500; }
+
+  /* ---------- sections ---------- */
+  section { display: flex; flex-direction: column; gap: var(--s4); }
+  .sec-head { display: flex; flex-direction: column; gap: var(--s2); }
+  h2 {
+    font-family: var(--serif); font-weight: 600; font-size: clamp(1.5rem, 3.2vw, 2rem);
+    line-height: 1.15; letter-spacing: -0.01em; margin: 0; text-wrap: balance;
+  }
+  h2 .num {
+    font-family: var(--mono); font-size: 0.7em; color: var(--brass);
+    font-weight: 400; margin-right: 0.6em; letter-spacing: 0.05em;
+  }
+  .lede { color: var(--muted); max-width: var(--measure); margin: 0; }
+  p { margin: 0; max-width: var(--measure); }
+
+  /* ---------- scoreboard ---------- */
+  .scoreboard {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+  }
+  .stat { background: var(--card); padding: var(--s3); display: flex; flex-direction: column; gap: var(--s1); }
+  .stat dt {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--faint);
+  }
+  .stat dd {
+    margin: 0; font-family: var(--serif); font-size: 1.85rem; line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .stat .sub { font-size: 0.78rem; color: var(--muted); font-family: var(--sans); line-height: 1.35; }
+  .arrow { color: var(--faint); font-size: 0.75em; margin: 0 0.15em; }
+  .was { color: var(--faint); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .now { color: var(--done); }
+
+  /* ---------- ledger ---------- */
+  .ledger { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--rule); }
+  .entry {
+    display: grid; grid-template-columns: 2.2rem 1fr; gap: 0 var(--s3);
+    padding: var(--s3) 0; border-bottom: 1px solid var(--rule-soft);
+  }
+  .entry-idx {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--faint);
+    padding-top: 0.28rem; font-variant-numeric: tabular-nums;
+  }
+  .entry-body { display: flex; flex-direction: column; gap: var(--s2); min-width: 0; }
+  .entry h3 {
+    font-family: var(--sans); font-size: 1rem; font-weight: 650;
+    margin: 0; line-height: 1.35; letter-spacing: -0.005em;
+  }
+  .entry p { font-size: 0.93rem; color: var(--muted); max-width: 62ch; }
+  .evidence {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
+    background: var(--rule-soft); border-left: 2px solid var(--accent);
+    padding: var(--s2) var(--s3); overflow-x: auto; white-space: pre-wrap;
+    word-break: break-word; line-height: 1.6;
+  }
+  .evidence b { color: var(--ink); font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--rule-soft); padding: 0.1em 0.35em; border-radius: 2px;
+    word-break: break-word;
+  }
+
+  /* ---------- chips ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: var(--s1); }
+  .chip {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 2px;
+    white-space: nowrap;
+  }
+  .c-done { background: var(--done-dim); color: var(--done); }
+  .c-todo { background: var(--todo-dim); color: var(--todo); }
+  .c-risk { background: var(--risk-dim); color: var(--risk); }
+  .c-file { background: var(--accent-dim); color: var(--accent); }
+  .c-who  { background: var(--brass-dim); color: var(--brass); }
+
+  /* ---------- tables ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--rule); background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 480px; }
+  th, td { text-align: left; padding: 0.62rem var(--s3); border-bottom: 1px solid var(--rule-soft); }
+  th {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--faint); font-weight: 500;
+    border-bottom: 1px solid var(--rule);
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .bar { display: block; height: 3px; background: var(--accent); border-radius: 2px; margin-top: 0.3rem; }
+  .bar-track { display: block; height: 3px; background: var(--rule); border-radius: 2px; margin-top: 0.3rem; }
+
+  /* ---------- task blocks ---------- */
+  .phase {
+    background: var(--card); border: 1px solid var(--rule);
+    padding: var(--s3) var(--s4) var(--s4); display: flex; flex-direction: column; gap: var(--s3);
+  }
+  .phase-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+  .phase-head h3 {
+    font-family: var(--serif); font-size: 1.2rem; font-weight: 600; margin: 0; letter-spacing: -0.005em;
+  }
+  .phase-when { font-family: var(--mono); font-size: 0.72rem; color: var(--faint); }
+  ul.tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s2); }
+  ul.tasks li {
+    position: relative; padding-left: 1.3rem;
+    font-size: 0.93rem; line-height: 1.5;
+  }
+  ul.tasks li::before {
+    content: ""; position: absolute; left: 0.15rem; top: 0.62em;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  ul.tasks li.hot::before { background: var(--risk); }
+  ul.tasks li b { font-weight: 650; }
+  ul.tasks li span.note { display: block; color: var(--muted); font-size: 0.87rem; }
+
+  .callout {
+    background: var(--risk-dim); border-left: 3px solid var(--risk);
+    padding: var(--s3) var(--s4); display: flex; flex-direction: column; gap: var(--s2);
+  }
+  .callout h3 { margin: 0; font-family: var(--sans); font-size: 1.02rem; font-weight: 680; color: var(--risk); }
+  .callout p { font-size: 0.93rem; max-width: 64ch; }
+  .callout blockquote {
+    margin: 0; font-family: var(--serif); font-style: italic;
+    font-size: 0.95rem; color: var(--muted); border-left: 2px solid var(--rule);
+    padding-left: var(--s3);
+  }
+
+  /* ---------- tarjetas de tarea con pasos ---------- */
+  .task {
+    background: var(--card); border: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+  }
+  .task.urgent { border-left: 3px solid var(--risk); }
+  .task-head {
+    padding: var(--s3) var(--s4); border-bottom: 1px solid var(--rule-soft);
+    display: flex; flex-direction: column; gap: var(--s2);
+  }
+  .task-head h3 {
+    font-family: var(--sans); font-size: 1.05rem; font-weight: 680;
+    margin: 0; line-height: 1.35; letter-spacing: -0.005em;
+  }
+  .task-head p { font-size: 0.92rem; color: var(--muted); max-width: 64ch; }
+  .task-body { padding: var(--s3) var(--s4) var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
+  .howto-label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--faint);
+  }
+  ol.steps {
+    list-style: none; counter-reset: step; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: var(--s2);
+  }
+  /* El contador va posicionado, NO como columna de grid: con display:grid en el
+     <li>, cada <b> y cada <em> se convierte en un item de grid independiente y
+     el texto se rompe a una palabra por linea. */
+  ol.steps li {
+    counter-increment: step; position: relative;
+    padding-left: 2.3rem; font-size: 0.93rem; line-height: 1.55;
+  }
+  ol.steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 0.1rem;
+    font-family: var(--mono); font-size: 0.72rem;
+    color: var(--accent); background: var(--accent-dim);
+    width: 1.45rem; height: 1.45rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  ol.steps li em { font-style: normal; color: var(--muted); font-size: 0.88rem; display: block; }
+  .caveat {
+    font-size: 0.85rem; color: var(--muted); border-top: 1px dashed var(--rule);
+    padding-top: var(--s2); max-width: 64ch;
+  }
+  .caveat b { color: var(--ink); }
+
+  /* ---------- bloques de contenido para pegar ---------- */
+  .copy {
+    border: 1px solid var(--rule); background: var(--card);
+    display: flex; flex-direction: column;
+  }
+  .copy-head {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+    gap: var(--s2); padding: var(--s2) var(--s3);
+    border-bottom: 1px solid var(--rule-soft); background: var(--rule-soft);
+  }
+  .copy-head .what {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+  }
+  .copy-head .lim { font-family: var(--mono); font-size: 0.68rem; color: var(--faint); }
+  .copy-text {
+    padding: var(--s3); font-size: 0.92rem; line-height: 1.6;
+    white-space: pre-wrap; overflow-wrap: break-word;
+  }
+  .copy-text.tight { white-space: pre-wrap; font-family: var(--mono); font-size: 0.82rem; line-height: 1.75; }
+  .swap {
+    display: grid; grid-template-columns: 1fr; gap: 1px;
+    background: var(--rule); border: 1px solid var(--rule);
+  }
+  @media (min-width: 620px) { .swap { grid-template-columns: 1fr 1fr; } }
+  .swap > div { background: var(--card); padding: var(--s3); display: flex; flex-direction: column; gap: var(--s2); }
+  .swap .tag {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase;
+  }
+  .swap .bad .tag { color: var(--risk); }
+  .swap .good .tag { color: var(--done); }
+  .swap .val { font-size: 0.95rem; line-height: 1.5; overflow-wrap: break-word; }
+  .swap .bad .val { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .swap .good .val { font-weight: 620; }
+  .swap .why { font-size: 0.84rem; color: var(--muted); }
+
+  .srv {
+    width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 460px;
+  }
+  .srv td { padding: 0.42rem var(--s3); border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  .srv td.p { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .srv td.d { font-family: var(--mono); color: var(--faint); white-space: nowrap; font-size: 0.8rem; }
+  .srv tr.cat td {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--brass); background: var(--rule-soft); border-bottom: 1px solid var(--rule);
+  }
+
+  .note-box {
+    border: 1px dashed var(--rule); padding: var(--s3) var(--s4);
+    display: flex; flex-direction: column; gap: var(--s2); background: var(--card);
+  }
+  .note-box h3 {
+    margin: 0; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--faint); font-weight: 500;
+  }
+  .note-box p, .note-box li { font-size: 0.89rem; color: var(--muted); }
+  .note-box ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: var(--s1); }
+
+  footer {
+    border-top: 1px solid var(--rule); padding-top: var(--s3);
+    font-family: var(--mono); font-size: 0.74rem; color: var(--faint);
+    display: flex; flex-direction: column; gap: var(--s1);
+  }
+
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px;
+  }
+
+  @media (max-width: 560px) {
+    .entry { grid-template-columns: 1fr; gap: var(--s2); }
+    .entry-idx { padding-top: 0; }
+    body { padding: var(--s4) var(--s3) var(--s5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Private Studio · Barcelona</p>
+    <h1>Auditoría SEO y trabajo realizado</h1>
+    <p class="standfirst">
+      Once agentes especializados analizaron www.barberbarcelona.es el 3 de agosto de 2026.
+      Este informe recoge lo que se ha corregido ya en el código y lo que queda por hacer,
+      separando lo que se arregla programando de lo que solo puede hacer Renato a mano.
+    </p>
+    <div class="meta">
+      <span><b>Fecha</b> 3 ago 2026</span>
+      <span><b>Herramienta</b> claude-seo 2.2.4</span>
+      <span><b>Alcance</b> 11 URLs</span>
+      <span><b>Stack</b> Astro 5 · Vercel</span>
+      <span><b>Rama</b> seo/fase-1-criticos</span>
+    </div>
+  </header>
+
+  <!-- ══════════ RIESGO ══════════ -->
+  <section>
+    <div class="callout">
+      <h3>Lo más urgente no es código: el nombre del perfil de Google</h3>
+      <p>
+        El perfil de Google Business se llama <b>«Private Studio - La Mejor Barberia de Barcelona»</b>.
+        Se comprobó resolviendo el enlace oficial que usa la propia web, que redirige a
+        <code>/maps/place/Private+Studio+-+La+Mejor+Barberia+de+Barcelona/</code>.
+      </p>
+      <blockquote>
+        «Including unnecessary information in your business name isn't permitted, and could
+        result in the suspension of your Business Profile.» — Normas de Google Business Profile
+      </blockquote>
+      <p>
+        Google pone justo este patrón como ejemplo de lo no aceptable («TD Bank, America's Most
+        Convenient Bank» frente a «TD Bank»). Para una barbería el perfil de Google <b>es</b> el
+        negocio: el map pack trae la mayoría de las reservas, así que una suspensión no es un
+        problema de posicionamiento, es quedarse sin canal. Renombrarlo a exactamente
+        <b>«Private Studio»</b> es gratis y tarda un minuto, pero solo puede hacerlo Renato desde
+        su perfil.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════ ESTADO ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">01</span>Punto de partida</h2>
+      <p class="lede">
+        Puntuación medida <b>antes</b> de aplicar ninguna corrección. No se ha vuelto a pasar la
+        auditoría completa, así que aquí no aparece una nota nueva: lo que sí está medido es cada
+        arreglo por separado, en la sección siguiente.
+      </p>
+    </div>
+
+    <dl class="scoreboard">
+      <div class="stat">
+        <dt>Health score</dt>
+        <dd>59<span style="font-size:0.5em;color:var(--faint)">/100</span></dd>
+        <span class="sub">Media ponderada de 7 categorías</span>
+      </div>
+      <div class="stat">
+        <dt>Peso de la home</dt>
+        <dd><span class="was">26,4</span> <span class="arrow">→</span> <span class="now">8,0</span></dd>
+        <span class="sub">MB de media en la carga inicial, móvil</span>
+      </div>
+      <div class="stat">
+        <dt>Texto invisible</dt>
+        <dd><span class="was">73</span> <span class="arrow">→</span> <span class="now">0</span></dd>
+        <span class="sub">Elementos servidos vacíos sin ejecutar JavaScript</span>
+      </div>
+      <div class="stat">
+        <dt>Titulares H1</dt>
+        <dd><span class="was">7</span> <span class="arrow">→</span> <span class="now">2</span></dd>
+        <span class="sub">Ninguno tenía palabras clave; ahora sí</span>
+      </div>
+    </dl>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Categoría</th><th>Peso</th><th>Nota</th><th style="width:34%">&nbsp;</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Calidad de contenido</td><td class="n">23 %</td><td class="n">60</td><td><span class="bar-track"><span class="bar" style="width:60%"></span></span></td></tr>
+          <tr><td>SEO técnico</td><td class="n">22 %</td><td class="n">74</td><td><span class="bar-track"><span class="bar" style="width:74%"></span></span></td></tr>
+          <tr><td>SEO on-page</td><td class="n">20 %</td><td class="n">48</td><td><span class="bar-track"><span class="bar" style="width:48%"></span></span></td></tr>
+          <tr><td>Datos estructurados</td><td class="n">10 %</td><td class="n">42</td><td><span class="bar-track"><span class="bar" style="width:42%"></span></span></td></tr>
+          <tr><td>Rendimiento (móvil)</td><td class="n">10 %</td><td class="n">52</td><td><span class="bar-track"><span class="bar" style="width:52%"></span></span></td></tr>
+          <tr><td>Preparación para búsqueda con IA</td><td class="n">10 %</td><td class="n">68</td><td><span class="bar-track"><span class="bar" style="width:68%"></span></span></td></tr>
+          <tr><td>Imágenes</td><td class="n">5 %</td><td class="n">55</td><td><span class="bar-track"><span class="bar" style="width:55%"></span></span></td></tr>
+          <tr><td>SEO local <span class="chip c-who">no pondera</span></td><td class="n">—</td><td class="n">60</td><td><span class="bar-track"><span class="bar" style="width:60%;background:var(--brass)"></span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note-box">
+      <h3>Lo que esta auditoría no pudo medir</h3>
+      <ul>
+        <li><b>Sin Google Search Console, CrUX ni PageSpeed.</b> No hay credenciales, así que todas las cifras de rendimiento son de laboratorio. Laboratorio no es lo que Google usa para posicionar.</li>
+        <li><b>Sin volúmenes de búsqueda ni posiciones confirmadas.</b> Los resultados de Google se leyeron con búsqueda web: son señal direccional, no ranking medido.</li>
+        <li><b>Análisis de enlaces en nivel básico.</b> Solo Common Crawl, sin datos de autoridad de dominio. El agente se negó a dar una nota numérica antes que inventarla.</li>
+        <li>Los enlaces de la biografía de Instagram y Facebook no se pueden verificar sin iniciar sesión.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ HECHO ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">02</span>Lo que ya está corregido</h2>
+      <p class="lede">
+        Siete cambios en la rama <code>seo/fase-1-criticos</code>, un commit por tema para que se
+        puedan revisar de uno en uno. Cada uno se verificó sobre la web construida, y el de
+        rendimiento además en un navegador real contra producción.
+      </p>
+    </div>
+
+    <div class="ledger">
+
+      <article class="entry">
+        <div class="entry-idx">01</div>
+        <div class="entry-body">
+          <h3>El tipo de negocio declarado a Google no existía</h3>
+          <p>
+            La web se declaraba como <code>BarberShop</code>, un tipo que no existe en el
+            vocabulario de schema.org. También situaba el local a 74 metros de su dirección real,
+            y declaraba un buscador interno que la web no tiene.
+          </p>
+          <div class="evidence">tipo      <b>BarberShop → HairSalon</b>  (schema.org/BarberShop devuelve 404)
+posición  <b>41.3925, 2.1530 → 41.3918882, 2.152643</b>
+          el pin real de Google y el geocodificado coinciden entre sí con 2,1 m
+buscador  potentialAction eliminado — el HTML de / y de /?q=test es idéntico
+perfiles  Booksy añadido a sameAs (4,9★, 206 reseñas)</div>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Layout.astro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">02</div>
+        <div class="entry-body">
+          <h3>Los servicios y las preguntas frecuentes no existían en la página</h3>
+          <p>
+            Los 23 servicios con sus precios y las 12 preguntas frecuentes solo vivían dentro de un
+            bloque de JavaScript. Google sí ejecuta JavaScript y acababa viéndolos, así que no era
+            invisibilidad en Google. El problema es quien <b>no</b> lo ejecuta: los rastreadores de
+            ChatGPT, Claude y Perplexity. Para ellos, Private Studio era una barbería sin catálogo
+            ni precios: solo quedaban «25,00 €» y «45min» flotando junto a un titular vacío.
+          </p>
+          <div class="evidence">elementos vacíos sin ejecutar JavaScript   <b>73 → 0</b>
+nombres de servicio legibles              <b>22 de 22</b>
+preguntas frecuentes legibles             <b>12 de 12</b>
+cambio de idioma a inglés                 verificado en navegador, intacto</div>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Services.astro</span>
+            <span class="chip c-file">FAQ.astro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">03</div>
+        <div class="entry-body">
+          <h3>Las etiquetas de idioma estaban mal en todo el sitio</h3>
+          <p>
+            Cada página declaraba la portada como su versión en español <em>y</em> en inglés, en vez
+            de su traducción real. Los cuatro pares de artículos que sí existen no estaban
+            enlazados entre sí. Además, los artículos escritos íntegramente en inglés se servían
+            marcados como español.
+          </p>
+          <div class="evidence">pares de traducción enlazados     <b>4 de 4</b>, recíprocos, con x-default
+artículos en inglés               ahora se sirven como <b>lang="en"</b>
+portada y listado del blog        dejan de declarar traducciones que no existen</div>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Layout.astro</span>
+            <span class="chip c-file">blog/[...slug].astro</span>
+            <span class="chip c-file">content/config.ts</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">04</div>
+        <div class="entry-body">
+          <h3>La portada descargaba 26 MB de vídeo en el móvil</h3>
+          <p>
+            Ninguno de los tres vídeos tenía imagen de portada, así que había que esperar a
+            descodificar el vídeo para pintar algo. Encima, el vídeo de la sección «Nosotros» se
+            descargaba siempre pese a estar muy por debajo del pliegue, y el del encabezado se
+            bajaba <b>dos veces</b> porque el diseño lo duplica para móvil y escritorio.
+          </p>
+          <div class="evidence">media en la carga inicial      <b>26,37 MB → 7,95 MB</b>   (−70 %)
+imagen de portada              añadida a los 3 vídeos (144 KB y 32 KB)
+vídeo de «Nosotros»            solo se descarga al entrar en pantalla
+vídeo del encabezado           solo se carga el del tamaño de pantalla activo</div>
+          <p style="font-size:0.88rem;color:var(--faint)">
+            Medido en navegador, mismo viewport, producción contra la versión corregida. El tiempo
+            de pintado no se ha vuelto a medir: eso pide datos reales de Google, que hoy no
+            tenemos.
+          </p>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Hero.astro</span>
+            <span class="chip c-file">About.astro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">05</div>
+        <div class="entry-body">
+          <h3>Ningún titular decía a qué se dedica el negocio</h3>
+          <p>
+            La portada tenía siete titulares principales y en ninguno aparecía «barbería»,
+            «Barcelona» ni «visagismo». En toda la primera pantalla del móvil no salía la palabra
+            barbería: quien llegaba desde Google no sabía si esto era una barbería, un estudio de
+            fotografía o una consultoría de imagen. El gancho de marca se mantiene intacto; debajo
+            se añadió una línea que sí lo dice.
+          </p>
+          <div class="evidence">titulares principales   <b>7 → 2</b>
+texto nuevo             «Barbería premium en el Eixample, Barcelona —
+                        visagismo y asesoría de imagen masculina»
+traducido               sí, entra por el diccionario en español e inglés</div>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Hero.astro</span>
+            <span class="chip c-file">Brands.astro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">06</div>
+        <div class="entry-body">
+          <h3>La página de reseñas podía acabar en Google</h3>
+          <p>
+            <code>/review</code> es el atajo que se comparte por WhatsApp y QR para pedir reseñas.
+            Se servía como una página normal, sin instrucción de no indexar. En cuanto alguien la
+            enlazara, Google podía indexar una página cuyo único contenido es «Redirigiendo a
+            Google…».
+          </p>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">review.astro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-idx">07</div>
+        <div class="entry-body">
+          <h3>En pantallas grandes el texto se escribía encima del titular</h3>
+          <p>
+            No es SEO, pero se ve. El titular del encabezado rota entre tres frases y el hueco
+            reservado asumía cuatro líneas; dos de las tres frases ocupan cinco en pantallas de
+            1920 píxeles o más, y el párrafo de debajo invadía el titular. A 1440 píxeles no se
+            reproduce, que es probablemente por qué había pasado desapercibido.
+          </p>
+          <div class="evidence">medido en 1024, 1280, 1440, 1920 y 2560 px × 3 variantes
+antes    solape de 14 px desde 1920 px, en 2 de las 3 frases
+después  entre 43 y 102 px de holgura, sin solape en ninguna combinación</div>
+          <div class="chips">
+            <span class="chip c-done">hecho</span>
+            <span class="chip c-file">Hero.astro</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ══════════ RENATO ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">03</span>Lo que solo puede hacer Renato</h2>
+      <p class="lede">
+        Nada de esto se arregla programando. Es, con diferencia, lo que más impacto tiene por
+        esfuerzo dedicado.
+      </p>
+    </div>
+
+    <div class="task urgent">
+      <div class="task-head">
+        <h3>1 · Renombrar el perfil de Google a «Private Studio»</h3>
+        <p>
+          Es lo primero de la lista y lo más rápido. Hay que quitar el añadido
+          «- La Mejor Barberia de Barcelona»: incumple las normas de Google y arriesga la
+          suspensión del perfil, que es de donde vienen la mayoría de las reservas.
+        </p>
+        <div class="chips">
+          <span class="chip c-risk">riesgo abierto</span>
+          <span class="chip c-who">Renato</span>
+          <span class="chip c-todo">2 minutos</span>
+        </div>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Cómo hacerlo</span>
+        <ol class="steps">
+          <li>Entrar en Google con <b>la cuenta que gestiona el negocio</b>. Si no es la correcta, no aparecerá la opción de editar.</li>
+          <li>Buscar en Google «Private Studio» o abrir la app de Google Maps y tocar <b>Empresa</b>, abajo a la derecha.</li>
+          <li>Pulsar <b>Editar perfil</b>.</li>
+          <li>En el campo del nombre, dejar exactamente <b>Private Studio</b>. Nada más: ni ciudad, ni «barbería», ni eslogan.<em>Google prohíbe expresamente meter eslóganes o palabras clave en el nombre. Ese es justo el motivo por el que hay que cambiarlo.</em></li>
+          <li>Pulsar <b>Guardar</b>.</li>
+        </ol>
+        <p class="caveat">
+          <b>Qué esperar después:</b> Google revisa todos los cambios antes de publicarlos, así
+          que no es instantáneo. Al cambiar el nombre de un negocio ya verificado, Google
+          <b>puede pedir volver a verificarlo</b> (normalmente con una postal, una llamada o un
+          vídeo del local). Es normal y merece la pena: el riesgo de dejarlo como está es perder
+          el perfil entero.
+        </p>
+      </div>
+    </div>
+
+    <div class="task urgent">
+      <div class="task-head">
+        <h3>2 · Arreglar o eliminar la ficha de Fresha</h3>
+        <p>
+          Hay una ficha indexada en Google como «BARBERÍA | PRIVATE STUDIO | MANICURA RUSA»
+          —un servicio que ni siquiera se ofrece— y su enlace da error. Quien la encuentra en
+          Google y hace clic, llega a una página muerta y se va.
+        </p>
+        <div class="chips">
+          <span class="chip c-risk">pierde clientes</span>
+          <span class="chip c-who">Renato</span>
+          <span class="chip c-todo">15 minutos</span>
+        </div>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Cómo hacerlo</span>
+        <ol class="steps">
+          <li>Buscar en Google <b>«Private Studio Fresha»</b> para dar con la ficha exacta que está indexada.<em>No pongo aquí el enlace directo porque la ficha da error y no he podido confirmar su dirección real.</em></li>
+          <li>Si en su día se creó una cuenta en Fresha, entrar en <b>fresha.com</b> y comprobar si el negocio sigue ahí.</li>
+          <li>Si el negocio ya no usa Fresha, <b>pedir la eliminación de la ficha</b> escribiendo a su soporte desde <b>support.fresha.com</b>, indicando el nombre, la dirección y que el listado está obsoleto.</li>
+          <li>Si sí se quiere mantener: corregir el nombre a <b>Private Studio</b>, quitar «MANICURA RUSA», y dejar dirección, teléfono y horario idénticos a los de Google y la web.</li>
+        </ol>
+        <p class="caveat">
+          <b>Por qué importa más de lo que parece:</b> Google cruza el nombre, la dirección y el
+          teléfono del negocio entre todos los sitios donde aparece. Cuando no coinciden, duda de
+          cuál es el bueno y baja la confianza en el negocio entero. Un solo listado con otro
+          nombre hace daño en todos lados.
+        </p>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-head">
+        <h3>3 · Mandar fotos de trabajos reales</h3>
+        <p>
+          Es el mayor hueco de credibilidad de la web. La galería lleva construida desde siempre
+          pero está desconectada y sus imágenes no existen, y siete de los nueve artículos del
+          blog no tienen ni una foto. Hoy ni Google ni ChatGPT tienen forma de saber que Renato
+          corta bien el pelo.
+        </p>
+        <div class="chips">
+          <span class="chip c-who">Renato</span>
+          <span class="chip c-todo">1 hora</span>
+          <span class="chip c-file">desbloquea 2 tareas de código</span>
+        </div>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Qué mandar</span>
+        <ol class="steps">
+          <li><b>6 fotos para la galería.</b> Trabajos terminados, variados entre sí: un fade, un corte largo, un ritual de barba, una coloración. Que no parezcan seis veces el mismo corte.</li>
+          <li><b>Ideal: 3 o 4 en antes y después.</b> Es lo que mejor demuestra el visagismo, que es el argumento diferencial del negocio, y lo que ningún competidor de la zona está enseñando.</li>
+          <li><b>1 foto por artículo del blog</b>, que ilustre el tema. Van 7 pendientes.</li>
+          <li><b>Una foto de Renato trabajando</b>, para la página de autor.</li>
+        </ol>
+        <span class="howto-label" style="margin-top:var(--s2)">Cómo hacerlas</span>
+        <ol class="steps">
+          <li>Con el móvil vale de sobra. <b>Luz natural</b>, cerca del escaparate, mejor que con los focos del techo.</li>
+          <li>Las 6 de la galería, <b>en horizontal o cuadrado</b>.<em>La web las recorta a una tira apaisada: una foto vertical pierde más de la mitad. Las del blog y el retrato, como salga.</em></li>
+          <li><b>Siempre el mismo encuadre</b> para el antes y el después: misma distancia, mismo ángulo. Si cambia el encuadre, la comparación no se lee.</li>
+          <li><b>Sin filtros.</b> Nada de belleza automática ni saturación: se nota y resta credibilidad.</li>
+          <li>Si sale la cara del cliente, <b>pedirle permiso</b>. Si no lo da, vale con encuadrar de la nariz para arriba o de perfil.<em>Publicar la cara de un cliente identificable sin su permiso da problemas de protección de datos.</em></li>
+        </ol>
+        <span class="howto-label" style="margin-top:var(--s2)">A quién se mandan</span>
+        <ol class="steps">
+          <li><b>A Alex, por WhatsApp.</b> No hay que subirlas a ningún sitio ni renombrarlas: él las prepara y las publica en la web.</li>
+          <li>Adjuntarlas <b>como «documento» o «archivo», nunca como «foto»</b>.<em>Enviadas como foto, WhatsApp las comprime y llegan sin resolución suficiente para la web. Como archivo llegan en calidad original.</em></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-head">
+        <h3>4 · Confirmar el horario real del sábado</h3>
+        <p>
+          La web dice 11:00–19:00 y dos fuentes indexadas en Google dicen 10:00–16:00. Uno de los
+          dos está mal y no se puede saber cuál desde fuera.
+        </p>
+        <div class="chips">
+          <span class="chip c-who">Renato</span>
+          <span class="chip c-todo">5 minutos</span>
+        </div>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Cómo hacerlo</span>
+        <ol class="steps">
+          <li>Decir cuál es el horario correcto de los sábados.</li>
+          <li>Comprobar que coincide en <b>Google</b> (mismo sitio que la tarea 1: Editar perfil → Horario).</li>
+          <li>Comprobarlo también en <b>Booksy</b>, que es donde reserva la gente.</li>
+          <li>Si Fresha se mantiene (tarea 2), ponerlo ahí también.</li>
+          <li>Avisar para corregirlo en la web, que se toca desde el código.</li>
+        </ol>
+        <p class="caveat">
+          Un cliente que se planta en la puerta un sábado a las 16:30 porque Google decía que
+          estaba abierto no vuelve, y muchas veces deja una reseña mala. Esto vale más por las
+          reseñas que se evitan que por el posicionamiento.
+        </p>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-head">
+        <h3>5 · Dar de alta el negocio en Páginas Amarillas</h3>
+        <p>
+          Es gratis y es el directorio español con más autoridad. Dos competidores de la misma
+          calle sí están listados —Muntaner 113 y Muntaner 176— y Private Studio no.
+        </p>
+        <div class="chips">
+          <span class="chip c-who">Renato</span>
+          <span class="chip c-todo">20 minutos</span>
+        </div>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Cómo hacerlo</span>
+        <ol class="steps">
+          <li>Entrar en <b>paginasamarillas.es</b> y buscar la opción de registro o de dar de alta una empresa.<em>Su página de registro es paginasamarillas.es/a/registro/, pero no he podido comprobarla: el sitio bloquea los accesos automatizados. Desde un navegador normal debería abrir sin problema.</em></li>
+          <li>Rellenar los datos <b>exactamente igual</b> que en Google, carácter por carácter:<em>Private Studio · Carrer de Muntaner, 172, BAJO 01 · 08036 Barcelona · +34 624 367 153 · www.barberbarcelona.es</em></li>
+          <li>Elegir la categoría <b>Barberías</b> o <b>Peluquerías de caballero</b>.</li>
+          <li>Cuidado con las llamadas comerciales que suelen venir después: <b>el alta básica es gratuita</b> y no hace falta contratar nada de pago para esto.</li>
+        </ol>
+        <p class="caveat">
+          Mismo criterio para <b>barcelona.place</b>, que tiene un artículo de «las mejores
+          barberías del Eixample» donde Private Studio no aparece y admite alta directa en
+          <b>barcelona.place/join/</b> (comprobado, funciona). Ese sitio importa especialmente:
+          es el tipo de página de la que se nutren ChatGPT y Perplexity cuando alguien les
+          pregunta por la mejor barbería de Barcelona.
+        </p>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <h3>Corrección · Search Console ya no depende de Renato</h3>
+      <p>
+        El informe de febrero decía que hacía falta «el usuario y la contraseña del dominio» para
+        verificar Google Search Console, y por eso lleva parado desde entonces. Al comprobar la
+        documentación de Google, eso <b>solo es cierto para uno de los métodos</b>. Hay cuatro que
+        no tocan el dominio: subir un archivo, poner una etiqueta en el código, usar Google
+        Analytics o usar Google Tag Manager.
+      </p>
+      <p>
+        La web ya lleva Google Tag Manager instalado, y el hueco para la etiqueta ya está
+        preparado en el código. Es decir: <b>esto se resuelve desde el código en cinco minutos</b>,
+        sin pedirle nada a Renato. Sale de su lista y pasa a la mía.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════ CONTENIDO LISTO ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">04</span>El contenido, ya escrito</h2>
+      <p class="lede">
+        Esto no es qué corregir, es <b>qué poner</b>. Todo está redactado con los datos reales del
+        negocio y listo para copiar y pegar tal cual, campo por campo.
+      </p>
+    </div>
+
+    <!-- ---------- GBP nombre ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Google · Nombre del negocio</h3>
+        <div class="chips"><span class="chip c-risk">crítico</span></div>
+      </div>
+      <div class="task-body">
+        <div class="swap">
+          <div class="bad">
+            <span class="tag">Ahora</span>
+            <span class="val">Private Studio - La Mejor Barberia de Barcelona</span>
+            <span class="why">Eslogan + superlativo. Prohibido, y motivo habitual de suspensión.</span>
+          </div>
+          <div class="good">
+            <span class="tag">Poner</span>
+            <span class="val">Private Studio</span>
+            <span class="why">Solo el nombre real. Las palabras clave van en la descripción y los servicios, que es donde sí están permitidas.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- GBP descripción ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Google · Descripción del negocio</h3>
+        <p>
+          Ahora mismo está vacía o genérica. Es el único sitio del perfil donde las palabras clave
+          sí están permitidas, y no se está usando.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head">
+            <span class="what">Pegar en «Descripción»</span>
+            <span class="lim">665 de 750 caracteres</span>
+          </div>
+          <div class="copy-text">Private Studio es una barbería premium en el Eixample de Barcelona, en Carrer de Muntaner 172, especializada en visagismo masculino: analizamos la forma de tu rostro, tu tipo de cabello y tu estilo de vida para diseñar el corte que de verdad te favorece, en lugar de repetir siempre el mismo.
+
+Fundada en 2024 por Renato Rojas, barbero peruano con más de una década de experiencia, trabajamos corte de precisión, ritual de barba con navaja y toalla caliente, coloración masculina, camuflaje de canas y ondulación permanente.
+
+Usamos producto profesional STMNT Grooming Goods. Atendemos en español e inglés, con cita previa. Reserva online o llámanos al 624 367 153.</div>
+        </div>
+        <p class="caveat">
+          <b>Por qué está escrita así:</b> menciona barbería, Barcelona, Eixample, visagismo y
+          asesoría masculina de forma natural, en frases que una persona leería sin sospechar. La
+          calle y el año de apertura le dan a Google señales que puede cruzar con la web y con
+          otros directorios.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- GBP categorías ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Google · Categorías</h3>
+        <p>
+          La categoría principal es el factor que más pesa para salir en el mapa. Debe ser una sola
+          y la más específica posible.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head"><span class="what">Categoría principal</span></div>
+          <div class="copy-text tight">Barbería</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head">
+            <span class="what">Categorías secundarias</span>
+            <span class="lim">añadir solo las que se ofrezcan de verdad</span>
+          </div>
+          <div class="copy-text tight">Peluquería de caballeros
+Salón de belleza
+Servicio de depilación con cera</div>
+        </div>
+        <p class="caveat">
+          No añadir más de tres o cuatro. Meter categorías que no se ofrecen diluye la principal y
+          hace aparecer el negocio en búsquedas que no convierten. Los nombres exactos que ofrece
+          Google pueden variar ligeramente: elegir el más parecido de su lista desplegable.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- GBP servicios ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Google · Servicios y precios</h3>
+        <p>
+          Los 22 servicios reales con sus precios y duración, sacados directamente de la web. Hoy
+          no están en el perfil de Google, y son justo lo que la gente busca antes de reservar.
+        </p>
+        <div class="chips"><span class="chip c-todo">30 minutos de tecleo</span></div>
+      </div>
+      <div class="task-body">
+        <div class="tablewrap">
+          <table class="srv">
+            <tbody>
+              <tr class="cat"><td colspan="3">Corte de cabello</td></tr>
+              <tr><td>Corte + asesoría personalizada</td><td class="d">45 min</td><td class="p">25,00 €</td></tr>
+              <tr><td>Corte de cabello</td><td class="d">35 min</td><td class="p">20,00 €</td></tr>
+              <tr><td>Corte de cabello (premium) + cejas</td><td class="d">45 min</td><td class="p">28,00 €</td></tr>
+              <tr><td>Corte de cabello (largo)</td><td class="d">50 min</td><td class="p">30,00 €</td></tr>
+              <tr><td>Corte (premium) + diseño de barba a navaja</td><td class="d">50 min</td><td class="p">30,00 €</td></tr>
+              <tr><td>Corte + ritual de barba (presidencial)</td><td class="d">1 h</td><td class="p">36,00 €</td></tr>
+              <tr><td>Asesoría completa: cabello + ritual de barba</td><td class="d">1 h</td><td class="p">36,00 €</td></tr>
+              <tr class="cat"><td colspan="3">Arreglo de barba</td></tr>
+              <tr><td>Ritual de barba (presidencial)</td><td class="d">25 min</td><td class="p">18,00 €</td></tr>
+              <tr><td>Tinturación de barba</td><td class="d">30 min</td><td class="p">15,00 €</td></tr>
+              <tr><td>Diseño de barba con máquina</td><td class="d">15 min</td><td class="p">15,00 €</td></tr>
+              <tr class="cat"><td colspan="3">Coloración</td></tr>
+              <tr><td>Cover Gray — camuflaje natural de canas</td><td class="d">30 min</td><td class="p">30,00 €</td></tr>
+              <tr><td>Tinturación rubio / gris</td><td class="d">1 h 30</td><td class="p">desde 90 €</td></tr>
+              <tr><td>Tinturación de cabello</td><td class="d">30 min</td><td class="p">desde 80 €</td></tr>
+              <tr><td>Mechas o iluminación masculina</td><td class="d">1 h</td><td class="p">desde 80 €</td></tr>
+              <tr><td>Matiz shampoo</td><td class="d">15 min</td><td class="p">10,00 €</td></tr>
+              <tr><td>Repolarización hidratante capilar</td><td class="d">10 min</td><td class="p">10,00 €</td></tr>
+              <tr class="cat"><td colspan="3">Ondulación permanente</td></tr>
+              <tr><td>Ondulación permanente (parte superior)</td><td class="d">1 h 15</td><td class="p">80,00 €</td></tr>
+              <tr><td>Ondulación permanente (cabello completo)</td><td class="d">1 h 30</td><td class="p">100,00 €</td></tr>
+              <tr class="cat"><td colspan="3">Depilación con cera</td></tr>
+              <tr><td>Depilación de cejas con cera</td><td class="d">10 min</td><td class="p">10,00 €</td></tr>
+              <tr><td>Depilación de nariz y orejas</td><td class="d">10 min</td><td class="p">10,00 €</td></tr>
+              <tr><td>Cejas con navaja</td><td class="d">30 min</td><td class="p">4,00 €</td></tr>
+              <tr><td>Combo waxing</td><td class="d">10 min</td><td class="p">15,00 €</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caveat">
+          <b>Empezar por estos cuatro</b> si no hay tiempo de meterlos todos de golpe: corte +
+          asesoría personalizada, corte + ritual de barba, ritual de barba y Cover Gray. Son los
+          que mejor describen el posicionamiento premium y los que traen la búsqueda con más
+          intención de compra.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- GBP preguntas ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Google · Preguntas y respuestas</h3>
+        <p>
+          Google deja que el propio negocio publique preguntas y se las responda. Es de las cosas
+          menos usadas y más rentables: ocupa espacio en la ficha y responde justo lo que frena la
+          reserva. Se publican desde la ficha, en «Hacer una pregunta», y luego se responden desde
+          la misma cuenta.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head"><span class="what">Pregunta 1</span></div>
+          <div class="copy-text">¿Qué es el visagismo y en qué se diferencia de un corte normal?
+
+En un corte normal pides un estilo y se ejecuta. En una asesoría de visagismo analizamos primero la forma de tu rostro, la línea de tu cráneo, tu tipo de cabello y tu estilo de vida, y a partir de ahí diseñamos el corte que mejor equilibra tus proporciones. Es la base de todos nuestros servicios y por eso nuestros cortes incluyen esa consulta previa.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Pregunta 2</span></div>
+          <div class="copy-text">¿Cuánto cuesta un corte de pelo en Private Studio?
+
+El corte de cabello son 20 €. El corte con asesoría personalizada de visagismo, 25 €, e incluye análisis de rostro, lavado premium y acabado con producto profesional. El corte con ritual de barba completo son 36 €. Puedes ver todos los servicios y precios en barberbarcelona.es.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Pregunta 3</span></div>
+          <div class="copy-text">¿Hace falta reservar o atendéis sin cita?
+
+Trabajamos con cita previa para poder dedicarle a cada cliente el tiempo que necesita sin prisas. Puedes reservar online en cualquier momento desde barberbarcelona.es o llamarnos al 624 367 153. Si tienes prisa, llámanos igualmente y miramos si hay hueco ese mismo día.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Pregunta 4</span></div>
+          <div class="copy-text">¿Atendéis en inglés?
+
+Sí. Atendemos en español e inglés durante toda la visita, incluida la consulta de visagismo. Barcelona tiene una comunidad internacional grande y queremos que todo el mundo entienda exactamente qué corte le estamos proponiendo y por qué.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Pregunta 5</span></div>
+          <div class="copy-text">¿Dónde estáis y cómo se llega?
+
+Estamos en Carrer de Muntaner 172, bajo, en el Eixample de Barcelona. A pie desde Hospital Clínic (L5) o Diagonal (L3, L5). El local está a pie de calle, no hay que subir a ningún piso.</div>
+        </div>
+        <p class="caveat">
+          <b>Ojo:</b> las respuestas de Google no admiten enlaces con formato, pero el texto de la
+          web sí se lee y la gente lo teclea. Escribir «barberbarcelona.es» a secas, sin https.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- Reseñas ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Pedir reseñas · mensaje para WhatsApp</h3>
+        <p>
+          El enlace <b>barberbarcelona.es/review</b> lleva desde febrero abriendo directamente el
+          formulario de reseña de Google, sin pasos intermedios, y no se está usando. Las reseñas
+          nuevas son la señal que más mueve el mapa local, y hay 206 en Booksy contra muchas menos
+          en Google, que es donde de verdad cuentan.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head">
+            <span class="what">Enviar el mismo día, 2–3 h después de la cita</span>
+          </div>
+          <div class="copy-text">¡Gracias por pasarte hoy, {nombre}! Si te ha gustado cómo ha quedado, ¿me dejas una reseña en Google? Son 30 segundos y a una barbería pequeña como la nuestra nos ayuda muchísimo a que nos encuentren.
+
+barberbarcelona.es/review</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Variante para cliente habitual</span></div>
+          <div class="copy-text">{nombre}, llevas ya unas cuantas visitas con nosotros y nunca te lo he pedido: ¿te importaría dejarnos una reseña en Google? Ayuda más de lo que parece.
+
+barberbarcelona.es/review</div>
+        </div>
+        <p class="caveat">
+          <b>Tres reglas:</b> nunca ofrecer descuento ni regalo a cambio —Google lo prohíbe y puede
+          costar la ficha—; no pedirlo a diez personas el mismo día, porque un pico repentino se
+          detecta como sospechoso; y pedirlo siempre en persona antes de que salga por la puerta,
+          que el mensaje solo sirve de recordatorio.
+        </p>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-head">
+        <h3>Responder reseñas · plantillas</h3>
+        <p>
+          Google confirma que responder es señal de actividad del perfil, y para quien lee, una
+          reseña respondida vale más que una suelta. Hay que responderlas todas, también las
+          buenas.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head"><span class="what">Reseña de 5 estrellas</span></div>
+          <div class="copy-text">Gracias, {nombre}. Nos alegra que te fueras contento con el resultado del {servicio}. Nos vemos en la próxima.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Reseña de 5 estrellas sin texto</span></div>
+          <div class="copy-text">¡Gracias por las cinco estrellas, {nombre}! Un placer tenerte por el estudio.</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head"><span class="what">Reseña negativa</span></div>
+          <div class="copy-text">Siento que no saliera como esperabas, {nombre}, y te agradezco que lo digas. No es el resultado que buscamos. Escríbeme al 624 367 153 y lo arreglamos: quiero entender qué falló y darte una solución.
+
+Renato</div>
+        </div>
+        <p class="caveat">
+          En la negativa: nada de discutir los hechos en público, nada de excusas y nada de
+          plantilla fría. Reconocer, dar un teléfono y firmar con nombre. Quien la lee dentro de
+          seis meses juzgará la respuesta, no la queja.
+        </p>
+      </div>
+    </div>
+
+    <!-- ---------- Fresha ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Fresha · mensaje al soporte</h3>
+        <p>
+          Para la ficha rota que Google tiene indexada como «BARBERÍA | PRIVATE STUDIO | MANICURA
+          RUSA» y que da error al abrirla.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head"><span class="what">Enviar desde support.fresha.com</span></div>
+          <div class="copy-text">Asunto: Solicitud de eliminación de listado obsoleto
+
+Hola,
+
+Existe en Fresha un listado de mi negocio con el nombre «BARBERÍA | PRIVATE STUDIO | MANICURA RUSA» que está desactualizado y cuyo enlace devuelve error 404. Ese nombre no corresponde a mi negocio y ofrece un servicio que no prestamos.
+
+Datos reales del negocio:
+Nombre: Private Studio
+Dirección: Carrer de Muntaner 172, bajo 01, 08036 Barcelona, España
+Teléfono: +34 624 367 153
+Web: www.barberbarcelona.es
+
+Solicito la eliminación de ese listado. Está indexado en Google y envía clientes a una página que no funciona.
+
+Gracias,
+Renato Rojas — propietario</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Directorios ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Directorios · los datos exactos</h3>
+        <p>
+          Para Páginas Amarillas, barcelona.place y cualquier otro alta. Copiar <b>carácter por
+          carácter</b>: si en un sitio pone «Bajo 1» y en otro «BAJO 01», Google duda de cuál es el
+          bueno y baja la confianza en el negocio.
+        </p>
+      </div>
+      <div class="task-body">
+        <div class="copy">
+          <div class="copy-head"><span class="what">Ficha NAP canónica</span><span class="lim">usar siempre esta</span></div>
+          <div class="copy-text tight">Nombre      Private Studio
+Dirección   Carrer de Muntaner, 172, BAJO 01
+CP y ciudad 08036 Barcelona
+Provincia   Barcelona
+País        España
+Teléfono    +34 624 367 153
+Email       privatestudio2@gmail.com
+Web         https://www.barberbarcelona.es
+Categoría   Barbería
+Horario     L a V  11:00–20:00
+            Sábado 11:00–19:00   (confirmar)
+            Domingo cerrado</div>
+        </div>
+        <div class="copy">
+          <div class="copy-head">
+            <span class="what">Descripción corta para directorios</span>
+            <span class="lim">237 caracteres</span>
+          </div>
+          <div class="copy-text">Barbería premium en el Eixample de Barcelona especializada en visagismo masculino. Diseñamos el corte según la forma de tu rostro y tu estilo de vida. Corte de precisión, ritual de barba a navaja y coloración masculina. Español e inglés.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Fotos ---------- -->
+    <div class="task">
+      <div class="task-head">
+        <h3>Fotos · las 12 tomas concretas</h3>
+        <p>
+          No «manda fotos»: esta es la lista de disparos. Se hacen en una tarde con el móvil y
+          resuelven a la vez la galería de la web, el blog y el perfil de Google.
+        </p>
+      </div>
+      <div class="task-body">
+        <span class="howto-label">Para la galería de la web · 6 fotos</span>
+        <ol class="steps">
+          <li><b>Antes y después de un visagismo.</b> Mismo encuadre, de frente, cliente mirando a cámara.<em>Es la foto más importante de todas: es el único servicio que ningún competidor de la zona está enseñando.</em></li>
+          <li><b>Antes y después de un rostro distinto al anterior.</b> Si el primero era cara alargada, este redondo o cuadrado.<em>Dos casos distintos demuestran que hay método, no suerte.</em></li>
+          <li><b>Un fade terminado, de perfil.</b> Que se vea la degradación limpia en la patilla y la nuca.</li>
+          <li><b>Un ritual de barba en pleno proceso.</b> Toalla caliente sobre el rostro o la navaja en la mano.<em>Vende la experiencia, no el resultado. Es lo que justifica el precio premium.</em></li>
+          <li><b>Una coloración o un Cover Gray terminado.</b> Antes y después si se puede.</li>
+          <li><b>El local vacío y ordenado</b>, desde la puerta.<em>Va también en Google como foto de interior. La gente quiere saber a dónde entra.</em></li>
+        </ol>
+
+        <span class="howto-label" style="margin-top:var(--s2)">Para el blog · 4 fotos</span>
+        <ol class="steps">
+          <li><b>Manos trabajando con la máquina en una nuca</b> — para el artículo de fade vs taper.</li>
+          <li><b>Barba recién arreglada en primer plano</b> — para el artículo de cuidado de barba.</li>
+          <li><b>Los productos STMNT alineados</b> sobre el mueble — para el artículo de productos.</li>
+          <li><b>Renato analizando el rostro de un cliente</b>, con el espejo de por medio — para los dos artículos de visagismo.</li>
+        </ol>
+
+        <span class="howto-label" style="margin-top:var(--s2)">Para el perfil de Google y la página de autor · 2 fotos</span>
+        <ol class="steps">
+          <li><b>La fachada con el rótulo visible</b>, de día.<em>Google la usa para que la gente reconozca el sitio al llegar. Reduce las llamadas de «no lo encuentro».</em></li>
+          <li><b>Retrato de Renato en el local</b>, mirando a cámara, sin cliente.<em>Va en la página de autor del blog y en el perfil. Pone cara al negocio, que es lo que Google llama señales de experiencia.</em></li>
+        </ol>
+
+        <p class="caveat">
+          <b>Cómo dispararlas:</b> luz natural cerca del escaparate, nunca con los focos del techo.
+          Sin filtros ni belleza automática. En el antes y después, misma distancia y mismo ángulo:
+          si cambia el encuadre, la comparación no se lee. Si sale la cara de un cliente, pedirle
+          permiso; si no lo da, encuadrar de la nariz para arriba o de perfil.
+        </p>
+        <p class="caveat">
+          <b>Orientación:</b> las 6 de la galería, <b>horizontales o cuadradas</b> — la web las
+          recorta a una tira apaisada y una foto vertical pierde más de la mitad. Las del blog y el
+          retrato, indiferente.
+        </p>
+        <p class="caveat">
+          <b>A quién se mandan:</b> a Alex, por WhatsApp, <b>adjuntándolas como archivo o documento,
+          no como foto</b>. Enviadas como foto, WhatsApp las comprime y llegan sin resolución
+          suficiente para la web. Él las prepara y las sube; no hay que renombrarlas ni editarlas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PENDIENTE CÓDIGO ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">05</span>Lo que queda por programar</h2>
+      <p class="lede">
+        Ordenado por impacto. Todo tiene ya el diagnóstico y el arreglo escritos en los informes
+        de detalle.
+      </p>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>Estructura y datos</h3>
+        <span class="phase-when">2–3 semanas</span>
+      </div>
+      <ul class="tasks">
+        <li><div><b>Conectar la galería</b> y rellenar la foto de cada artículo, en cuanto lleguen las imágenes.</div></li>
+        <li><div><b>Meter los 23 servicios y sus precios en los datos estructurados.</b> <span class="note">Los precios reales ya están en el código; a Google no se le están contando.</span></div></li>
+        <li><div><b>Enlazar los nueve artículos entre sí.</b> <span class="note">Hoy no hay ni un enlace de un artículo a otro: nueve piezas publicadas y ninguna autoridad circulando entre ellas.</span></div></li>
+        <li><div><b>Añadir migas de pan y mejorar los datos de cada artículo</b> con imagen y fecha de actualización.</div></li>
+        <li><div><b>Crear una página de autor de Renato</b> y enriquecer su ficha en los datos estructurados. <span class="note">Hoy es solo un nombre suelto. En un negocio de un profesional, esa es la palanca de credibilidad más barata.</span></div></li>
+        <li><div><b>Generar el mapa del sitio automáticamente.</b> <span class="note">Está escrito a mano y sus fechas son inventadas: son anteriores a la última vez que se editó el propio fichero. Google descuenta las fechas de todo el sitio cuando las pilla siendo poco fiables.</span></div></li>
+        <li><div><b>Agrandar cuatro botones del menú móvil</b> (36–40 px, por debajo del mínimo de 48) y poner el botón fijo de reservar también en el blog. <span class="note">Buena parte del tráfico de buscadores aterriza directo en un artículo, y ahí reservar cuesta más que en la portada.</span></div></li>
+        <li><div><b>Añadir cabeceras de seguridad</b> y convertir <code>/review</code> en una redirección de servidor de verdad.</div></li>
+        <li class="hot"><div><b>Verificar Google Search Console vía la etiqueta del código o Tag Manager.</b> <span class="note">Cinco minutos y desbloquea la mitad de las métricas que hoy faltan: qué se indexa, por qué palabras entra la gente y cómo van los tiempos de carga reales. Sin esto se trabaja a ciegas.</span></div></li>
+      </ul>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head">
+        <h3>Contenido y autoridad</h3>
+        <span class="phase-when">mes 2</span>
+      </div>
+      <ul class="tasks">
+        <li><div><b>Crear una página de servicio de visagismo masculino</b>, no un artículo de blog. <span class="note">Buscar «visagismo» a secas trae peluquerías de mujer. Solo «visagismo masculino Barcelona» trae al público correcto, y ahí un competidor directo ya tiene dos páginas dedicadas mientras Private Studio solo tiene una mención de pasada.</span></div></li>
+        <li><div><b>Congelar el patrón actual del blog.</b> <span class="note">En las cinco búsquedas informativas comprobadas, los resultados son de L'Oréal, Gillette, Philips, Druni y revistas de estilo. Cero resultados de Barcelona. Es una batalla que no se puede ganar y que, aunque se ganara, no traería clientes: quien busca «cómo cuidar la barba» desde Sevilla no va a reservar en Muntaner 172.</span></div></li>
+        <li><div><b>Publicar las 7 piezas priorizadas</b> del plan de contenidos, todas con intención comercial local.</div></li>
+        <li><div><b>Dejar de traducir el contenido de negocio al inglés.</b> <span class="note">Reservar el inglés para el público expatriado, que sí es una búsqueda real y distinta donde Private Studio no aparece.</span></div></li>
+        <li><div><b>Entrar en las listas locales.</b> <span class="note">Las búsquedas de barrio las ganan artículos tipo «las mejores barberías del Eixample», no las webs de las barberías. Y es de ahí de donde beben Perplexity y los resúmenes con IA de Google.</span></div></li>
+      </ul>
+    </div>
+
+    <div class="note-box">
+      <h3>Listas locales verificadas · 3 ago 2026</h3>
+      <ul>
+        <li><b>barcelona.place</b> — su artículo «Las 12 mejores barberías del Eixample» no incluye a Private Studio (comprobado, cero coincidencias). Tiene formulario de alta abierto en <code>barcelona.place/join/</code>. Máxima prioridad y mínima fricción.</li>
+        <li><b>barbershopmap.com</b> — tampoco aparece. Sin alta automática, hace falta contacto manual.</li>
+        <li><b>timeout.com/barcelona</b> y <b>barcelona-metropolitan.com</b> — medios reales, encajan con el ángulo del público expatriado.</li>
+        <li><b>Descartados con evidencia:</b> 11870 y Cylex bloquean el acceso; Cambra de Comerç, el Ajuntament y guia.barcelona.cat están vivos pero no tienen directorio aplicable a un negocio individual. No perder tiempo ahí.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ DECISIONES ══════════ -->
+  <section>
+    <div class="sec-head">
+      <h2><span class="num">06</span>Dos cosas que se decidió no hacer</h2>
+      <p class="lede">
+        Quedan escritas para que dentro de seis meses nadie las «arregle» sin conocer el motivo.
+      </p>
+    </div>
+
+    <div class="ledger">
+      <article class="entry">
+        <div class="entry-idx">—</div>
+        <div class="entry-body">
+          <h3>No poner las estrellas de Google en los datos estructurados</h3>
+          <p>
+            Es tentador, porque Private Studio tiene un 5,0. Pero la política de Google dice que
+            si el negocio controla las reseñas sobre sí mismo, sus páginas no son elegibles para
+            mostrar estrellas, y lo extiende explícitamente a los widgets de reseñas incrustados.
+            Implementarlo daría cero estrellas y expondría a una penalización manual. Las
+            estrellas que sí se ven salen del map pack, que no depende de esto.
+          </p>
+          <div class="chips"><span class="chip c-risk">no implementar</span></div>
+        </div>
+      </article>
+      <article class="entry">
+        <div class="entry-idx">—</div>
+        <div class="entry-body">
+          <h3>No crear páginas por barrio</h3>
+          <p>
+            Es un solo local. Serían páginas de relleno que además competirían con la propia
+            portada. Se descartó a propósito.
+          </p>
+          <div class="chips"><span class="chip c-risk">no implementar</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <span>Auditoría: claude-seo 2.2.4 · 11 agentes · 11 URLs · 1.395 líneas de informes de detalle</span>
+    <span>Detalle completo con evidencia línea por línea en src/docs/seo-audit-2026-08/</span>
+    <span>Línea base capturada el 3 ago 2026 para poder medir el antes y el después tras desplegar</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
