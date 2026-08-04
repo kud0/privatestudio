@@ -144,10 +144,11 @@
   </div>
 
   <h2 class="seccion">Hoy</h2>
-  <div class="extra extra3">
+  <div class="extra">
     <div><div class="k">Gastado</div><div class="v" id="hoy">—</div></div>
     <div><div class="k">Clics</div><div class="v" id="clics-hoy">—</div></div>
     <div><div class="k">Se ha visto</div><div class="v" id="impresiones-hoy">—</div></div>
+    <div><div class="k">Coste por clic</div><div class="v" id="cpc-hoy">—</div></div>
   </div>
 
   <h2 class="seccion">Acumulado · 1–15 agosto</h2>
@@ -227,6 +228,8 @@
       : euros(hoy) + (isNaN(diario) ? '' : ' de ' + Math.round(diario) + ' €');
     $('clics-hoy').textContent = d.clics_hoy || '0';
     $('impresiones-hoy').textContent = (d.impresiones_hoy || '0') + ' veces';
+    var clicsHoy = parseFloat(d.clics_hoy);
+    $('cpc-hoy').textContent = (clicsHoy > 0 && !isNaN(hoy)) ? euros(hoy / clicsHoy) : '—';
     $('clics').textContent = d.clics_periodo || '0';
     $('impresiones').textContent = (d.impresiones_periodo || '0') + ' veces';
     $('cpc').textContent = parseFloat(d.cpc_medio) > 0 ? euros(parseFloat(d.cpc_medio)) : '—';
