@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Private Studio · Puesta a punto de la web</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap');
+
+  *,*::before,*::after{box-sizing:border-box}
+  h1,h2,h3,h4,p,ul,ol,figure{margin:0}
+  ul{padding:0;list-style:none}
+
+  :root{
+    --paper:#f5f1e6; --card:#fffdf8; --ink:#211a12; --ink2:#6b6255; --ink3:#9c9284;
+    --line:#e5ddcc; --line-soft:#efe9db;
+    --oxblood:#7a2e28; --oxblood-bg:#f8ebe7;
+    --brass:#8f6f2e; --brass-bg:#f3ecd8;
+    --sage:#3f5f45; --sage-bg:#eaf0e6;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--paper:#171310;--card:#211b15;--ink:#f2ece0;--ink2:#b3a996;--ink3:#7d7364;
+      --line:#3a3227;--line-soft:#2a251d;
+      --oxblood:#e0958a;--oxblood-bg:#3a2018;--brass:#d8bd7c;--brass-bg:#332c19;
+      --sage:#9fc3a4;--sage-bg:#1d2a1f}
+  }
+  :root[data-theme="dark"]{--paper:#171310;--card:#211b15;--ink:#f2ece0;--ink2:#b3a996;--ink3:#7d7364;
+    --line:#3a3227;--line-soft:#2a251d;
+    --oxblood:#e0958a;--oxblood-bg:#3a2018;--brass:#d8bd7c;--brass-bg:#332c19;
+    --sage:#9fc3a4;--sage-bg:#1d2a1f}
+  :root[data-theme="light"]{--paper:#f5f1e6;--card:#fffdf8;--ink:#211a12;--ink2:#6b6255;--ink3:#9c9284;
+    --line:#e5ddcc;--line-soft:#efe9db;
+    --oxblood:#7a2e28;--oxblood-bg:#f8ebe7;--brass:#8f6f2e;--brass-bg:#f3ecd8;
+    --sage:#3f5f45;--sage-bg:#eaf0e6}
+
+  html{color-scheme:light dark}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:'Public Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+
+  .hoja{max-width:600px;margin:0 auto;padding:28px 20px 60px}
+
+  .mancheta{text-align:center;margin-bottom:30px}
+  .marca{font-family:'Zilla Slab',serif;font-weight:800;font-size:15px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+  h1{font-family:'Zilla Slab',serif;font-weight:800;font-size:30px;letter-spacing:-.01em;
+    line-height:1.12;margin-top:6px;text-wrap:balance}
+  .fecha{font-size:13px;color:var(--ink3);margin-top:8px}
+
+  /* Nota de partida */
+  .nota{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:22px 20px;display:flex;align-items:center;gap:18px;margin-bottom:32px}
+  .nota .num{font-family:'Zilla Slab',serif;font-weight:800;font-size:44px;line-height:1;
+    color:var(--brass);font-variant-numeric:tabular-nums;flex-shrink:0}
+  .nota .num small{font-size:18px;font-weight:700;color:var(--ink3)}
+  .nota p{font-size:14.5px;color:var(--ink2);line-height:1.5}
+  .nota p b{color:var(--ink)}
+
+  h2.seccion{font-family:'Zilla Slab',serif;font-weight:800;font-size:20px;
+    letter-spacing:-.005em;margin:0 0 4px;text-wrap:balance}
+  .seccion-sub{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-bottom:16px}
+
+  section{margin-bottom:34px}
+
+  /* Tarjetas de accion */
+  .tarjeta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 17px;display:flex;gap:14px;margin-bottom:10px}
+  .tarjeta:last-child{margin-bottom:0}
+  .marcador{flex-shrink:0;width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Zilla Slab',serif;font-weight:800;font-size:14px;
+    font-variant-numeric:tabular-nums}
+  .cont{flex:1;min-width:0}
+  .cont h3{font-size:15.5px;font-weight:700;line-height:1.35;margin-bottom:3px}
+  .cont p{font-size:13.5px;color:var(--ink2);line-height:1.48}
+  .etiqueta{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;padding:3px 9px;border-radius:100px;margin-top:8px}
+
+  /* Variantes por urgencia */
+  .urgente .marcador{background:var(--oxblood-bg);color:var(--oxblood)}
+  .urgente .etiqueta{background:var(--oxblood-bg);color:var(--oxblood)}
+  .en-marcha .marcador{background:var(--brass-bg);color:var(--brass)}
+  .bien .marcador{background:var(--sage-bg);color:var(--sage)}
+  .bien .marcador svg{width:15px;height:15px}
+
+  /* Lista compacta para "ya en marcha" y "ya funciona" */
+  .compacta{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden}
+  .compacta li{display:flex;gap:11px;align-items:flex-start;padding:12px 16px;
+    border-bottom:1px solid var(--line-soft);font-size:13.5px;line-height:1.45;color:var(--ink2)}
+  .compacta li:last-child{border-bottom:0}
+  .compacta li b{color:var(--ink);font-weight:600}
+  .marca-fila{flex-shrink:0;width:18px;height:18px;margin-top:1px}
+
+  .cierre{font-size:13px;color:var(--ink3);line-height:1.6;text-align:center;
+    margin-top:38px;padding-top:20px;border-top:1px solid var(--line)}
+
+  @media(min-width:640px){
+    h1{font-size:34px}
+    .nota .num{font-size:52px}
+  }
+</style>
+</head>
+<body>
+<div class="hoja">
+
+  <div class="mancheta">
+    <div class="marca">Private Studio · Muntaner 172</div>
+    <h1>Puesta a punto de la web</h1>
+    <div class="fecha">Revisión del 3 de agosto de 2026</div>
+  </div>
+
+  <div class="nota">
+    <div class="num">59<small>/100</small></div>
+    <p>Nota de partida de cómo está la web hoy de cara a Google. <b>Ni mal ni resuelto</b> — hay cosas que ya funcionan muy bien y cuatro que dependen de ti, sin coste ni complicación.</p>
+  </div>
+
+  <section>
+    <h2 class="seccion">Lo que depende de ti</h2>
+    <div class="seccion-sub">Cuatro cosas, todas gratis, ninguna necesita programar nada. Cuanto antes se hagan, antes dejan de restar.</div>
+
+    <div class="tarjeta urgente">
+      <div class="marcador">1</div>
+      <div class="cont">
+        <h3>Renombrar tu ficha de Google</h3>
+        <p>Hoy se llama <i>«Private Studio - La Mejor Barberia de Barcelona»</i>. Google prohíbe expresamente nombres así y puede llegar a suspender la ficha — y de ahí sale la mayoría de tus reservas. Cámbialo a solo <b>«Private Studio»</b> desde tu perfil de empresa.</p>
+        <span class="etiqueta">Gratis · 1 minuto</span>
+      </div>
+    </div>
+
+    <div class="tarjeta urgente">
+      <div class="marcador">2</div>
+      <div class="cont">
+        <h3>Arreglar o borrar tu ficha de Fresha</h3>
+        <p>Está rota (da error al abrirla) y encima muestra el nombre antiguo del negocio, con «manicura rusa» incluido. Quien la encuentre buscando se lleva una impresión rara.</p>
+        <span class="etiqueta">Gratis</span>
+      </div>
+    </div>
+
+    <div class="tarjeta urgente">
+      <div class="marcador">3</div>
+      <div class="cont">
+        <h3>Confirmar el horario del sábado</h3>
+        <p>La web dice 11:00–19:00, pero dos sitios que Google indexa dicen 10:00–16:00. Hay que saber cuál es el bueno para que nadie se plante en la puerta a la hora equivocada.</p>
+        <span class="etiqueta">2 minutos</span>
+      </div>
+    </div>
+
+    <div class="tarjeta urgente">
+      <div class="marcador">4</div>
+      <div class="cont">
+        <h3>Mandarnos 6-7 fotos de trabajos reales</h3>
+        <p>Cortes, barbas, el local. Es lo que más echa en falta la ficha ahora mismo para dar confianza a alguien que no te conoce todavía.</p>
+        <span class="etiqueta">Cuando puedas</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="seccion">Lo que ya estamos arreglando</h2>
+    <div class="seccion-sub">En el código de la web, sin que tengas que hacer nada.</div>
+    <ul class="compacta">
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--brass)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--brass)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>La web carga más rápido en el móvil — el vídeo de portada pesaba de más y frenaba todo lo demás.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--brass)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--brass)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Tus servicios y precios ya se leen bien por los buscadores, no solo por las personas.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--brass)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--brass)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Arreglado el enlace entre la versión española e inglesa de la web, que estaba mal conectado.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--brass)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--brass)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Corregidos datos técnicos que hacían que Google situara el local en el sitio equivocado del mapa.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--brass)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--brass)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Un solo título por página en vez de varios — ayuda a que Google entienda mejor de qué va cada una.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="seccion">Ya funciona bien</h2>
+    <div class="seccion-sub">Comprobado, no hay que tocarlo.</div>
+    <ul class="compacta">
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--sage)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>El botón de reservar está siempre visible en el móvil, sin que haga falta buscar nada.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--sage)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>La web no da saltos raros ni errores de carga en ningún dispositivo probado.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--sage)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Las traducciones inglés/español del blog son reales, escritas de verdad — no traducción automática.</span>
+      </li>
+      <li>
+        <svg class="marca-fila" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="var(--sage)" stroke-width="1.6"/><path d="M6 10l2.5 2.5L14 7" stroke="var(--sage)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>ChatGPT y otras IAs pueden leer y recomendar tu web sin ningún bloqueo.</span>
+      </li>
+    </ul>
+  </section>
+
+  <div class="cierre">
+    Este es el resumen para decidir rápido. Hay un informe técnico más largo,<br>
+    con el detalle de cada punto, si en algún momento quieres entrar más a fondo.
+  </div>
+
+</div>
+</body>
+</html>
