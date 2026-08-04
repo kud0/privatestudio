@@ -79,9 +79,11 @@
   .total:empty{display:none}
   .total b{color:var(--ink);font-variant-numeric:tabular-nums}
 
-  .extra{display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  .extra,.extra3{display:grid;gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .extra div{background:var(--card);padding:9px 11px}
+  .extra{grid-template-columns:1fr 1fr}
+  .extra3{grid-template-columns:repeat(3,1fr)}
+  .extra div,.extra3 div{background:var(--card);padding:9px 11px}
   .extra .k{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
   .extra .v{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
   .extra .v small{font-size:10.5px;font-weight:500;color:var(--ink3)}
@@ -215,8 +217,15 @@
     <div class="total" id="total"></div>
   </div>
 
-  <div class="extra">
-    <div><div class="k">Hoy</div><div class="v" id="hoy">—</div></div>
+  <h2 class="seccion">Hoy</h2>
+  <div class="extra extra3">
+    <div><div class="k">Gastado</div><div class="v" id="hoy">—</div></div>
+    <div><div class="k">Clics</div><div class="v" id="clics-hoy">—</div></div>
+    <div><div class="k">Se ha visto</div><div class="v" id="impresiones-hoy">—</div></div>
+  </div>
+
+  <h2 class="seccion">Acumulado · 1–15 agosto</h2>
+  <div class="extra extra3">
     <div><div class="k">Clics</div><div class="v" id="clics">—</div></div>
     <div><div class="k">Se ha visto</div><div class="v" id="impresiones">—</div></div>
     <div><div class="k">Coste por clic</div><div class="v" id="cpc">—</div></div>
@@ -240,7 +249,7 @@
 
   <div class="salud" id="salud"></div>
 
-  <footer>Huecos actualizados el 4 ago · 11:32 · el gasto se lee de Google Ads al abrir esta página</footer>
+  <footer>Huecos actualizados el 4 ago · 11:37 · el gasto se lee de Google Ads al abrir esta página</footer>
 
 </div>
 
@@ -290,6 +299,8 @@
     var diario = parseFloat(d.presupuesto_diario);
     $('hoy').textContent = isNaN(hoy) ? '—'
       : euros(hoy) + (isNaN(diario) ? '' : ' de ' + Math.round(diario) + ' €');
+    $('clics-hoy').textContent = d.clics_hoy || '0';
+    $('impresiones-hoy').textContent = (d.impresiones_hoy || '0') + ' veces';
     $('clics').textContent = d.clics_periodo || '0';
     $('impresiones').textContent = (d.impresiones_periodo || '0') + ' veces';
     $('cpc').textContent = parseFloat(d.cpc_medio) > 0 ? euros(parseFloat(d.cpc_medio)) : '—';
