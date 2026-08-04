@@ -775,3 +775,224 @@ No se elimina: la única opción que ofrece la interfaz es borrarla, es
 irreversible, y el perjuicio real es cosmético — la campaña puja por
 **Maximizar clics**, así que las conversiones no intervienen en la entrega.
 Se deja documentado.
+
+---
+
+## 3 agosto 2026 · Noche — auditoría + mejoras para el arranque del 4 ago
+
+### Contexto de la tarde/noche (hechos, no suposiciones)
+
+**Overspend del día (no es un bug del presupuesto de Ads).**
+- Presupuesto diario de la campaña: **20 €**.
+- Google gastó del orden de **~33 €** el 3 ago (hoja del guardián:
+  `gastado_hoy ≈ 33,40`, `gastado_periodo ≈ 47,26`, CPC ~0,37 €, ~128 clics en
+  ventana Circuit).
+- Comportamiento conocido: Google **puede pasarse del daily** en un día suelto
+  y “compensar” después. Con 20 € configurados, **igual se puede ir a 30+**.
+- El freno **`MARGEN_DIARIO = 1.15`** del guardián (pausa al ~23 € del día) se
+  puso **después** de ver el exceso. Antes solo había tope de **periodo 200 €**
+  + pausa por agenda. Por eso hoy se pasó el 20.
+- Estado al cierre: campaña **pausada** en Ads; `ads-control.json` en
+  **activa** (había huecos en los 2 días abiertos). Correcto: la pausó el
+  tope diario, no la agenda.
+- Mañana el guardián, si hay huecos y no se ha superado el tope de periodo,
+  debe **reactivar** al empezar el día (gasto “hoy” se resetea en el informe
+  diario de Google).
+
+**Radio.**
+- Durante el día 3 el radio efectivo era **2,5 km**.
+- Alex lo bajó a **1,5 km** por la tarde/noche. El panel ya muestra 1,5.
+- La entrega de ads puede tardar en reflejarlo del todo: **mañana 4 ago se
+  asume 1,5 km** como targeting real. No tocar de nuevo sin motivo.
+
+**Panel.**
+- URL interna `panel-76380b752010.html` — **solo Alex/ops**. Reni no lo usa.
+- Gasto real: hoja CSV del guardián (no Booksy). Huecos: cron Booksy.
+
+### Problemas de calidad detectados en search terms (auditoría 3 ago)
+
+Todo el tramo visible del informe caía en **`ES — Barbería`**; el grupo
+**`EN — Barber` casi no aparecía** (turista EN sirviendo anuncio/keywords ES).
+
+| Término (ej.) | Problema |
+|---|---|
+| `private studio…` | Marca: CTR alto, gasto discutible; **no se toca** sin decisión de Alex/Reni |
+| `peluquería cerca de mi` (broad) | Basura: no es barbería hombre; muchas impr., CTR flojo |
+| `barberia cerca de mi` | Nuestra, pero CTR ~1,5 % — anuncio poco diferenciador |
+| `barber near me` | EN sirviendo desde grupo ES |
+
+### Mejoras preparadas (script, sin aplicar solas en esta sesión)
+
+Fichero: `scripts/circuit-2026/ads-script-mejora-circuit.js`
+
+**Qué hace (idempotente, una ejecución):**
+1. **Negativas de campaña** nuevas: peluqueria/peluquería/peluquero, salón,
+   tinte, manicura, mujer/women, empleo, barato, ciudades ajenas, etc.
+   (no añade duplicados si ya existen).
+2. **Limpieza ES/EN otra vez:** en `ES — Barbería` pausa keywords con palabra
+   inglesa/alemana (`barber`, `near`, `haircut`…).
+3. **Grupo EN:** asegura enabled (o crea) las 8 keywords del plan, incl.
+   `"barber near me"`, `"haircut barcelona"`, etc.
+4. **RSA extra ES** con titulares *Reserva en Booksy*, Eixample, Muntaner —
+   para subir CTR de “cerca de mí” sin matar la keyword.
+5. **RSA extra EN** con *Book on Booksy* / *Call or Book on Booksy* (Booksy
+   primero; llamada como complemento; **sin** “sin app”).
+6. **No toca:** estado on/off de la campaña, presupuesto 20 €, radio, schedule,
+   tope 200 €, marca (keywords de marca se dejan).
+
+**Cómo aplicarlo (mañana temprano o esta noche, 2 min):**
+1. Google Ads → Scripts (el del guardián ya autorizado sirve: pegar, Preview,
+   Run una vez, **no programar en horario** — es one-shot).
+2. Leer el log: negativas nuevas, pausadas en ES, EN activas, RSA creados.
+3. Volver a dejar el código del **guardián** en el script horario si se usó
+   el mismo slot.
+4. Verificar en UI: Keywords ES solo castellano; EN con las 8; Assets/anuncios
+   nuevos en revisión si Google los mete a review.
+
+### Checklist arranque mañana 4 ago (11:00 horario tienda)
+
+- [ ] Ejecutado `ads-script-mejora-circuit.js` (log OK).
+- [ ] Guardián horario sigue siendo el de `ads-script-guardia.js` (con
+      `MARGEN_DIARIO = 1.15`, `TOPE_PERIODO = 200`, radio no lo gestiona él).
+- [ ] Campaña puede estar paused al despertar: el guardián la enciende si
+      control = activa y gasto del día < margen.
+- [ ] Radio en UI: **1,5 km** Muntaner 172 · Presence.
+- [ ] No tocar marca ni pasar a Max conversiones.
+- [ ] Tras mediodía: mirar search terms del 4 — ¿desaparece “peluquería…”?
+      ¿`barber near me` cae en **EN — Barber**?
+
+### Qué NO se ha hecho a propósito
+
+- No se ha reactivado la campaña a mano (el guardián manda).
+- No se ha bajado ni subido el presupuesto 20 €.
+- No se ha cambiado la puja (sigue Max clics).
+- No se ha tocado el panel que ve Reni (no existe; el panel es interno).
+- No se niega la palabra suelta «studio» (demasiado genérica: tatuaje, foto…).
+
+### Decisiones de Alex (3–4 ago noche) — criterio de eficiencia
+
+**Radio 1,5 km (mantenido).** Objetivo: más intención “cerca”, que los 20 €
+duren el día de campaña y no se abran a ciudad entera. 2,5 km se considera
+demasiado ancho para barbería local. Si en 2–3 días cae mucho el turista EN /
+`barber near me` y la agenda del 10–14 sigue vacía, valorar **2,0 km** (no
+volver a 2,5 de golpe).
+
+**Marca no se paga.** Quien busca `private studio` / `private studio barcelona`
+debería encontrar orgánico + Maps sin clic de pago. Las búsquedas de marca
+eran CTR altísimo y CPC ridículo, pero canibalizan lo gratis. El script de
+mejora añade **negativas de frase** de esas queries. Si un competidor pujara
+por el nombre, se reabriría un ad group Marca mínimo (no es el caso ahora).
+
+**«studio» solo:** no se añade como keyword ni como negativa amplia.
+
+### Estado del paquete para mañana 4 ago
+
+| Pieza | Estado |
+|---|---|
+| Guardián + tope día 115 % | En código repo; debe estar en Ads |
+| Radio 1,5 | Hecho en UI (Alex) |
+| Script `ads-script-mejora-circuit.js` | En repo — **falta Run una vez en Ads** |
+| Bitácora | Actualizada |
+| Reactivar campaña | Guardián a las ~11 si hay huecos |
+
+### Registro machine-readable (comparativas futuras)
+
+Fichero: `src/docs/registro-cambios-ads-circuit.jsonl`  
+Una línea JSON por evento, con `fecha` ISO-local.  
+**Baseline pre-mejora 2026-08-03** grabada (gasto, clics, radio 2.5→1.5, pausa por daily, problemas EN/ES/marca).  
+Tras el Run del script, añadir línea `tipo:aplicacion` con log de Ads y `tipo:post_mejora_dia1` el 4 ago noche con métricas del día.
+
+Cómo comparar en el futuro:
+1. Leer baseline `2026-08-03` vs filas posteriores del mismo jsonl.
+2. KPIs: gastado_hoy vs 20, CPC, % clics marca, % search terms EN en grupo EN, CTR `barberia cerca de mi`, desaparición de `peluqueria cerca de mi`.
+
+### 23:50 · Intento de aplicar el script vía Playwright — FALLO (registrado)
+
+- Perfil de Chrome copiado sin cookies de sesión válidas → login / select account.
+- Error de automatización al clicar «+» (regex).
+- **Resultado: la cuenta de Ads no se modificó.** Keywords, negativas y RSA siguen
+  como antes del script.
+- Entrada en `registro-cambios-ads-circuit.jsonl` con `resultado: fallo`.
+- Script sigue en clipboard del Mac (si `pbcopy` OK) para pegado manual.
+
+**Aplicación manual (2 min) — única vía fiable sin sesión MCP caliente:**
+1. Ads → Tools → Bulk actions → Scripts → +  
+2. Pegar `ads-script-mejora-circuit.js` → Preview → Run  
+3. Copiar el log del Logger  
+4. Avisar / pegar log aquí → se añade línea `tipo:aplicacion` `resultado:ok` al jsonl
+   con fecha/hora real.
+
+### 3 ago ~23:55 · Cierre de noche (Alex se va a dormir)
+
+**Intentos Playwright de aplicar el script de mejora: FALLIDOS.**  
+Google entra en bucle `accountchooser` ↔ `selectaccount` y exige reauth/2FA que
+solo puede completar una persona delante del teclado. Tras ~20 ciclos se **paró**
+el bot para no quemar la sesión.
+
+| Qué | ¿En la cuenta Ads mañana? |
+|---|---|
+| Radio 1,5 km | **Sí** (hecho por Alex en UI) |
+| Budget 20 € + fin 15 ago + tope 200 € | **Sí** (ya montado) |
+| Guardián horario + tope día 115 % | **Sí si el script en Ads es el del repo** — verificar 1 vez |
+| Negativas peluquería + marca | **NO** hasta Run del script |
+| Limpieza ES/EN + RSA Booksy | **NO** hasta Run del script |
+| Control agenda / cron Booksy | **Sí** (Mac + cron 9–21) |
+
+**Checklist arranque:** `src/docs/ARRANQUE-4-AGO-2026.md`  
+**Cron reintento automático:** 4 ago 09:15 → `run-morning.mjs` (solo si Mac despierto y hay sesión; si pide 2FA, fallará igual).  
+**Script en portapapeles** al cerrar la noche (pbcopy).
+
+**Acción crítica al despertar (antes de las 11:00):**  
+cuenta **608-571-5182** → Scripts → New → pegar `ads-script-mejora-circuit.js` → Preview → Run → no programar.  
+Sin eso, la campaña arranca con radio 1,5 y freno de gasto, pero **sin** las mejoras de calidad de search terms.
+
+### 3/8/2026, 23:59:47 · Aplicación script mejora
+
+- Resultado: **fallo**
+- usuario dijo dentro pero URL sigue login/404
+- filled: —
+- url: https://accounts.google.com/v3/signin/accountchooser?continue=https%3A%2F%2Fads.google.com%2Fnav%2Flogin%3Fdst%3D%2Faw%2Foverview%3Focid%253D6085715182%26f.sid%3D-1331845753793900182%26a%3D1&faa=1&service=adwords&flowName=GlifWebSignIn&flowEntry=AccountChooser&dsh=S572500051%3A1785794381698442
+
+
+### 4/8/2026, 0:01:54 · Aplicación script
+- **fallo**: filled=keyboard; Loading | Choose an account | Alex Sole | alexsole@gmail.com | Use another account | English (United States) | Help | Privacy | Terms
+
+
+### 4/8/2026, 0:02:54 · Aplicación script mejora
+- **ok_parcial**: ocid=6836533876 filled=keyboard logOk=false | search ; responsive_layout ; Appearance ; help_outline ; Help ; notifications ; button_magic ; Ask Advisor ; BETA ; Create ; campaign ; Campaigns ; rewarded_ads ; Goals ; construction ; Tools ; credit_card ; Billing ; settings ; Admin ; chevron_right ; Collapse ; Overview ; Recommendations ; Insights and reports ; expand_more ; Campaigns ; expand_more ; Audiences, keywords, and content ; expand_more ; Change history ; Turn off ad blockers ;  ; Google Ads can't work when you're using an ad blocker. ; To use Google Ads, please turn off any ad blockers for now. ;  ; © 
+
+
+### 2026-08-04 07:49:13 · Aplicación script mejora (agente)
+
+- **ok_parcial**: filled=paste; success=false; search | "What are my top performing campaigns?" | responsive_layout | Appearance | help_outline | Help | notifications | button_magic | Ask Advisor | BETA | Create | campaign | Campaigns | rewarded_ads | Goals | construction | Tools | credit_card | Billing | settings | Admin | chevron_right | Collapse | Overview | Recommendations | Insights and reports | expand_more | Campaigns | expand_more | Audiences, keywords, and content | expand_more | Change history | Turn off ad blockers |  | Google Ads can't work when you're using an ad blocker. | To use Google Ads, please turn off any ad blockers for now. |  | © Google, 2026.
+
+
+
+### 2026-08-04 08:11 · Script mejora APLICADO (OK)
+
+- **scriptId:** 12047141 (Unnamed script en UI)
+- **Run:** Finished successfully · 15 s · **27 successful** · **12 log statements**
+- **Guardian Circuit 2026:** sin tocar (Hourly · Enabled)
+- **Browser keep-alive:** sigue abierto (no cerrado)
+- Registro JSONL actualizado.
+
+
+
+### 2026-08-04 08:13 · Confirmación post-Authorize
+
+- Usuario autorizó con passkey.
+- **Run 08:12:** Finished successfully · 11 s · 2 successful · 12 logs (idempotente).
+- **Run 08:09 (previo):** 27 successful · 12 logs.
+- scriptId **12047141** · Guardian **sin tocar**.
+- Playwright keep-alive **sigue abierto**.
+
+
+
+### 2026-08-04 09:16:17 · Aplicación automática script mejora
+
+- **Resultado:** fallo
+- **Detalle:** page.waitForTimeout: Target page, context or browser has been closed
+- **URL:** https://ads.google.com/nav/selectaccount?euid=592731033&__u=3739712017&authuser=0&dst=/aw/overview?ocid%3D6085715182&f.sid=7948775087357668792&a=1&pli=1
+- **filled:** 
+- Registro JSONL actualizado.
+
