@@ -132,6 +132,12 @@ async function consultar(desde, hasta) {
   return resp.json();
 }
 
+/** A qué franja pertenece una hora de inicio "HH:MM". */
+function franjaDe(h) {
+  const hora = Number(h.slice(0, 2));
+  return hora < 14 ? 'manana' : hora < 17 ? 'mediodia' : 'tarde';
+}
+
 /**
  * Suma por barbero: dos barberos a la misma hora son dos citas, no una.
  *
@@ -140,6 +146,11 @@ async function consultar(desde, hasta) {
  * hay libre AHORA, no guarda historia. Lo que no se anote aquí se pierde para
  * siempre, y saber a qué horas se llena antes una barbería es justo lo que hace
  * falta para llevar la siguiente.
+ *
+ * `porFranja` cuenta citas reales por franja (mismo empaquetado sin solapes que
+ * `porDia`, aplicado por separado a cada franja), no marcas de horario en bruto:
+ * Booksy devuelve una marca cada pocos minutos, así que sumarlas directamente
+ * multiplicaba por varias veces el número real de huecos reservables.
  */
 function resumir(datos) {
   const porDia = {};
@@ -150,12 +161,12 @@ function resumir(datos) {
       if (!horas.length) continue;
       porDia[dia.date] = (porDia[dia.date] ?? 0) + citasReales(horas);
 
-      porFranja[dia.date] = porFranja[dia.date] ?? { manana: 0, mediodia: 0, tarde: 0 };
-      for (const h of horas) {
-        const hora = Number(h.slice(0, 2));
-        const franja = hora < 14 ? 'manana' : hora < 17 ? 'mediodia' : 'tarde';
-        porFranja[dia.date][franja]++;
+      const porFranjaDelDia = porFranja[dia.date] ?? { manana: 0, mediodia: 0, tarde: 0 };
+      for (const franja of ['manana', 'mediodia', 'tarde']) {
+        const horasDeLaFranja = horas.filter(h => franjaDe(h) === franja);
+        porFranjaDelDia[franja] += citasReales(horasDeLaFranja);
       }
+      porFranja[dia.date] = porFranjaDelDia;
     }
   }
   const total = Object.values(porDia).reduce((a, b) => a + b, 0);
