@@ -91,7 +91,7 @@
     },
     {
       "fecha": "2026-08-13",
-      "citas": 17,
+      "citas": 14,
       "cerrado": false,
       "decide": false
     },
@@ -108,8 +108,8 @@
       "decide": false
     }
   ],
-  "citas_ventana": 77,
-  "actualizado": "2026-08-08T15:00:00.798Z",
+  "citas_ventana": 74,
+  "actualizado": "2026-08-08T17:00:01.215Z",
   "hoy_cerrado": false,
   "motivo": "13 citas libres hoy y lunes"
 }
