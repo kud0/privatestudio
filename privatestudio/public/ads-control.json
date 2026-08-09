@@ -91,7 +91,7 @@
     },
     {
       "fecha": "2026-08-13",
-      "citas": 14,
+      "citas": 12,
       "cerrado": false,
       "decide": false
     },
@@ -108,8 +108,8 @@
       "decide": false
     }
   ],
-  "citas_ventana": 71,
-  "actualizado": "2026-08-09T15:00:01.676Z",
+  "citas_ventana": 69,
+  "actualizado": "2026-08-09T17:00:00.769Z",
   "hoy_cerrado": true,
   "motivo": "la barbería no abre hoy: no se paga por anunciarse con la persiana bajada"
 }
