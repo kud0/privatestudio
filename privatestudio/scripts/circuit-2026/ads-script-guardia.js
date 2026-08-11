@@ -46,10 +46,22 @@ var GASTADO_ANTES = 19.99;
 var INICIO = '2026-08-01';
 var FIN    = '2026-08-15';
 
-// Control publicado por el cron de Booksy. Formato:
-//   {"estado":"activa"|"pausa", "presupuesto_diario": 10|20|30, "motivo": "..."}
+// Endpoint EN VIVO (Vercel serverless, /api/circuit-control): calcula el
+// estado consultando Booksy en el momento de cada petición, sin publicar ni
+// cachear nada de antemano. Sustituye al fichero estático ads-control.json
+// que publicaba el cron del Mac de Alex — ese cron se saltaba el run entero
+// si el portátil estaba dormido, dejando la campaña con un dato congelado
+// sin que nadie se enterara. Ver commit del 12 ago 2026.
 // Si no responde o es ilegible, el guardián no toca ni estado ni presupuesto.
-var CONTROL_URL = 'https://www.barberbarcelona.es/ads-control.json';
+var CONTROL_URL = 'https://www.barberbarcelona.es/api/circuit-control';
+
+// El plan de Vercel es Hobby: solo permite un cron propio al día, no cada
+// hora. En vez de depender de eso, el propio guardián (que ya corre cada
+// hora, fiable, en los servidores de Google) dispara el guardado del
+// historial de tendencia (ritmo, reservas de hoy) que usa el panel. Best
+// effort: si falla, no afecta a pausa/activa ni al gasto.
+var REFRESH_URL = 'https://www.barberbarcelona.es/api/circuit-refresh';
+var REFRESH_SECRET = 'REEMPLAZAR_CON_EL_CRON_SECRET';
 
 // Horas que puede tener el control antes de dejar de creérselo.
 //
@@ -123,6 +135,7 @@ function main() {
   } finally {
     try { publicarMetricas(campana); }
     catch (e) { Logger.log('No se pudo publicar en la hoja: ' + e); }
+    dispararRefrescoHistorico();
   }
 }
 
@@ -319,6 +332,24 @@ function gastoPeriodo(campana) {
   var hasta = FIN.replace(/-/g, '');
   var stats = campana.getStatsFor(desde, hasta);
   return stats.getCost();
+}
+
+/**
+ * Guarda un snapshot de tendencia en Vercel Blob (ritmo, reservas de hoy).
+ * Best effort a propósito: un fallo aquí no debe pausar ni activar nada, solo
+ * se pierde un punto de la gráfica de tendencia del panel.
+ */
+function dispararRefrescoHistorico() {
+  if (!REFRESH_URL || REFRESH_SECRET === 'REEMPLAZAR_CON_EL_CRON_SECRET') return;
+  try {
+    UrlFetchApp.fetch(REFRESH_URL, {
+      method: 'get',
+      headers: { Authorization: 'Bearer ' + REFRESH_SECRET },
+      muteHttpExceptions: true
+    });
+  } catch (e) {
+    Logger.log('refresco de historico fallido (no crítico): ' + e);
+  }
 }
 
 /**
