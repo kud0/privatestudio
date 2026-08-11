@@ -44,3 +44,4 @@ public/guardia.txt
 # Son ~18 MB de PNG y se regeneran con claude-seo. Se quedan en local.
 src/docs/seo-audit-*/screenshots/
 src/docs/seo-audit-*/homepage-render.json
+.env*

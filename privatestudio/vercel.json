@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/circuit-refresh", "schedule": "0 * * * *" }
+  ]
+}
