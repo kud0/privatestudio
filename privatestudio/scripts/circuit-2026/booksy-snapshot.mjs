@@ -279,10 +279,15 @@ async function generarPanel(control, historial) {
     return n + (new Date(d.fecha + 'T12:00:00').getDay() === 1 ? 1 : 0);
   }, 1);
 
-  // Reservas del día: comparación con el primer snapshot de hoy, misma ventana.
+  // Reservas del día: huecos consumidos SOLO en el día de hoy entre el primer y
+  // el último snapshot de hoy. Comparar `total` (toda la ventana 1-15) en vez de
+  // `porDia[hoyISO]` mezclaba cancelaciones/huecos liberados de OTROS días con
+  // las reservas de hoy y podía enseñar 0 aunque hoy se hubiera llenado del todo.
   const hoyISO = control.actualizado.slice(0, 10);
   const deHoy = historial.filter(s => s.momento.slice(0, 10) === hoyISO && s.ventana);
-  const reservadasHoy = deHoy.length > 1 ? Math.max(0, deHoy[0].total - deHoy.at(-1).total) : 0;
+  const reservadasHoy = deHoy.length > 1
+    ? Math.max(0, (deHoy[0].porDia[hoyISO] ?? 0) - (deHoy.at(-1).porDia[hoyISO] ?? 0))
+    : 0;
 
   // Ritmo natural de reserva: citas que se llenan solas por día, calculado sobre
   // toda la serie de la misma ventana. Es el dato que dice si la campaña aporta algo.
@@ -484,7 +489,7 @@ async function main() {
   };
 
   const anterior = await estadoPublicado();
-  const resultado = await publicar(control, anterior, [...previos, { momento, ventana, total }]);
+  const resultado = await publicar(control, anterior, [...previos, { momento, ventana, total, porDia, porFranja }]);
   console.log(`\ncontrol: ${estado.toUpperCase()} — ${citasDisponibles} citas libres ${cuando}`);
   console.log(`   ${resultado}`);
 }
