@@ -41,13 +41,25 @@ export default async function handler(_req, res) {
       diasVentana.push({ fecha, citas: porDia[fecha] ?? 0, cerrado: estaCerrado(fecha) });
     }
 
-    // Reservas de hoy: huecos consumidos SOLO hoy entre el primer y el
-    // último snapshot de hoy guardados en Blob por /api/circuit-refresh.
+    // Reservas de hoy: suma de las bajadas reales en CUALQUIER día de la
+    // ventana entre el primer y el último snapshot de hoy — no solo en el
+    // hueco de hoy. Este negocio vende las citas del propio día muy pronto
+    // (el hueco de "hoy" en porDia suele desaparecer antes de la primera
+    // lectura de la mañana), así que mirar solo esa fecha daba 0 casi
+    // siempre aunque hubiera reservas reales entrando para otros días.
+    // Se suman solo las bajadas (día a día) y se ignoran las subidas para
+    // que una cancelación en un día no enmascare una reserva real en otro.
     const hoyISO = iso(new Date());
     const deHoy = historial.filter(s => s.momento.slice(0, 10) === hoyISO);
-    const reservadasHoy = deHoy.length > 1
-      ? Math.max(0, (deHoy[0].porDia?.[hoyISO] ?? 0) - (deHoy.at(-1).porDia?.[hoyISO] ?? 0))
-      : 0;
+    let reservadasHoy = 0;
+    if (deHoy.length > 1) {
+      const primero = deHoy[0].porDia ?? {};
+      const ultimo = deHoy.at(-1).porDia ?? {};
+      const dias = new Set([...Object.keys(primero), ...Object.keys(ultimo)]);
+      for (const d of dias) {
+        reservadasHoy += Math.max(0, (primero[d] ?? 0) - (ultimo[d] ?? 0));
+      }
+    }
 
     // Ritmo natural: huecos que se llenan solos por día, sobre toda la serie.
     let ritmo = null;
