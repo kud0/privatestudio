@@ -120,12 +120,12 @@
   </header>
 
   <h2 class="seccion">Huecos libres · 1 al 15 de agosto</h2>
-  <div class="calendario">
+  <div class="calendario" id="calendario">
       {{CALENDARIO}}
   </div>
   <div class="leyenda">
     El anuncio se enciende o se apaga según los dos próximos días abiertos
-    (<b>{{DECISIVOS}}</b>), marcados con la línea dorada. Los domingos no cuentan.
+    (<b id="decisivos">{{DECISIVOS}}</b>), marcados con la línea dorada. Los domingos no cuentan.
   </div>
 
   <h2 class="seccion">Dinero gastado</h2>
@@ -159,9 +159,9 @@
   </div>
 
   <div class="extra">
-    <div><div class="k">Reservadas hoy</div><div class="v">{{RESERVADAS}}</div></div>
-    <div><div class="k">Libres 1–15 ago</div><div class="v">{{VENTANA}}</div></div>
-    <div><div class="k">Ritmo</div><div class="v">{{RITMO}}<small>/día</small></div></div>
+    <div><div class="k">Reservadas hoy</div><div class="v" id="reservadas">{{RESERVADAS}}</div></div>
+    <div><div class="k">Libres 1–15 ago</div><div class="v" id="ventana">{{VENTANA}}</div></div>
+    <div><div class="k">Ritmo</div><div class="v" id="ritmo">{{RITMO}}<small>/día</small></div></div>
     <div><div class="k">Radio</div><div class="v">1,5 km</div></div>
   </div>
 
@@ -303,6 +303,67 @@
   }
 
   leer(1);
+})();
+
+/* Calendario, ritmo y reservas de hoy: igual que el gasto de arriba, se leen
+   en vivo al abrir la página en vez de depender de que alguien haya publicado
+   el HTML recientemente. El fichero que genera este panel (booksy-snapshot.mjs,
+   por cron local) sigue existiendo como respaldo — si este fetch falla, se
+   queda el dato que ese cron dejó horneado en el HTML, nunca un hueco en blanco. */
+(function () {
+  var API = 'https://www.barberbarcelona.es/api/circuit-panel-data';
+  var $ = function (id) { return document.getElementById(id); };
+  var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+  function fila(d, hoyFecha, decisivos, maximo) {
+    var f = new Date(d.fecha + 'T12:00:00');
+    var nombre = DIAS[f.getDay()].slice(0, 3);
+    var esHoy = d.fecha === hoyFecha;
+    var pasado = d.fecha < hoyFecha;
+
+    var clases = ['fila'];
+    if (d.cerrado) clases.push('cerrado');
+    if (esHoy) clases.push('hoy');
+    if (pasado) clases.push('pasado');
+    if (decisivos.indexOf(d.fecha) !== -1) clases.push('decide');
+    if (!d.cerrado && !pasado && d.citas === 0) clases.push('lleno');
+
+    var etiqueta = esHoy ? 'Hoy' : nombre.charAt(0).toUpperCase() + nombre.slice(1);
+    var ancho = d.cerrado ? 0 : Math.round((d.citas / maximo) * 100);
+    var texto = d.cerrado ? 'cerrado' : pasado ? '—' : d.citas === 0 ? 'lleno' : String(d.citas);
+
+    var fila = document.createElement('div');
+    fila.className = clases.join(' ');
+    fila.innerHTML = '<div class="f">' + etiqueta + ' ' + f.getDate() + '</div>' +
+      '<div class="b"><i style="width:' + ancho + '%"></i></div>' +
+      '<div class="c">' + texto + '</div>';
+    return fila;
+  }
+
+  function pintarPanel(d) {
+    var hoyFecha = d.control.actualizado.slice(0, 10);
+    var decisivos = Object.keys(d.control.detalle_48h || {});
+    var maximo = Math.max(1, ...d.dias_ventana.map(function (x) { return x.citas; }));
+
+    var cal = $('calendario');
+    cal.innerHTML = '';
+    d.dias_ventana.forEach(function (dia) { cal.appendChild(fila(dia, hoyFecha, decisivos, maximo)); });
+
+    var nombres = decisivos.map(function (fecha) {
+      var f = new Date(fecha + 'T12:00:00');
+      return fecha === hoyFecha ? 'hoy' : DIAS[f.getDay()];
+    });
+    $('decisivos').textContent = nombres.join(' · ');
+
+    $('reservadas').textContent = d.reservadas_hoy;
+    $('ventana').textContent = d.citas_ventana;
+    $('ritmo').textContent = d.ritmo === null ? '—' : d.ritmo;
+  }
+
+  fetch(API, { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(pintarPanel)
+    .catch(function () { /* se queda el dato horneado por el cron local, sin avisos ruidosos */ });
 })();
 </script>
 </body>
