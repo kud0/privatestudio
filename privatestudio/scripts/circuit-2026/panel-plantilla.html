@@ -193,6 +193,18 @@
     return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
   };
 
+  // Ad schedule nativo de la campaña en Google Ads (comprobado a mano en la
+  // UI, no lo gestiona ningún script): L-V 9:00-20:00, domingo nada. El
+  // sábado tiene horario reducido pero no está confirmado con exactitud
+  // aquí, así que no se avisa ese día para no afirmar algo sin comprobar.
+  var fueraDeHorario = function (ahora) {
+    var dia = ahora.getDay();
+    var hora = ahora.getHours() + ahora.getMinutes() / 60;
+    if (dia === 0) return true;
+    if (dia >= 1 && dia <= 5) return hora < 9 || hora >= 20;
+    return false;
+  };
+
   // «2026-08-01» → «1 de agosto». Nadie lee fechas ISO de un vistazo.
   var enCastellano = function (fechaIso) {
     var p = fechaIso.split('-');
@@ -237,8 +249,13 @@
     if (d.estado) {
       var e = $('estado');
       var pausada = d.estado === 'pausada';
-      e.textContent = pausada ? 'Pausada' : 'En marcha';
-      e.className = 'estado ' + (pausada ? 'warn' : 'ok');
+      // "Activada" (lo que vigila el guardián: agenda + tope de gasto) no es
+      // lo mismo que "mostrándose ahora mismo": el horario nativo de la
+      // campaña (L-V 9:00-20:00, domingo nada) corta el anuncio sin
+      // desactivarla, y decir "En marcha" a las 22h confunde más que ayuda.
+      var fuera = !pausada && fueraDeHorario(new Date());
+      e.textContent = pausada ? 'Pausada' : fuera ? 'Activada · fuera de horario' : 'En marcha';
+      e.className = 'estado ' + (pausada || fuera ? 'warn' : 'ok');
     }
 
     // Estado del propio sistema, para no tener que fiarse de que "va solo".
