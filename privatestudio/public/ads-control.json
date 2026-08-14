@@ -1,20 +1,20 @@
 {
-  "estado": "pausa",
+  "estado": "activa",
   "presupuesto_diario": 20,
-  "citas_48h": 0,
+  "citas_48h": 20,
   "proximos_abiertos": [
     {
-      "fecha": "2026-08-13",
-      "citas": 0
+      "fecha": "2026-08-14",
+      "citas": 2
     },
     {
-      "fecha": "2026-08-14",
-      "citas": 0
+      "fecha": "2026-08-17",
+      "citas": 18
     }
   ],
   "detalle_48h": {
-    "2026-08-13": 0,
-    "2026-08-14": 0
+    "2026-08-14": 2,
+    "2026-08-17": 18
   },
   "dias_ventana": [
     {
@@ -93,11 +93,11 @@
       "fecha": "2026-08-13",
       "citas": 0,
       "cerrado": false,
-      "decide": true
+      "decide": false
     },
     {
       "fecha": "2026-08-14",
-      "citas": 0,
+      "citas": 2,
       "cerrado": false,
       "decide": true
     },
@@ -108,8 +108,8 @@
       "decide": false
     }
   ],
-  "citas_ventana": 0,
-  "actualizado": "2026-08-13T19:00:01.259Z",
+  "citas_ventana": 2,
+  "actualizado": "2026-08-14T07:00:01.649Z",
   "hoy_cerrado": false,
-  "motivo": "sin huecos hoy y viernes: no se paga por clics que no pueden reservar"
+  "motivo": "20 citas libres hoy y lunes"
 }
