@@ -1,7 +1,7 @@
 {
   "estado": "activa",
   "presupuesto_diario": 20,
-  "citas_48h": 6,
+  "citas_48h": 4,
   "proximos_abiertos": [
     {
       "fecha": "2026-08-19",
@@ -9,12 +9,12 @@
     },
     {
       "fecha": "2026-08-20",
-      "citas": 6
+      "citas": 4
     }
   ],
   "detalle_48h": {
     "2026-08-19": 0,
-    "2026-08-20": 6
+    "2026-08-20": 4
   },
   "dias_ventana": [
     {
@@ -109,7 +109,7 @@
     }
   ],
   "citas_ventana": 0,
-  "actualizado": "2026-08-19T11:00:01.485Z",
+  "actualizado": "2026-08-19T13:00:00.456Z",
   "hoy_cerrado": false,
-  "motivo": "6 citas libres hoy y jueves"
+  "motivo": "4 citas libres hoy y jueves"
 }
