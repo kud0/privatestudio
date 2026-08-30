@@ -1,20 +1,20 @@
 {
-  "estado": "activa",
+  "estado": "pausa",
   "presupuesto_diario": 20,
-  "citas_48h": 7,
+  "citas_48h": 15,
   "proximos_abiertos": [
     {
-      "fecha": "2026-08-29",
-      "citas": 0
+      "fecha": "2026-08-31",
+      "citas": 6
     },
     {
-      "fecha": "2026-08-31",
-      "citas": 7
+      "fecha": "2026-09-01",
+      "citas": 9
     }
   ],
   "detalle_48h": {
-    "2026-08-29": 0,
-    "2026-08-31": 7
+    "2026-08-31": 6,
+    "2026-09-01": 9
   },
   "dias_ventana": [
     {
@@ -109,7 +109,7 @@
     }
   ],
   "citas_ventana": 0,
-  "actualizado": "2026-08-29T19:00:01.917Z",
-  "hoy_cerrado": false,
-  "motivo": "7 citas libres hoy y lunes"
+  "actualizado": "2026-08-30T11:00:00.885Z",
+  "hoy_cerrado": true,
+  "motivo": "la barbería no abre hoy: no se paga por anunciarse con la persiana bajada"
 }
