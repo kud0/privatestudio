@@ -5,16 +5,16 @@
   "proximos_abiertos": [
     {
       "fecha": "2026-09-09",
-      "citas": 1
+      "citas": 0
     },
     {
       "fecha": "2026-09-10",
-      "citas": 7
+      "citas": 8
     }
   ],
   "detalle_48h": {
-    "2026-09-09": 1,
-    "2026-09-10": 7
+    "2026-09-09": 0,
+    "2026-09-10": 8
   },
   "dias_ventana": [
     {
@@ -109,7 +109,7 @@
     }
   ],
   "citas_ventana": 0,
-  "actualizado": "2026-09-09T15:00:01.311Z",
+  "actualizado": "2026-09-09T17:00:01.219Z",
   "hoy_cerrado": false,
   "motivo": "8 citas libres hoy y jueves"
 }
