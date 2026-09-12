@@ -29,7 +29,7 @@ const {
 	alternates,
 } = Astro.props;
 const canonicalUrl = canonicalDomain + Astro.url.pathname;
-const ogImage = canonicalDomain + '/images/og-share.jpg';
+const ogImage = canonicalDomain + '/images/og-share.jpg?v=2';
 
 // Solo se emite el cluster hreflang si hay al menos dos versiones reales.
 // x-default apunta al espanol: el mercado local es el primario.
@@ -122,7 +122,7 @@ const xDefault = alternates?.es;
 				}
 			],
 			"priceRange": "€€",
-			"image": "https://www.barberbarcelona.es/images/og-share.jpg",
+			"image": "https://www.barberbarcelona.es/images/og-share.jpg?v=2",
 			"sameAs": [
 				"https://www.instagram.com/private.studiobcn/",
 				"https://www.facebook.com/profile.php?id=61574816260980",
