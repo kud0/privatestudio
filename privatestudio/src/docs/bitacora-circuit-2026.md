@@ -1046,3 +1046,125 @@ autorizado del guardián para consultas puntuales. Si hace falta correr algo
 de una vez, hacerlo y **verificar en el mismo momento** que el código del
 guardián queda repuesto antes de cerrar la tarea — no dejarlo para luego.
 
+### 2026-08-05 a 08 · Dos días de margen superado, pausa manual y recorte de presupuesto/radio
+
+**05 ago (26,19 €).** El guardián solo revisa una vez por hora: entre el check
+de las 16:51 (`hoy=20.77/20.00 → sin cambios`) y el de las 17:51
+(`hoy=25.08/20.00 → pausada por tope del día`) el gasto subió 4,31 € en una
+sola hora, saltando directo el umbral de margen (20×1.15 = 23 €) antes de que
+hubiera ocasión de detectarlo. Tras la pausa, el gasto siguió subiendo hasta
+26,19 € por el retraso normal de Google en contabilizar clics ya en curso.
+
+**06 ago.** Alex pidió pausar manualmente al ver 21,43 € (por debajo del
+margen todavía). Al pausar a mano, el guardián reactivó la campaña sola en el
+siguiente check porque `control=activa` (agenda con hueco) y el gasto seguía
+bajo el margen — mismo mecanismo que ya se había avisado el día anterior.
+Presupuesto subido de 16 € a 10 € y luego a 16 € otra vez en pasos previos de
+la sesión (ver hilos anteriores); consolidado más abajo.
+
+**07 ago.** Nueva pausa manual pedida explícitamente para que **no** se
+reactivara sola. Esta vez además se **desactivó el script del guardián**
+(Scripts > Guardian Circuit 2026 > Options > Disable) para que no pudiera
+tocar nada mientras la campaña está parada. Efecto colateral esperado: el
+panel (`panel-76380b752010.html`), que publica el propio guardián, se queda
+congelado en el último dato mientras esté desactivado.
+
+**08 ago · Cambios de configuración para la semana que viene.** Con la
+campaña todavía pausada y el guardián todavía desactivado:
+- **Presupuesto: 16 € → 10 €/día.**
+- **Radio: 2 km → 1,5 km** alrededor de Carrer de Muntaner, 172, Barcelona
+  (el radio real de la campaña era 2 km, no 1,5 km como se pensaba antes de
+  comprobarlo).
+
+Objetivo explícito de Alex: *"intentar maximizar el budget, buscar la gente
+cercana que realmente está interesada"* — apostar por proximidad e intención
+sobre volumen, dado que el 82% de los clics ya venían de la ficha/Maps
+("Get location details"), no del anuncio clásico de búsqueda.
+
+**Pendiente, no ejecutado:** la campaña y el guardián siguen ambos pausados/
+desactivados a cierre de esta sesión. El plan es reactivar ambos el lunes 10
+de agosto para arrancar la semana con la nueva configuración (10 €/día,
+1,5 km) — hay que hacerlo a mano ese día, nada se reactiva solo.
+
+**Nota de herramienta:** esta sesión se conectó por primera vez a la
+extensión de Chrome de Claude (`mcp__claude-in-chrome__*`) como alternativa a
+Playwright para operar el navegador real de Alex. Iba desconectada al
+principio de la sesión (solo apareció como herramienta disponible tras un
+resume); una vez cargada y seleccionado el único navegador conectado
+(`select_browser`), funcionó con normalidad para editar presupuesto y radio.
+
+### 2026-08-08 (más tarde) · Reactivación y guardián reconstruido en un script nuevo
+
+Alex aclaró que el cambio a 10 €/1,5 km era para arrancar **hoy**, no el
+lunes. Campaña reactivada (Enabled) sobre las 13:55.
+
+**El guardián viejo (scriptId 12022525) quedó irrecuperable desde la
+interfaz.** Una vez un script queda "Disabled", la lista de Scripts de
+Google Ads lo excluye por completo — no aparece ni con filtros, ni
+buscando por nombre, ni ampliando a 30 días — y su página de edición
+directa (`/scripts/edit?...`) se queda con Run/Save bloqueados
+permanentemente. No hay botón "Enable" visible en ningún sitio de la UI
+actual para revertir un Disable.
+
+**Arreglo:** se creó un script nuevo desde cero con el mismo nombre
+("Guardian Circuit 2026", scriptId nuevo 12071869), inyectando el código
+real de `ads-script-guardia.js` directamente en el editor CodeMirror vía
+`javascript_tool` (base64 + `atob` para evitar problemas de escapado con
+acentos y símbolos, sin necesidad de publicar nada a `public/`). Guardado,
+autorizado y con trigger horario configurado igual que el original.
+
+**La autorización sí exigió el passkey de Alex**, confirmando lo ya
+anotado en `ads-script-servicio-nuevo-tumba-el-script`: un script con
+SpreadsheetApp/MailApp/UrlFetchApp/AdsApp pide reautorización real, no
+delegable por automatización. Los primeros intentos de "Run" fallaban en
+silencio (la advertencia de autorización volvía a aparecer tras cada
+click) hasta que Alex completó el passkey por su cuenta; después el script
+corrió limpio a la primera: `control=activa | gastado=133.62 |
+hoy=2.20/10.00 → sin cambios`.
+
+**Verificado:** panel (CSV) actualizado en vivo tras la ejecución
+(`actualizado,2026-08-08 14:42`, `presupuesto_diario,10`,
+`gastado_hoy,2.2`) — ya no muestra el dato congelado del viernes. Script
+en la lista con Frequency: Hourly, Status: Enabled.
+
+**Pendiente:** el script viejo (12022525) queda muerto/desactivado sin
+limpiar — no hace nada, pero conviene recordarlo si alguna vez se busca
+"el guardián" y no aparece por nombre coincidente en un histórico viejo.
+
+### 2026-08-27 · Arranque post-Circuit, campaña más concreta, 6 €/día
+
+- **Qué:** script one-shot `Arranque concreto 2026-08-27` (scriptId 12212757).
+  Presupuesto 10→6 €/día. Radio 1,5 km → 1,0 km Muntaner 172. Fecha fin
+  campaña 15 ago 2026 → 31 dic 2027. Pausadas keywords genéricas
+  (barberia, barberia cerca de mi, barberia barcelona, barber barcelona,
+  barber near me, haircut barcelona, barbershop barcelona). Creadas 6 ES
+  (visagismo / eixample / muntaner / asesoria) y 5 EN (english speaking,
+  eixample, grooming). Campaña **Enabled / Eligible**.
+- **Errores (2):** RSA visagismo no creados — límite 3 RSA enabled por ad group.
+- **Guardián en Ads:** sigue con FIN Circuit 15 ago en el código que corre
+  en Google. En repo `ads-script-guardia.js` ya apunta INICIO 27 ago /
+  FIN 2027-12-31 / TOPE 180. Frequency del guardián en UI era "—" (último
+  run 13 ago). Si se reprograma horario sin pegar el código nuevo, pausará
+  la campaña por ventana caducada.
+- **Verificado:** tabla Campaigns → PS | Search | Barcelona €6.00/day Eligible.
+
+### 2026-08-27 (tarde) · Dashboard + guardián 9–19 y tope diario al 100 %
+
+- **Qué:** dashboard `public/ads-dashboard.html` (noindex) leyendo
+  `ads-social-estado.json`. Guardián (scriptId 12071869) reescrito:
+  pausa al 100 % del presupuesto del día (`MARGEN_DIARIO = 1.0`),
+  enable/pause 9–19 Europe/Madrid, ad schedule nativo 9:00–19:00 los 7
+  días, agenda Booksy igual. Tope de periodo Circuit desactivado (`0`).
+- **Por qué:** el budget nativo de Google no es de fiar; Alex pidió
+  dashboard de control + pause al budget + 9–19 cada día.
+- **Estado anterior:** Frequency "—", código en Ads con FIN Circuit
+  15 ago, MARGEN 1.15, horario solo nativo L–V 11–20.
+- **Ads:** código pegado, Save, Run 13:45 y 13:54. Frequency **Hourly**.
+  Log 13:54: `hora=13 | horario-nativo=9-19 ok x7 | control=activa |
+  hoy=0.00/6.00 → sin cambios`. Change history 13:45: 5 ad schedules
+  quitados, 6 añadidos 09:00–19:00 (Mon–Fri + Sun). El segundo run
+  reporta 7/7.
+- **Verificado:** Scripts lista Frequency Hourly, Enabled; log de
+  ejecución 2086615876521256244; dashboard desktop+móvil con Google
+  6 €, TikTok 20 € draft, Meta pendiente.
+

@@ -1,127 +1,68 @@
 /**
- * GUARDIÁN DE CAMPAÑA — Circuit Festival 2026 · Private Studio (608-571-5182)
+ * GUARDIÁN — Private Studio Search (608-571-5182)
+ * Campaña: PS | Search | Barcelona
  *
- * Qué es: un Google Ads Script. Se ejecuta DENTRO de Google Ads, con los permisos
- * de la cuenta. No necesita developer token, ni OAuth, ni que nadie tenga sesión
- * abierta — por eso es el único mecanismo fiable cuando Alex no está delante.
+ * Google Ads Script. Corre DENTRO de la cuenta, cada hora, sin que nadie
+ * tenga sesión abierta. El presupuesto diario nativo de Google no es de
+ * fiar (se pasa y "compensa" en el mes): este script pausa al llegar al
+ * 100 % del día. El horario 9–19 va por partida doble: ad schedule nativo
+ * (corta el serving al instante) + pause/enable aquí (por si el schedule
+ * se borra o Google lo ignora).
  *
- * Instalación (una vez, con la campaña ya creada):
- *   Google Ads → Herramientas → Acciones masivas → Scripts → +
- *   Pegar este archivo · Autorizar · Vista previa · Guardar
- *   Programar: "Cada hora"
+ * Cada hora:
+ *   1. Fuera de 9–19 (Europe/Madrid) → pausa. Dentro → puede activar.
+ *   2. Agenda Booksy: si CONTROL_URL dice pausa, pausa.
+ *   3. Gasto de HOY >= presupuesto diario → pausa hasta mañana.
+ *   4. Ad schedule nativo: todos los días 9:00–19:00. Lo repara si falta.
  *
- * Qué hace cada hora:
- *   1. Agenda: si CONTROL_URL dice {"estado":"pausa"} (sin huecos en 48 h), pausa.
- *      Si no responde, NO toca nada. El importe diario no se toca: se fija a mano.
- *   2. Tope de gasto del periodo: si el gasto acumulado supera TOPE_PERIODO,
- *      pausa y avisa. Es la red de seguridad contra un error de configuración.
- *   3. Aviso por email al llegar al 80% del tope.
- *   4. Informe diario por correo: una vez al día, en la ejecución de las 8 h.
- *      Va dentro del guardián a propósito — un script aparte exigiría una
- *      autorización nueva de Google con passkey, y esto debe funcionar sin
- *      depender de que Alex esté delante.
+ * Ante fallo de red / control ilegible: no pausa por agenda. Sí respeta
+ * horario y tope diario (eso no depende del control).
  *
- * El horario NO lo gestiona este script: lo hace el ad schedule nativo de la
- * campaña (L–V 11–20, sáb 11–19, domingo nada). Duplicarlo aquí solo añadiría
- * riesgo de dejar la campaña pausada por un fallo de lectura.
- *
- * Diseño: por defecto NO hace nada destructivo. Ante cualquier duda (fallo de red,
- * respuesta ilegible) deja la campaña como está y avisa. Preferimos gastar de más
- * un día que apagar la campaña por un error de lectura en pleno pico.
+ * Instalación: Herramientas → Acciones masivas → Scripts.
+ * Pegar · Autorizar · Programar: Cada hora.
  */
 
 // ─── Configuración ──────────────────────────────────────────────────────────
 
 var CAMPANA = 'PS | Search | Barcelona';   // campaignId 22697186771
 
-// Tope de gasto para la ventana del festival. La campaña empieza el 1 de agosto
-// y estos 200 € cubren del 1 al 15. Decisión de Alex, 1 ago.
-var TOPE_PERIODO = 200;
-
-// Lo gastado el 31 de julio, antes de que arrancara la ventana. No cuenta contra
-// el tope; se publica solo para que el panel pueda enseñarlo y el número cuadre
-// con lo que Google cobra de verdad.
+// Ventana de stats / fecha de fin de campaña. Tope de PERIODO desactivado
+// (0): esto ya no es Circuit 1–15 ago. El freno de dinero es el diario.
+var TOPE_PERIODO = 0;
 var GASTADO_ANTES = 19.99;
+var INICIO = '2026-08-27';
+var FIN    = '2027-12-31';
 
-var INICIO = '2026-08-01';
-var FIN    = '2026-08-15';
+// 9:00 inclusive → 19:00 exclusive. A las 19:00 ya está pausada.
+var HORA_INICIO = 9;
+var HORA_FIN    = 19;
 
-// Endpoint EN VIVO (Vercel serverless, /api/circuit-control): calcula el
-// estado consultando Booksy en el momento de cada petición, sin publicar ni
-// cachear nada de antemano. Sustituye al fichero estático ads-control.json
-// que publicaba el cron del Mac de Alex — ese cron se saltaba el run entero
-// si el portátil estaba dormido, dejando la campaña con un dato congelado
-// sin que nadie se enterara. Ver commit del 12 ago 2026.
-// Si no responde o es ilegible, el guardián no toca ni estado ni presupuesto.
+// 1.0 = al llegar al presupuesto del día, para. Sin el 15 % extra que
+// Google se permite. Los datos llegan con minutos de retraso: entre
+// dos ejecuciones horarias aún puede colarse un clic de más. Por eso
+// el ad schedule nativo también corta a las 19:00.
+var MARGEN_DIARIO = 1.0;
+
 var CONTROL_URL = 'https://www.barberbarcelona.es/api/circuit-control';
-
-// El plan de Vercel es Hobby: solo permite un cron propio al día, no cada
-// hora. En vez de depender de eso, el propio guardián (que ya corre cada
-// hora, fiable, en los servidores de Google) dispara el guardado del
-// historial de tendencia (ritmo, reservas de hoy) que usa el panel. Best
-// effort: si falla, no afecta a pausa/activa ni al gasto.
 var REFRESH_URL = 'https://www.barberbarcelona.es/api/circuit-refresh';
 var REFRESH_SECRET = 'REEMPLAZAR_CON_EL_CRON_SECRET';
-
-// Horas que puede tener el control antes de dejar de creérselo.
-//
-// El cron que lo publica corre en un Mac. Si ese Mac se apaga, se queda sin red,
-// o la barbería migra de Booksy a otro sistema y el script deja de funcionar, el
-// fichero se queda congelado — pero sigue respondiendo 200 y diciendo "activa".
-// Sin esta comprobación el guardián se creería un dato de hace días y podría
-// estar pagando clics con la agenda llena.
-//
-// Catorce horas y no ocho: el cron corre cada dos horas de 9 a 21, pero de
-// madrugada no corre nadie, así que a las 8:51 el control tiene 12 h de vida
-// legítimas. Con el umbral en ocho, la campaña se apagaba sola cada noche y
-// mandaba una alarma falsa cada mañana — pasó el 2 de agosto de 2026. Catorce
-// deja pasar el silencio nocturno normal y sigue cazando un fallo de verdad:
-// durante el día harían falta siete ejecuciones seguidas fallidas para llegar.
 var MAX_HORAS_CONTROL = 14;
 
 var EMAIL_AVISOS = 'alexsole@gmail.com';
-
-var UMBRAL_AVISO = 0.8;   // avisar al consumir este % del tope
-
-/**
- * Cuánto se tolera pasarse del presupuesto diario antes de parar el día.
- *
- * Google se permite gastar bastante más que el importe diario en un día suelto
- * —dice que lo compensa a lo largo del mes— y desde 2026 reparte pensando en el
- * mes entero, no en el día. El 3 de agosto de 2026, con 20 €/día configurados,
- * gastó 31,49 €: un 57 % de más.
- *
- * Eso no rompe el tope total, pero se come el presupuesto de la ventana mucho
- * antes de tiempo: a ese ritmo los 200 € pactados hasta el día 15 se habrían
- * agotado el día 8. Con este freno, cada día gasta lo suyo y el dinero llega
- * hasta donde tiene que llegar.
- *
- * 1.15 y no 1.0 porque los datos de Google llegan con minutos de retraso: pedir
- * exactitud absoluta haría pausar y reactivar sin parar.
- */
-var MARGEN_DIARIO = 1.15;
-
-// Hora (0-23) a la que se envía el informe diario. La ejecución horaria que
-// caiga en esta hora lo dispara; las demás no.
+var UMBRAL_AVISO = 0.8;
 var HORA_INFORME = 8;
 
-var URL_PANEL  = 'https://www.barberbarcelona.es/panel-76380b752010.html';
+var URL_PANEL  = 'https://ps-ads-seven.vercel.app';
 var URL_AGENDA = 'https://booksy.com/es-es/90283_private-studio_barberia_48863_barcelona';
-
-// Hoja «PS Circuit 2026 — gasto». Publicada como CSV para que el panel pueda
-// leer el gasto real sin necesidad de credenciales:
-//   .../2PACX-1vQFDtzeZFuF68CwZCuBTt858Ysn9VIpej9rSOQpycXoQu_Qf7hXRJ5jl1JwMHedtw3qeGLkT9nKE-KP/pub?output=csv
-// Es el único puente entre lo que Google Ads sabe y lo que el panel enseña.
 var HOJA_ID = '16n-xk77i2ep7Vk5HKxbm8QEvme-RcIhcnm-vC5i6uf0';
+
+var DIAS_SEMANA = [
+  'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY',
+  'FRIDAY', 'SATURDAY', 'SUNDAY'
+];
 
 // ─── Ejecución ──────────────────────────────────────────────────────────────
 
-/**
- * Separa las dos responsabilidades: `proteger` decide y actúa sobre el dinero,
- * `publicarMetricas` solo informa. La publicación va en un finally para que
- * salga por cualquiera de las tres salidas de `proteger`, y dentro de su propio
- * try/catch: un fallo escribiendo la hoja nunca puede tumbar la protección.
- */
 function main() {
   var campana = buscarCampana(CAMPANA);
   if (!campana) {
@@ -141,47 +82,48 @@ function main() {
 
 function proteger(campana) {
   var registro = [];
+  var zona = AdsApp.currentAccount().getTimeZone();
+  var ahora = new Date();
+  var hoyIso = Utilities.formatDate(ahora, zona, 'yyyy-MM-dd');
+  var hora = parseInt(Utilities.formatDate(ahora, zona, 'H'), 10);
+  registro.push('hora=' + hora);
 
-  // 0 · Informe diario (antes que nada: debe salir aunque luego se pause)
   informeDiarioSiToca(campana);
 
-  // 0.5 · Fuera de la ventana contratada no se gasta, y punto.
-  //
-  // La campaña tiene fecha de fin puesta en Google Ads, pero esto es la segunda
-  // cerradura. Sin ella, si alguien quitara esa fecha, el 16 de agosto la
-  // campaña seguiría a 20 €/día y el guardián NO la pararía: su contador solo
-  // suma del 1 al 15, así que a partir del 16 se queda congelado por debajo del
-  // tope para siempre. Serían 600 € al mes del bolsillo del cliente sin que
-  // saltara ninguna alarma.
-  var hoyIso = Utilities.formatDate(new Date(),
-                 AdsApp.currentAccount().getTimeZone(), 'yyyy-MM-dd');
+  try {
+    registro.push(aplicarHorarioNativo(campana));
+  } catch (e) {
+    Logger.log('ad schedule nativo: ' + e);
+    registro.push('horario-nativo=error');
+  }
+
   if (hoyIso > FIN) {
     if (campana.isEnabled()) {
       campana.pause();
-      avisar('Campaña pausada: fin de la ventana contratada',
-             'Hoy es ' + hoyIso + ' y la ventana acordada terminó el ' + FIN + '.\n\n' +
-             'La campaña queda pausada. Para volver a usarla hay que decidir un ' +
-             'presupuesto nuevo y quitar la fecha de fin en Google Ads.');
+      avisar('Campaña pausada: fin de fecha',
+             'Hoy es ' + hoyIso + ' y la fecha de fin es ' + FIN + '.\n\n' +
+             'La campaña queda pausada.');
     }
-    Logger.log('fuera de ventana (' + hoyIso + ' > ' + FIN + ') → pausada');
+    Logger.log('fuera de fecha (' + hoyIso + ' > ' + FIN + ') → pausada');
     return;
   }
 
-  // 1 · Agenda: si no hay huecos en los próximos días abiertos, pausar
+  // Horario 9–19. Pausa de noche / madrugada sin email (es rutinario).
+  if (hora < HORA_INICIO || hora >= HORA_FIN) {
+    if (campana.isEnabled()) campana.pause();
+    Logger.log(registro.join(' | ') + ' → pausada por horario (9–19)');
+    return;
+  }
+
   var control = leerControl();
   registro.push('control=' + control.estado);
 
-  // Control caducado: nadie sabe si queda hueco. Se para y se avisa. Perder unas
-  // horas de anuncios es recuperable; pagar clics a una agenda llena, no.
   if (control.estado === 'caducado') {
     if (campana.isEnabled()) {
       campana.pause();
       avisar('Campaña pausada: el control de agenda no se actualiza',
              'Motivo: ' + control.motivo + '.\n\n' +
-             'El guardián ya no sabe si quedan huecos, así que ha parado la campaña ' +
-             'para no gastar a ciegas. Suele significar que el ordenador que publica ' +
-             'la agenda está apagado, sin red, o que el sistema de reservas ha cambiado.\n\n' +
-             'La campaña se reactivará sola en cuanto el control vuelva a publicarse.');
+             'El guardián ya no sabe si quedan huecos, así que ha parado la campaña.');
     }
     Logger.log(registro.join(' | ') + ' → pausada por control caducado: ' + control.motivo);
     return;
@@ -197,7 +139,6 @@ function proteger(campana) {
     return;
   }
 
-  // 2 · Tope de gasto del periodo
   var gastado = gastoPeriodo(campana);
   registro.push('gastado=' + gastado.toFixed(2));
 
@@ -206,22 +147,18 @@ function proteger(campana) {
       campana.pause();
       avisar('Campaña pausada: tope de periodo alcanzado',
              'Gasto acumulado del periodo: €' + gastado.toFixed(2) +
-             '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '. La campaña queda pausada.');
+             '. Tope configurado: €' + TOPE_PERIODO.toFixed(2) + '.');
     }
-    Logger.log(registro.join(' | ') + ' → pausada por tope');
+    Logger.log(registro.join(' | ') + ' → pausada por tope de periodo');
     return;
   }
 
   if (TOPE_PERIODO > 0 && gastado >= TOPE_PERIODO * UMBRAL_AVISO && !avisoYaEnviado()) {
-    avisar('Aviso: ' + Math.round(UMBRAL_AVISO * 100) + '% del presupuesto consumido',
-           'Gasto acumulado: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) +
-           '. La campaña sigue activa.');
+    avisar('Aviso: ' + Math.round(UMBRAL_AVISO * 100) + '% del presupuesto de periodo',
+           'Gasto acumulado: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) + '.');
     marcarAvisoEnviado();
   }
 
-  // 2.5 · Tope del día. Va DESPUÉS del tope del periodo y ANTES de reactivar:
-  // si hoy ya se ha gastado lo suyo, la campaña se queda parada hasta mañana
-  // aunque la agenda tenga huecos de sobra.
   var diario = campana.getBudget().getAmount();
   var gastadoHoy = campana.getStatsFor('TODAY').getCost();
   registro.push('hoy=' + gastadoHoy.toFixed(2) + '/' + diario.toFixed(2));
@@ -229,35 +166,64 @@ function proteger(campana) {
   if (diario > 0 && gastadoHoy >= diario * MARGEN_DIARIO) {
     if (campana.isEnabled()) {
       campana.pause();
-      avisar('Campaña pausada: se ha gastado lo del día',
+      avisar('Campaña pausada: presupuesto del día agotado',
              'Hoy lleva €' + gastadoHoy.toFixed(2) + ' con un presupuesto de €' +
              diario.toFixed(2) + '/día.\n\n' +
-             'Google se permite pasarse del importe diario y compensarlo durante el mes, ' +
-             'pero eso adelanta el final de la ventana contratada. La campaña queda ' +
-             'parada hasta mañana y vuelve sola.\n\n' +
-             'Acumulado del periodo: €' + gastado.toFixed(2) + ' de €' + TOPE_PERIODO.toFixed(2) + '.');
+             'Google se permite pasarse del importe diario. El guardián la para ' +
+             'al 100 % y la vuelve a abrir mañana a las ' + HORA_INICIO + ':00.\n\n' +
+             'Panel: ' + URL_PANEL);
     }
     Logger.log(registro.join(' | ') + ' → pausada por tope del día');
     return;
   }
 
-  // 3 · Reactivar si vuelve a haber huecos y la campaña estaba pausada
-  if (control.estado === 'activa' && !campana.isEnabled()) {
+  // Dentro de 9–19, bajo presupuesto, agenda no en pausa.
+  // control=auto (fetch fallido) también activa: no dejarla muerta
+  // toda la mañana porque Booksy no contestó. Ya salimos si era pausa/caducado.
+  if (!campana.isEnabled()) {
     campana.enable();
-    avisar('Campaña reactivada', 'Vuelve a haber huecos: ' + control.motivo);
-    Logger.log(registro.join(' | ') + ' → reactivada');
+    Logger.log(registro.join(' | ') + ' → activada (horario ' + HORA_INICIO + '–' + HORA_FIN + ')');
     return;
   }
 
   Logger.log(registro.join(' | ') + ' → sin cambios');
 }
 
+/**
+ * Corta el serving a las 19:00 aunque el script tarde hasta :59 en correr.
+ * Si ya hay exactamente 7 franjas 9:00–19:00, no toca nada.
+ */
+function aplicarHorarioNativo(campana) {
+  var porDia = {};
+  var it = campana.targeting().adSchedules().get();
+  while (it.hasNext()) {
+    var s = it.next();
+    var dia = String(s.getDayOfWeek()).toUpperCase();
+    var ok = s.getStartHour() === HORA_INICIO && s.getStartMinute() === 0 &&
+             s.getEndHour() === HORA_FIN && s.getEndMinute() === 0;
+    if (ok && !porDia[dia]) porDia[dia] = s;
+    else s.remove();
+  }
+  var anadidos = 0;
+  var i;
+  for (i = 0; i < DIAS_SEMANA.length; i++) {
+    if (porDia[DIAS_SEMANA[i]]) continue;
+    campana.addAdSchedule({
+      dayOfWeek: DIAS_SEMANA[i],
+      startHour: HORA_INICIO,
+      startMinute: 0,
+      endHour: HORA_FIN,
+      endMinute: 0,
+      bidModifier: 1
+    });
+    anadidos++;
+  }
+  if (anadidos === 0) return 'horario-nativo=9-' + HORA_FIN + ' ok x' + DIAS_SEMANA.length;
+  return 'horario-nativo=anadidos ' + anadidos;
+}
+
 // ─── Publicación de métricas ────────────────────────────────────────────────
 
-/**
- * Vuelca el estado real de la campaña en la hoja, en pares clave/valor, que es
- * lo más fácil de leer para el panel desde el CSV publicado.
- */
 function publicarMetricas(campana) {
   if (!HOJA_ID) return;
 
@@ -265,9 +231,11 @@ function publicarMetricas(campana) {
   var periodo = campana.getStatsFor(INICIO.replace(/-/g, ''), FIN.replace(/-/g, ''));
   var hoy = campana.getStatsFor('TODAY');
   var control = leerControl();
+  var hora = parseInt(Utilities.formatDate(new Date(), zona, 'H'), 10);
 
   var coste = periodo.getCost();
   var clics = periodo.getClicks();
+  var mes = campana.getStatsFor('THIS_MONTH');
 
   var filas = [
     ['clave', 'valor'],
@@ -278,7 +246,13 @@ function publicarMetricas(campana) {
     ['gastado_periodo', coste.toFixed(2)],
     ['tope_periodo', TOPE_PERIODO.toFixed(2)],
     ['gastado_hoy', hoy.getCost().toFixed(2)],
+    ['gastado_mes', mes.getCost().toFixed(2)],
+    ['clics_mes', String(mes.getClicks())],
+    ['impresiones_mes', String(mes.getImpressions())],
     ['presupuesto_diario', campana.getBudget().getAmount().toFixed(2)],
+    ['margen_diario', String(MARGEN_DIARIO)],
+    ['horario', HORA_INICIO + '-' + HORA_FIN],
+    ['hora_madrid', String(hora)],
     ['clics_periodo', String(clics)],
     ['impresiones_periodo', String(periodo.getImpressions())],
     ['cpc_medio', clics > 0 ? (coste / clics).toFixed(2) : '0.00'],
@@ -287,8 +261,6 @@ function publicarMetricas(campana) {
     ['inicio', INICIO],
     ['fin', FIN],
     ['gastado_antes', GASTADO_ANTES.toFixed(2)],
-    // Deja constancia de que el informe diario salió, sin depender de abrir el
-    // correo para comprobarlo.
     ['ultimo_informe', ultimoInforme()]
   ];
 
@@ -297,7 +269,6 @@ function publicarMetricas(campana) {
   hoja.getRange(1, 1, filas.length, 2).setValues(filas);
 }
 
-/** Horas transcurridas desde una marca ISO. Null si no se puede leer. */
 function antiguedadEnHoras(marcaIso) {
   if (!marcaIso) return null;
   var t = Date.parse(marcaIso);
@@ -305,10 +276,6 @@ function antiguedadEnHoras(marcaIso) {
   return (new Date().getTime() - t) / 3600000;
 }
 
-/**
- * Fecha del último informe enviado. Se deduce de las etiquetas «informe-AAAA-MM-DD»
- * que deja `informeDiarioSiToca`, que son la misma marca que evita repetirlo.
- */
 function ultimoInforme() {
   var ultima = '';
   var it = AdsApp.labels().withCondition('Name CONTAINS "informe-"').get();
@@ -319,26 +286,17 @@ function ultimoInforme() {
   return ultima || 'ninguno todavía';
 }
 
-// ─── Auxiliares ─────────────────────────────────────────────────────────────
-
 function buscarCampana(nombre) {
   var it = AdsApp.campaigns().withCondition('Name = "' + nombre + '"').get();
   return it.hasNext() ? it.next() : null;
 }
 
-/** Gasto acumulado de la campaña dentro de la ventana del festival. */
 function gastoPeriodo(campana) {
   var desde = INICIO.replace(/-/g, '');
   var hasta = FIN.replace(/-/g, '');
-  var stats = campana.getStatsFor(desde, hasta);
-  return stats.getCost();
+  return campana.getStatsFor(desde, hasta).getCost();
 }
 
-/**
- * Guarda un snapshot de tendencia en Vercel Blob (ritmo, reservas de hoy).
- * Best effort a propósito: un fallo aquí no debe pausar ni activar nada, solo
- * se pierde un punto de la gráfica de tendencia del panel.
- */
 function dispararRefrescoHistorico() {
   if (!REFRESH_URL || REFRESH_SECRET === 'REEMPLAZAR_CON_EL_CRON_SECRET') return;
   try {
@@ -352,11 +310,6 @@ function dispararRefrescoHistorico() {
   }
 }
 
-/**
- * Lee el control publicado por el cron de Booksy.
- * Devuelve {estado, presupuesto, motivo}. Ante cualquier fallo devuelve estado
- * 'auto' y presupuesto 0: no se toca nada por un error de red.
- */
 function leerControl() {
   var vacio = { estado: 'auto', presupuesto: 0, motivo: 'control no disponible' };
   if (!CONTROL_URL) return vacio;
@@ -368,7 +321,6 @@ function leerControl() {
     if (resp.getResponseCode() !== 200) return vacio;
     var datos = JSON.parse(resp.getContentText());
 
-    // Un control viejo es peor que no tener control: parece válido y no lo es.
     var horas = antiguedadEnHoras(datos.actualizado);
     if (horas === null || horas > MAX_HORAS_CONTROL) {
       return {
@@ -387,15 +339,11 @@ function leerControl() {
       motivo: datos.motivo || ''
     };
   } catch (e) {
-    Logger.log('Control ilegible (' + e + '). No se toca nada.');
+    Logger.log('Control ilegible (' + e + '). No se toca nada por agenda.');
     return vacio;
   }
 }
 
-/**
- * Envía el informe una sola vez al día. Usa una etiqueta con la fecha como
- * marca para no repetirlo si el script se ejecuta dos veces en la misma hora.
- */
 function informeDiarioSiToca(campana) {
   var zona = AdsApp.currentAccount().getTimeZone();
   var ahora = new Date();
@@ -417,31 +365,28 @@ function informeDiarioSiToca(campana) {
   l.push('  Impresiones   ' + ayer.getImpressions());
   l.push('  Conversiones  ' + ayer.getConversions());
   l.push('');
-  l.push('ACUMULADO ' + INICIO + ' → ' + FIN);
-  l.push('  Inversión     €' + periodo.getCost().toFixed(2) + '  de €' + TOPE_PERIODO.toFixed(2));
-  l.push('  Restante      €' + Math.max(0, TOPE_PERIODO - periodo.getCost()).toFixed(2));
+  l.push('DESDE ' + INICIO);
+  l.push('  Inversión     €' + periodo.getCost().toFixed(2));
   l.push('  Clics         ' + periodo.getClicks());
   l.push('  Conversiones  ' + periodo.getConversions());
   l.push('');
   l.push('ESTADO AHORA');
   l.push('  Campaña       ' + (campana.isEnabled() ? 'activa' : 'PAUSADA'));
   l.push('  Presupuesto   €' + campana.getBudget().getAmount().toFixed(2) + '/día');
+  l.push('  Horario       ' + HORA_INICIO + ':00–' + HORA_FIN + ':00 (pausa al 100 % del día)');
   l.push('  Agenda        ' + control.motivo);
   l.push('');
   l.push('BÚSQUEDAS QUE MÁS GASTARON AYER');
   l.push(terminosDeAyer());
   l.push('');
-  l.push('La pausa por agenda llena es automática, cada hora.');
-  l.push('');
   l.push('Panel:  ' + URL_PANEL);
   l.push('Agenda: ' + URL_AGENDA);
 
   MailApp.sendEmail(EMAIL_AVISOS,
-    '[Private Studio · Circuit] Informe ' + Utilities.formatDate(ahora, zona, 'd MMM'),
+    '[Private Studio · Ads] Informe ' + Utilities.formatDate(ahora, zona, 'd MMM'),
     l.join('\n'));
 }
 
-/** Los diez términos que más gasto generaron ayer, para cazar negativas. */
 function terminosDeAyer() {
   var filas = [];
   try {
@@ -463,12 +408,11 @@ function terminosDeAyer() {
 function avisar(asunto, cuerpo) {
   if (!EMAIL_AVISOS) return;
   MailApp.sendEmail(EMAIL_AVISOS,
-    '[Private Studio · Circuit] ' + asunto,
+    '[Private Studio · Ads] ' + asunto,
     cuerpo + '\n\nCuenta 608-571-5182 · campaña "' + CAMPANA + '"' +
     '\nGenerado por el guardián automático el ' + new Date());
 }
 
-/** Evita repetir el aviso de 80% en cada ejecución horaria. */
 function avisoYaEnviado() {
   var etiqueta = AdsApp.labels().withCondition('Name = "aviso-80-enviado"').get();
   return etiqueta.hasNext();
