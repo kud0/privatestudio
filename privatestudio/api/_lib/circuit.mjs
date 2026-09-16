@@ -14,7 +14,27 @@ const NEGOCIO = 90283;
 const VARIANTE = 2430520;
 const DURACION_MIN = 35;
 
-export const VENTANA = { inicio: '2026-08-01', fin: '2026-08-15' };
+const DIAS_VENTANA = 14;
+
+const isoDe = fecha => fecha.toISOString().slice(0, 10);
+
+/**
+ * Ventana rodante: hoy y los trece días siguientes.
+ *
+ * Eran dos fechas fijas (`2026-08-01/2026-08-15`, la ventana de Circuit) y al
+ * pasar agosto el histórico empezó a guardar `total: 0` en cada run sin que
+ * nadie se enterara: el endpoint respondía 200 y el calendario enseñaba quince
+ * días de agosto a cero. Con getters se recalcula en cada acceso, así que no
+ * puede volver a caducar.
+ */
+export const VENTANA = {
+  get inicio() {
+    return isoDe(new Date());
+  },
+  get fin() {
+    return isoDe(new Date(Date.now() + (DIAS_VENTANA - 1) * 86400000));
+  }
+};
 
 /**
  * Días que la barbería tiene cerrados aunque no sean domingo. Hay que

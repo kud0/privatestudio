@@ -50,7 +50,21 @@ const NEGOCIO = 90283;
 const VARIANTE = 2430520;
 const DURACION_MIN = 35;
 
-const VENTANA = { inicio: '2026-08-01', fin: '2026-08-15' };
+const DIAS_VENTANA = 14;
+
+const isoDeFecha = fecha => fecha.toISOString().slice(0, 10);
+
+// Ventana rodante: hoy y los trece días siguientes. Ver el comentario largo en
+// api/_lib/circuit.mjs — esta constante estaba duplicada ahí con las mismas dos
+// fechas fijas de agosto, y las dos caducaron a la vez.
+const VENTANA = {
+  get inicio() {
+    return isoDeFecha(new Date());
+  },
+  get fin() {
+    return isoDeFecha(new Date(Date.now() + (DIAS_VENTANA - 1) * 86400000));
+  }
+};
 
 /**
  * Días que la barbería tiene cerrados aunque no sean domingo.
