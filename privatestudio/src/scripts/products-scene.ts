@@ -10,13 +10,30 @@ const ease = (a: number, b: number, p: number) => {
   return t * t * (3 - 2 * t);
 };
 
-/** A complete circle, with a reading pause for each product. No scroll hijacking. */
-export function collectionTurn(p: number) {
+/** Touch keeps moving through the reading positions instead of stopping there. */
+export function collectionTurn(p: number, stacked = false) {
+  if (stacked) {
+    const phase = clamp((p - .29) / (.92 - .29)) * 3;
+    // Positive velocity throughout: slower at each label, faster between them.
+    return (phase - .65 * Math.sin(phase * TAU) / TAU) * TAU / 3;
+  }
   return (ease(.40, .53, p) + ease(.64, .77, p) + ease(.88, .96, p)) * TAU / 3;
 }
 
 type FrameRect = { x: number; y: number; width: number; height: number };
 type ProductLayout = { width: number; height: number; stacked: boolean; area: FrameRect; introArea: FrameRect; fit?: number; introFit?: number };
+const envelopeWidths = new WeakMap<THREE.Vector3[], number>();
+
+function envelopeWidth(points: THREE.Vector3[]) {
+  let width = envelopeWidths.get(points);
+  if (width === undefined) {
+    let left = Infinity, right = -Infinity;
+    points.forEach(point => { left = Math.min(left, point.x); right = Math.max(right, point.x); });
+    width = right - left;
+    envelopeWidths.set(points, width);
+  }
+  return width;
+}
 
 function frameAt(layout: ProductLayout, p: number): FrameRect {
   const t = ease(.115, .29, p);
@@ -61,8 +78,8 @@ export function arrangeProductModels(roots: THREE.Group[], corners: THREE.Vector
   const reveal = ease(.16, .29, p);
   const entry = ease(0, .115, p);
   const settle = ease(.115, .29, p);
-  const end = ease(.96, .99, p);
-  const turn = collectionTurn(p);
+  const end = ease(stacked ? .92 : .96, .99, p);
+  const turn = collectionTurn(p, stacked);
   const frame = frameAt(layout, p);
   const worldHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
   const unit = worldHeight / height;
@@ -74,7 +91,7 @@ export function arrangeProductModels(roots: THREE.Group[], corners: THREE.Vector
   const weights = [.94, .85, .85];
   const fit = lerp(layout.introFit ?? 1, layout.fit ?? 1, settle);
   // Width-aware final spacing: the jar needs more room than either bottle.
-  const finalWidths = corners.map((points, i) => (Math.max(...points.map(v => v.x)) - Math.min(...points.map(v => v.x))) * modelScale * weights[i] * (layout.fit ?? 1) * 1.12);
+  const finalWidths = corners.map((points, i) => envelopeWidth(points) * modelScale * weights[i] * (layout.fit ?? 1) * 1.12);
   const gap = area.width * unit * .12;
   const finalScale = Math.min(1, (area.width * unit - gap * 2 - unit * 24) / finalWidths.reduce((sum, v) => sum + v, 0));
   finalWidths.forEach((value, i) => { finalWidths[i] = value * finalScale; });
@@ -95,7 +112,9 @@ export function arrangeProductModels(roots: THREE.Group[], corners: THREE.Vector
     const availableRadius = (frame.width / 2 - 12) * unit * perspective - root.scale.x * (i === 0 ? 1.36 : .67);
     const safeRadius = Math.max(0, (radius + availableRadius - Math.hypot(radius - availableRadius, unit * 12)) / 2);
     root.position.x = cx * perspective + Math.sin(angle) * safeRadius;
-    root.rotation.set(i === 0 ? .32 : .035, -turn * 3, i === 0 ? -.07 : (i === 1 ? -.07 : .07));
+    // One continuous package revolution on touch; each active label faces front.
+    const yaw = stacked ? i * TAU / 3 - turn : -turn * 3;
+    root.rotation.set(i === 0 ? .32 : .035, yaw, i === 0 ? -.07 : (i === 1 ? -.07 : .07));
     if (i === 0) {
       const introZ = lerp(-2, 4, entry);
       root.position.x = lerp(cx * (1 - introZ / camera.position.z), root.position.x, settle);
@@ -109,7 +128,7 @@ export function arrangeProductModels(roots: THREE.Group[], corners: THREE.Vector
     root.position.y = lerp(root.position.y, cy, end);
     root.position.z = lerp(root.position.z, 0, end);
     root.scale.multiplyScalar(lerp(1, finalScale, end));
-    root.rotation.y = lerp(root.rotation.y, -TAU * 3, end);
+    root.rotation.y = lerp(root.rotation.y, stacked ? (i < 2 ? -TAU : 0) : -TAU * 3, end);
     root.rotation.y += Math.atan2(-root.position.x, camera.position.z - root.position.z);
     cursor += finalWidths[i] + gap;
   });
@@ -156,10 +175,11 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
   const modelSpace = section.querySelector<HTMLElement>('.ps-model-space')!;
   const bottomline = section.querySelector<HTMLElement>('.ps-bottomline')!;
   const articles = [...section.querySelectorAll<HTMLElement>('.ps-product')];
+  const articleStyles = articles.map(() => ({ opacity: '', transform: '' }));
   const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-product-target]')];
   const bars = buttons.map(button => button.querySelector<HTMLElement>('.ps-nav-track > span')!);
   const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 1024 ? 1.5 : 1.75));
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
@@ -196,6 +216,8 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
   const corners: THREE.Vector3[][] = [];
   let disposed = false;
   let raf = 0;
+  let measureRaf = 0;
+  let layoutKey = '';
   let progress = 0;
   let target = 0;
   let mobile = false;
@@ -225,6 +247,7 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
     if (disposed) return;
     disposed = true;
     cancelAnimationFrame(raf);
+    cancelAnimationFrame(measureRaf);
     abort.abort(); intersection?.disconnect(); resizeObserver?.disconnect();
     roots.forEach(disposeModel);
     environmentMap.dispose(); renderer.dispose(); renderer.domElement.remove();
@@ -239,7 +262,8 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
     const results = await Promise.allSettled(names.map(name => loader.loadAsync(`/models/private-studio/${name}.glb`)));
     results.forEach(result => { if (result.status === 'fulfilled') roots.push(result.value.scene); });
     if (results.some(result => result.status === 'rejected')) throw new Error('A product asset could not be loaded.');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || innerHeight < 640) { dispose(); return () => {}; }
+    const stableHeight = section.querySelector<HTMLElement>('.ps-viewport-probe')?.clientHeight ?? innerHeight;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || stableHeight < (innerWidth < 768 ? 640 : 700)) { dispose(); return () => {}; }
     roots.forEach(root => {
       corners.push(productEnvelope(root));
       root.traverse((obj: any) => {
@@ -266,8 +290,6 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
       if (disposed) return;
       width = stage.clientWidth; height = stage.clientHeight;
       mobile = width < 1024;
-      renderer.setSize(width, height);
-      camera.aspect = width / height; camera.updateProjectionMatrix();
       const stageRect = stage.getBoundingClientRect();
       const modelRect = modelSpace.getBoundingClientRect();
       const area = { x: modelRect.left - stageRect.left, y: modelRect.top - stageRect.top, width: modelRect.width, height: modelRect.height };
@@ -277,13 +299,27 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
       const introArea = mobile
         ? { x: width * .07, y: introBottom, width: width * .86, height: Math.max(80, bottom - introBottom) }
         : { x: width * .56, y: height * .22, width: width * .38, height: height * .60 };
-      layout = { width, height, stacked: mobile, area, introArea };
-      fitProductLayout(roots, corners, camera, layout);
-      orbit.style.left = `${area.x}px`; orbit.style.width = `${area.width}px`;
-      orbit.style.top = `${area.y + area.height * .82}px`; orbit.style.height = `${area.height * .16}px`;
+      // Mobile browser chrome fires resize while scrolling even though 100svh
+      // and the reserved model space stay unchanged. Never refit for that case.
+      const nextKey = [width, height, ...Object.values(area), ...Object.values(introArea)].map(value => Math.round(value * 2)).join(':');
+      if (nextKey !== layoutKey) {
+        layoutKey = nextKey;
+        renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 1.75));
+        renderer.setSize(width, height);
+        camera.aspect = width / height; camera.updateProjectionMatrix();
+        layout = { width, height, stacked: mobile, area, introArea };
+        fitProductLayout(roots, corners, camera, layout);
+        orbit.style.left = `${area.x}px`; orbit.style.width = `${area.width}px`;
+        orbit.style.top = `${area.y + area.height * .82}px`; orbit.style.height = `${area.height * .16}px`;
+        render(progress);
+      }
       start = section.getBoundingClientRect().top + window.scrollY;
       travel = Math.max(1, section.offsetHeight - height);
       onScroll();
+    }
+    function scheduleMeasure() {
+      if (disposed || measureRaf) return;
+      measureRaf = requestAnimationFrame(() => { measureRaf = 0; measure(); });
     }
     function onScroll() {
       target = clamp((window.scrollY - start) / travel);
@@ -295,7 +331,7 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
     function render(p: number) {
       const reveal = ease(.16, .29, p);
       const introOut = ease(.09, .16, p);
-      const turn = collectionTurn(p);
+      const turn = collectionTurn(p, mobile);
       arrangeProductModels(roots, corners, camera, layout, p);
 
       intro.style.opacity = String(1 - introOut);
@@ -306,20 +342,25 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
       const detailReveal = ease(.255, .32, p);
       // Fade copy through the fastest part of each change, leaving readable pauses.
       const distance = Math.abs(turn / (TAU / 3) - Math.round(turn / (TAU / 3)));
-      const opacity = detailReveal * (1 - ease(.25, .5, distance));
+      const opacity = detailReveal * (1 - ease(mobile ? .40 : .25, .5, distance));
       articles.forEach((article, i) => {
         const shown = i === index && opacity > .05;
-        article.style.opacity = String(shown ? opacity : 0);
-        article.style.transform = `translateY(${shown ? (1 - opacity) * 16 : 16}px)`;
-        article.toggleAttribute('data-active', shown);
-        article.setAttribute('aria-hidden', String(!shown));
-        article.inert = !shown;
+        const alpha = (shown ? opacity : 0).toFixed(3);
+        const transform = `translateY(${(shown ? (1 - opacity) * 16 : 16).toFixed(2)}px)`;
+        const previous = articleStyles[i];
+        if (previous.opacity !== alpha) { article.style.opacity = alpha; previous.opacity = alpha; }
+        if (previous.transform !== transform) { article.style.transform = transform; previous.transform = transform; }
+        if (article.getAttribute('aria-hidden') !== String(!shown)) {
+          article.toggleAttribute('data-active', shown);
+          article.setAttribute('aria-hidden', String(!shown));
+          article.inert = !shown;
+        }
       });
       if (index !== active) {
         active = index;
         buttons.forEach((button, i) => button.setAttribute('aria-current', String(i === index)));
       }
-      const ranges = [[.29,.46],[.46,.70],[.70,.94]];
+      const ranges = mobile ? [[.29,.395],[.395,.605],[.605,.815]] : [[.29,.46],[.46,.70],[.70,.94]];
       bars.forEach((bar, i) => bar.style.transform = `scaleX(${clamp((p - ranges[i][0]) / (ranges[i][1] - ranges[i][0]))})`);
       renderer.render(scene, camera);
     }
@@ -333,13 +374,13 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
       render(progress);
       if (progress !== target) raf = requestAnimationFrame(frame);
     }
-    const stops = [.34, .575, .815];
     buttons.forEach((button, index) => button.addEventListener('click', () => {
+      const stops = mobile ? [.32, .50, .71] : [.34, .575, .815];
       window.scrollTo({ top: start + stops[index] * travel, behavior: 'smooth' });
     }, { signal: abort.signal }));
     renderer.domElement.addEventListener('webglcontextlost', event => { event.preventDefault(); dispose(); }, { signal: abort.signal });
     window.addEventListener('scroll', onScroll, { passive: true, signal: abort.signal });
-    window.addEventListener('resize', measure, { passive: true, signal: abort.signal });
+    window.addEventListener('resize', scheduleMeasure, { passive: true, signal: abort.signal });
     document.addEventListener('visibilitychange', onScroll, { signal: abort.signal });
     intersection = new IntersectionObserver(entries => {
       visible = entries[0].isIntersecting;
@@ -347,7 +388,7 @@ export async function mountProductScene(section: HTMLElement): Promise<() => voi
       else { cancelAnimationFrame(raf); raf = 0; }
     });
     intersection.observe(section);
-    resizeObserver = new ResizeObserver(measure);
+    resizeObserver = new ResizeObserver(scheduleMeasure);
     resizeObserver.observe(stage);
     resizeObserver.observe(intro);
     resizeObserver.observe(modelSpace);

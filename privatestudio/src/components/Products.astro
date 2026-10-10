@@ -8,6 +8,7 @@ const products = [
 
 <section id="products" class="ps-products" aria-labelledby="ps-products-title">
   <span id="brands" class="ps-anchor" aria-hidden="true"></span>
+  <span class="ps-viewport-probe" aria-hidden="true"></span>
   <div class="ps-stage">
     <div class="ps-topline">
       <div class="ps-signature">PRIVATE STUDIO<span>GROOMING ESSENTIALS</span></div>
@@ -56,15 +57,18 @@ const products = [
   const section = document.querySelector<HTMLElement>('.ps-products');
   if (section) {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const size = window.matchMedia('(max-width: 767px) and (min-height: 640px), (min-width: 768px) and (min-height: 700px)');
+    const viewportProbe = section.querySelector<HTMLElement>('.ps-viewport-probe')!;
+    // The browser's address bar must not switch presentations mid-gesture.
+    const sizeMatches = () => viewportProbe.clientHeight >= (innerWidth < 768 ? 640 : 700);
+    let eligibleSize = sizeMatches();
     let cleanup: (() => void) | undefined;
     let loading = false;
     const start = async () => {
-      if (motion.matches || !size.matches || loading || cleanup) return;
+      if (motion.matches || !sizeMatches() || loading || cleanup) return;
       loading = true;
       try {
         const { mountProductScene } = await import('../scripts/products-scene');
-        if (!motion.matches && size.matches) cleanup = await mountProductScene(section);
+        if (!motion.matches && sizeMatches()) cleanup = await mountProductScene(section);
       } catch (error) {
         console.warn('Product collection: using the photographic presentation.', error);
       } finally { loading = false; }
@@ -76,15 +80,21 @@ const products = [
     // Hash navigation can restore a scroll position before the lazy scene mounts.
     if (/^#(?:products|brands|product-)/.test(location.hash)) void start();
     const preferenceChanged = () => {
-      if (motion.matches || !size.matches) { cleanup?.(); cleanup = undefined; }
+      if (motion.matches || !sizeMatches()) { cleanup?.(); cleanup = undefined; }
       else void start();
     };
+    const sizeChanged = () => {
+      const eligible = sizeMatches();
+      if (eligible === eligibleSize) return;
+      eligibleSize = eligible;
+      preferenceChanged();
+    };
     motion.addEventListener('change', preferenceChanged);
-    size.addEventListener('change', preferenceChanged);
+    window.addEventListener('resize', sizeChanged, { passive: true });
     document.addEventListener('astro:before-swap', () => {
       observer.disconnect(); cleanup?.();
       motion.removeEventListener('change', preferenceChanged);
-      size.removeEventListener('change', preferenceChanged);
+      window.removeEventListener('resize', sizeChanged);
     }, { once: true });
   }
 </script>
@@ -92,6 +102,7 @@ const products = [
 <style>
   .ps-products { --ps-paper: #000; --ps-ink: #fff; --ps-beige: #e0d4ba; position: relative; background: var(--ps-paper); color: var(--ps-ink); scroll-margin-top: 80px; }
   .ps-anchor { position: absolute; top: 0; }
+  .ps-viewport-probe { position: absolute; width: 0; height: 100svh; visibility: hidden; pointer-events: none; }
   .ps-stage { position: relative; overflow: hidden; padding: 56px 5vw; isolation: isolate; }
   .ps-topline { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 3; }
   .ps-signature { font-size: 14px; font-weight: 700; letter-spacing: .22em; }
@@ -157,6 +168,7 @@ const products = [
   .ps-nav-track { position: absolute; height: 1px; background: #ffffff26; bottom: 0; left: 0; right: 0; }
   .ps-nav-track > span { display: block; width: 100%; height: 1px; background: #e0d4ba; transform: scaleX(0); transform-origin: left; }
   @media (max-width: 1023px) {
+    .ps-products[data-enhanced] { height: 450svh; }
     [data-enhanced] .ps-stage { padding: 98px 7% 80px; }
     [data-enhanced] .ps-intro { left: 7%; top: 170px; width: 86%; }
     [data-enhanced] .ps-intro h2 { font-size: clamp(32px, min(8.5vw, 6svh), 56px); }
@@ -188,7 +200,6 @@ const products = [
     .ps-product-copy { padding: 0 6px; }
     .ps-product h3 { font-size: 56px; }
     .ps-description { max-width: 420px; }
-    .ps-products[data-enhanced] { height: 600svh; }
     [data-enhanced] .ps-product-index { font-size: 8px; gap: 12px; }
     [data-enhanced] .ps-product h3 { font-size: 42px; margin: 12px 0 12px; }
     [data-enhanced] .ps-type { font-size: 8px; margin-bottom: 12px; }
